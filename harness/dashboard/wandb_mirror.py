@@ -6,8 +6,8 @@ partner). Strictly decoupled, write-only telemetry:
     results.json. Never writes anything the loop or agents read.
   - Opt-in: does nothing without WANDB_API_KEY (or WANDB_MODE=offline for a
     dry run). If W&B is down or the key is wrong, the machine never notices.
-  - Run with SYSTEM python3 (wandb is installed --user; the project's pinned
-    .venv stays frozen): `python3 harness/dashboard/wandb_mirror.py &`
+  - Run with the Python named by the installed `wandb` executable (the project's
+    pinned .venv stays frozen). `harness/start_event.sh` discovers it automatically.
 
 Git remains the source of truth; this is a public live window onto it.
 """

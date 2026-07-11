@@ -141,6 +141,47 @@ class HarnessRegressionTests(unittest.TestCase):
             self.assertIn("made-up", result.stdout.lower())
             self.assertIn("repeated", result.stdout.lower())
 
+    def test_style_gate_rejects_weak_abstract_rhythm_and_display_bloat(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            (repo / "paper").mkdir()
+            (repo / "paper/main.tex").write_text(
+                "\\begin{document}\n"
+                "\\begin{abstract}Results vary. Position matters. Context hurts.\\end{abstract}\n"
+                "Results vary. Position matters. Context hurts.\n"
+                + "\\begin{table}x\\end{table}\n" * 5
+                + "\\end{document}\n"
+            )
+            result = run(sys.executable, str(ROOT / "harness/gates/check_style.py"), cwd=repo)
+            self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+            output = result.stdout.lower()
+            self.assertIn("abstract", output)
+            self.assertIn("short sentences", output)
+            self.assertIn("displays", output)
+
+    def test_style_gate_accepts_concise_professional_paper_shape(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            (repo / "paper").mkdir()
+            (repo / "paper/main.tex").write_text(
+                "\\begin{document}\n"
+                "\\begin{abstract}\n"
+                "We examine whether target position changes retrieval accuracy in synthetic documents. "
+                "A frozen language model answers matched questions under deterministic decoding. "
+                "Accuracy declines when the target moves behind competing clauses. "
+                "The comparison remains limited to one model and one controlled task. "
+                "These results motivate testing document structure before expanding context.\n"
+                "\\end{abstract}\n"
+                "\\section{Results}\n"
+                "The paired comparison isolates position while holding each question and competing clause fixed. "
+                "Accuracy is lower at later positions, although the estimate remains specific to the tested model.\n"
+                "\\begin{table}Selective position estimates.\\end{table}\n"
+                "\\begin{figure}Matched scenario summary.\\end{figure}\n"
+                "\\end{document}\n"
+            )
+            result = run(sys.executable, str(ROOT / "harness/gates/check_style.py"), cwd=repo)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_sanity_gate_rejects_unknown_units_and_fake_script_paths(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo = Path(tmp)

@@ -65,6 +65,19 @@ def strip_comments(line: str) -> str:
     return re.sub(r"(?<!\\)%.*$", "", line)
 
 
+def plain_tex(text: str) -> str:
+    """Reduce LaTeX prose enough for conservative sentence-shape checks."""
+    text = "\n".join(strip_comments(line) for line in text.splitlines())
+    text = re.sub(r"\$[^$]*\$|\\\([^)]*\\\)", " ", text, flags=re.S)
+    text = re.sub(r"\\begin\{[^}]+\}|\\end\{[^}]+\}", " ", text)
+    text = re.sub(r"\\[A-Za-z@]+\*?(?:\[[^\]]*\])?", " ", text)
+    return re.sub(r"[{}~&]", " ", text)
+
+
+def sentences(text: str) -> list[str]:
+    return [part.strip() for part in re.split(r"(?<=[.!?])\s+", text) if re.search(r"[A-Za-z]", part)]
+
+
 def main() -> int:
     if not TEX.exists():
         print("PASS: paper/main.tex does not exist yet (nothing to check)")
@@ -100,6 +113,42 @@ def main() -> int:
                 "vary sentence structure and lead with the evidence"
             )
             errors += 1
+    if "\\begin{document}" in raw_text:
+        abstract_match = re.search(
+            r"\\begin\{abstract\}(.*?)\\end\{abstract\}", raw_text, flags=re.S
+        )
+        if not abstract_match:
+            print("FAIL: paper has no abstract environment")
+            errors += 1
+        else:
+            abstract_sentences = sentences(plain_tex(abstract_match.group(1)))
+            if not 4 <= len(abstract_sentences) <= 7:
+                print(
+                    f"FAIL: abstract has {len(abstract_sentences)} sentences; use 4-7 "
+                    "for question, design, principal estimate, qualification, and takeaway"
+                )
+                errors += 1
+
+        displays = len(re.findall(r"\\begin\{(?:table|figure)\*?\}", raw_text))
+        if not 2 <= displays <= 4:
+            print(f"FAIL: paper has {displays} result displays; a 2-4 page paper should use 2-4 selective displays")
+            errors += 1
+
+        body_sentences = sentences(plain_tex(raw_text))
+        word_counts = [len(re.findall(r"[A-Za-z]+(?:[-'][A-Za-z]+)?", item)) for item in body_sentences]
+        for index, count in enumerate(word_counts, 1):
+            if count > 45:
+                print(f"FAIL: sentence {index} has {count} words (limit 45) — split the claim from its qualification")
+                errors += 1
+        for index in range(len(word_counts) - 2):
+            streak = word_counts[index : index + 3]
+            if all(2 <= count <= 6 for count in streak):
+                print(
+                    f"FAIL: sentences {index + 1}-{index + 3} are three consecutive short sentences "
+                    f"({streak} words) — combine related evidence into professional prose"
+                )
+                errors += 1
+                break
     if errors:
         print(f"{errors} style failure(s) in paper/main.tex")
         return 1

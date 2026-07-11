@@ -43,22 +43,19 @@ You type three commands all day. Everything else is watching and presenting.
 ```
 cd ~/ralphm/Ralphm
 tmux new -s ralph
-# pane 1 — the machine:
-caffeinate -is env PUSH=1 harness/loop.sh
+# pane 1 — preflight, then the machine + dashboard + W&B mirror:
+harness/start_event.sh --check
+harness/start_event.sh
 # split pane: press Ctrl-b then %  — then in pane 2, the live status view:
 tail -f VERIFY.log
 ```
 
 (tmux survives a closed window: `tmux attach -t ralph` reconnects.)
 
-Optional third pane — the web dashboard (gates, scores, tags, TODO,
-editorial thesis, last agent message, auto-refreshing):
-
-```
-harness/dashboard.sh     # then open http://127.0.0.1:8788/harness/dashboard/
-```
-
-This is also the demo screen: put it on the projector.
+The launcher starts the local dashboard at
+`http://127.0.0.1:8788/harness/dashboard/` and the authenticated W&B mirror.
+This is also the demo screen: put it on the projector. Set `SKIP_WANDB=1` only
+if you intentionally need the research loop to continue without the mirror.
 
 That's it. That is the entire "how do I run it."
 
