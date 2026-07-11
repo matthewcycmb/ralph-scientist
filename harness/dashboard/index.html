@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ralph Scientist — Live</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; margin: 0; }
+  body { background:#0a0e14; color:#e6edf3; font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace; padding:16px 22px; }
+
+  .head { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:12px; }
+  .head h1 { font-size:17px; }
+  .head .q { color:#d2a8ff; font-size:14px; }
+  .head .tagline { color:#7d8590; font-size:12px; }
+
+  /* F top stroke: full-width status band */
+  .hero { display:flex; align-items:stretch; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
+  .stat { background:#11161f; border:1px solid #263041; border-radius:10px; padding:10px 16px; min-width:118px; transition:box-shadow .3s, border-color .3s; }
+  .stat.flash { border-color:#3fb950; box-shadow:0 0 14px rgba(63,185,80,.35); }
+  .stat .label { font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:#7d8590; margin-bottom:2px; }
+  .stat .value { font-size:26px; font-weight:800; line-height:1.15; }
+  .stat .note { font-size:11px; color:#7d8590; margin-top:2px; }
+  .running { color:#3fb950; } .stopped { color:#f85149; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.25} }
+  .pulse { animation:pulse 1.6s ease-in-out infinite; }
+  .gatebox { flex:1; min-width:270px; background:#11161f; border:1px solid #263041; border-radius:10px; padding:10px 16px; }
+  .gatestrip { display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin-top:6px; }
+  .chip { display:inline-block; padding:3px 10px; border-radius:999px; font-size:12px; }
+  .ok   { background:#0f2b17; color:#3fb950; border:1px solid #238636; }
+  .bad  { background:#2d1214; color:#f85149; border:1px solid #da3633; }
+  .tag  { background:#1c2a3a; color:#58a6ff; border:1px solid #1f6feb; }
+  .papertag { background:#2a2138; color:#d2a8ff; border:1px solid #8957e5; font-weight:700; }
+
+  /* importance bands, top to bottom */
+  .band2 { display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-bottom:14px; }
+  .main { display:grid; grid-template-columns: minmax(340px, 1fr) minmax(320px, 1fr); gap:14px; align-items:start; }
+  @media (max-width: 900px){ .main, .band2 { grid-template-columns: 1fr; } }
+  .card { background:#11161f; border:1px solid #263041; border-radius:10px; padding:14px; overflow-x:auto; }
+  .card h2 { font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:#7d8590; margin-bottom:10px; }
+  .col { display:flex; flex-direction:column; gap:12px; }
+
+  #pdfwrap { padding:0; overflow:hidden; }
+  #pdfwrap .bar { display:flex; align-items:center; justify-content:space-between; padding:12px 14px 8px; }
+  #pdfwrap h2 { margin:0; }
+  #livebtn { font:inherit; font-size:11px; padding:3px 12px; border-radius:999px; border:1px solid #238636; background:#0f2b17; color:#3fb950; cursor:pointer; display:none; }
+  #pdf { width:100%; height:52vh; border:0; display:block; background:#fff; filter:brightness(.88); }
+  .pdfmeta { padding:8px 14px; font-size:11px; color:#7d8590; border-top:1px solid #263041; }
+
+  pre { white-space:pre-wrap; word-break:break-word; font-size:12px; color:#c9d1d9; }
+  .clamp { max-height:100px; overflow-y:auto; }
+  .muted { color:#7d8590; }
+
+  /* paper activity: expandable rows */
+  .rowd { border-bottom:1px solid #1c2431; background:transparent; border-left:0; border-right:0; border-top:0; border-radius:0; margin:0; }
+  .rowd:last-child { border-bottom:0; }
+  .rowd summary { display:flex; align-items:center; gap:10px; padding:7px 4px; font-size:12px; cursor:pointer; list-style:none; }
+  .rowd summary::before { content:"▸"; color:#7d8590; font-size:10px; }
+  .rowd[open] summary::before { content:"▾"; }
+  .rowd summary:hover { background:#161d2a; }
+  .rowd .n { font-weight:700; color:#58a6ff; min-width:58px; }
+  .add { color:#3fb950; } .rm { color:#f85149; }
+  .rowd .desc { padding:4px 8px 10px 22px; font-size:12px; color:#a5b1bd; }
+
+  .draft { display:flex; align-items:center; gap:10px; padding:7px 4px; border-bottom:1px solid #1c2431; cursor:pointer; }
+  .draft:last-child { border-bottom:0; }
+  .draft:hover { background:#161d2a; }
+  .draft .n { font-weight:700; color:#58a6ff; min-width:58px; }
+  .draft .s { min-width:48px; }
+
+  .scores { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  .scores > span { min-width:56px; text-align:center; padding:7px 8px; border-radius:8px; background:#0d1420; border:1px solid #1c2431; }
+  .scores > span b { display:block; font-size:17px; }
+  .scores > span small { color:#7d8590; font-size:11px; display:block; }
+  #spark, #timeline { display:block; }
+  #spark { margin-top:10px; }
+
+  details.drawer { margin-top:12px; background:#0d121b; border:1px solid #1c2431; border-radius:10px; }
+  details.drawer summary { cursor:pointer; padding:10px 14px; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:#7d8590; user-select:none; }
+  details.drawer[open] summary { border-bottom:1px solid #1c2431; }
+  details.drawer .inner { padding:12px 14px; }
+  .sub { color:#57606a; font-size:11px; margin-top:12px; }
+  #confetti { position:fixed; inset:0; pointer-events:none; z-index:99; }
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+  <div class="head">
+    <h1>Ralph Scientist</h1>
+    <span class="q">"Does more context degrade model performance?"</span>
+    <span class="tagline">autonomous research loop · every number computed · every citation verified · no human hands</span>
+  </div>
+
+  <!-- F top stroke -->
+  <div class="hero">
+    <div class="stat" id="st-lap"><div class="label">Lap</div><div class="value" id="lap">–</div><div class="note" id="laptime"></div></div>
+    <div class="stat" id="st-loop"><div class="label">Loop</div><div class="value" id="loop">–</div><div class="note" id="loopnote"></div></div>
+    <div class="stat" id="st-score"><div class="label">Rubric score</div><div class="value" id="score">–</div><div class="note" id="scorerec"></div></div>
+    <div class="stat" id="st-icml"><div class="label">ICML score</div><div class="value" id="icml">–</div><div class="note">novelty-graded · context</div></div>
+    <div class="stat" id="st-read"><div class="label">Readability</div><div class="value" id="read">–</div><div class="note" id="readnote">Flesch ease · the humanizer's scoreboard</div></div>
+    <div class="stat" id="st-tag"><div class="label">Best tag</div><div class="value" id="besttag" style="font-size:18px">–</div><div class="note" id="tagcount"></div></div>
+    <div class="gatebox"><div class="label" style="font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#7d8590;">Gates</div><div class="gatestrip" id="gates"></div></div>
+  </div>
+
+  <!-- band 2: the growth story — what judges look for first -->
+  <div class="band2">
+    <div class="card"><h2>Growth — reviewer score (rubric | icml) · criticisms fixed</h2><svg id="spark" width="100%" height="58"></svg><div class="scores" id="scores" style="margin-top:10px"></div></div>
+    <div class="card"><h2>Lap timeline</h2><svg id="timeline" width="100%" height="64"></svg><div class="muted" id="lastevent" style="font-size:11px; margin-top:6px;"></div></div>
+  </div>
+
+  <!-- band 3: the artifact and its story -->
+  <div class="main">
+    <div class="col">
+      <div class="card"><h2>Current thesis (editor)</h2><pre id="editorial" class="clamp"></pre></div>
+      <div class="card"><h2>Drafts — click to view</h2><div id="drafts"></div></div>
+      <div class="card"><h2>Paper activity — click a lap for details</h2><div id="paperlog"></div></div>
+    </div>
+
+    <div class="card" id="pdfwrap">
+      <div class="bar"><h2 id="pdftitle">The paper — live</h2><button id="livebtn" onclick="goLive()">back to live</button></div>
+      <iframe id="pdf" title="paper"></iframe>
+      <div class="pdfmeta" id="pdfmeta"></div>
+    </div>
+  </div>
+
+  <details class="drawer"><summary>TODO — the logbook</summary><div class="inner"><pre id="todo"></pre></div></details>
+  <details class="drawer"><summary>All tags · last agent sign-off · VERIFY.log</summary><div class="inner">
+    <div id="tags" style="margin-bottom:12px"></div>
+    <pre id="agent" style="margin-bottom:12px"></pre>
+    <pre id="verify"></pre>
+  </div></details>
+
+  <div class="sub" id="meta"></div>
+
+<script>
+let pdfMtime = 0, viewingDraft = null, lastPaperCount = null, lastVals = {};
+let lastActivity = 0, loopRunning = false;
+
+function setStat(cardId, elId, text) {
+  const el = document.getElementById(elId);
+  if (lastVals[elId] !== undefined && lastVals[elId] !== text) {
+    const card = document.getElementById(cardId);
+    card.classList.add('flash');
+    setTimeout(() => card.classList.remove('flash'), 1200);
+  }
+  lastVals[elId] = text;
+  el.textContent = text;
+}
+
+function showDraft(path, iter) {
+  viewingDraft = path;
+  document.getElementById('pdf').src = path + '#toolbar=0&view=FitH';
+  document.getElementById('pdftitle').textContent = `Draft — lap ${iter}`;
+  document.getElementById('livebtn').style.display = 'inline-block';
+}
+function goLive() {
+  viewingDraft = null; pdfMtime = 0;
+  document.getElementById('pdftitle').textContent = 'The paper — live';
+  document.getElementById('livebtn').style.display = 'none';
+  refresh();
+}
+
+function sparkline(reviews) {
+  const svg = document.getElementById('spark');
+  const pts = reviews.map(r => r.rubric ?? r.overall);
+  if (pts.length < 2) { svg.innerHTML = ''; return; }
+  const w = svg.clientWidth || 300, h = 58, pad = 7;
+  const x = i => pad + i * (w - 2*pad) / (pts.length - 1);
+  const y = v => h - pad - (v - 1) * (h - 2*pad) / 9;
+  // second series: cumulative UNIQUE criticisms fixed (computed in gen_status —
+  // re-listed old wins don't inflate it) — the growth the score can't show
+  // once it sits at the genre ceiling
+  let cum = 0;
+  const fixed = reviews.map(r => (cum = r.ledger?.cum_fixed ?? cum));
+  const fmax = fixed[fixed.length - 1];
+  const yf = v => h - pad - v * (h - 2*pad) / Math.max(fmax, 1);
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  svg.innerHTML =
+    `<line x1="${pad}" y1="${y(6)}" x2="${w-pad}" y2="${y(6)}" stroke="#8957e5" stroke-dasharray="3 4" stroke-width="1" opacity=".6"/>` +
+    (fmax > 0
+      ? `<polyline points="${fixed.map((v,i)=>`${x(i)},${yf(v)}`).join(' ')}" fill="none" stroke="#58a6ff" stroke-width="1.5" stroke-dasharray="1 3"/>` +
+        `<text x="${pad}" y="${yf(fmax)+3}" fill="#58a6ff" font-size="9">${fmax} fixed</text>`
+      : '') +
+    `<polyline points="${pts.map((v,i)=>`${x(i)},${y(v)}`).join(' ')}" fill="none" stroke="#3fb950" stroke-width="2"/>` +
+    pts.map((v,i) => `<circle cx="${x(i)}" cy="${y(v)}" r="3" fill="#3fb950"/>`).join('') +
+    `<text x="${w-pad}" y="${y(6)-4}" fill="#8957e5" font-size="9" text-anchor="end">tag line (6)</text>`;
+}
+
+function lapTimeline(history, reviews) {
+  const svg = document.getElementById('timeline');
+  if (!history.length) { svg.innerHTML = '<text x="4" y="20" fill="#7d8590" font-size="11">appears once the loop runs</text>'; return; }
+  const scoreByIter = Object.fromEntries(reviews.map(r => [r.iter, r.rubric ?? r.overall]));
+  const cell = 16, gap = 5, w = Math.max(history.length * (cell + gap) + 8, 200), h = 64;
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  svg.innerHTML = history.map((g, i) => {
+    const x = 4 + i * (cell + gap);
+    const color = g.fails === 0 ? '#238636' : '#da3633';
+    const score = scoreByIter[g.iter];
+    return `<rect x="${x}" y="14" width="${cell}" height="${cell}" rx="4" fill="${color}">` +
+           `<title>lap ${g.iter} at ${g.time} — ${g.fails === 0 ? 'all gates passed' : g.fails + ' gate(s) failed'}</title></rect>` +
+           `<text x="${x + cell/2}" y="10" fill="#7d8590" font-size="8" text-anchor="middle">${g.iter}</text>` +
+           (score !== undefined
+             ? `<text x="${x + cell/2}" y="46" fill="#d2a8ff" font-size="10" font-weight="bold" text-anchor="middle">${score}</text>` +
+               `<text x="${x + cell/2}" y="58" fill="#7d8590" font-size="7" text-anchor="middle">review</text>`
+             : '');
+  }).join('');
+}
+
+function confettiBurst() {
+  const c = document.getElementById('confetti'), ctx = c.getContext('2d');
+  c.width = innerWidth; c.height = innerHeight;
+  const parts = Array.from({length: 160}, () => ({
+    x: innerWidth/2, y: innerHeight/3,
+    vx: (Math.random()-.5)*16, vy: -Math.random()*14 - 2,
+    s: Math.random()*6+3, r: Math.random()*Math.PI,
+    col: ['#3fb950','#58a6ff','#d2a8ff','#f0883e','#e6edf3'][Math.floor(Math.random()*5)]
+  }));
+  let frames = 0;
+  (function tick(){
+    ctx.clearRect(0,0,c.width,c.height);
+    for (const p of parts) {
+      p.x += p.vx; p.y += p.vy; p.vy += .35; p.r += .1;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r);
+      ctx.fillStyle = p.col; ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s); ctx.restore();
+    }
+    if (++frames < 140) requestAnimationFrame(tick); else ctx.clearRect(0,0,c.width,c.height);
+  })();
+}
+
+let runStarted = 0, lapStarted = 0, curLap = null;
+function fmtDur(s) {
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
+  return h ? `${h}h ${String(m).padStart(2,'0')}m` : (m ? `${m}m ${String(sec).padStart(2,'0')}s` : `${sec}s`);
+}
+setInterval(() => {
+  if (!loopRunning || !lastActivity) return;
+  const now = Math.floor(Date.now()/1000);
+  const secs = Math.max(0, now - lastActivity);
+  const lapDur = lapStarted ? fmtDur(Math.max(0, now - lapStarted)) : '';
+  document.getElementById('loopnote').textContent =
+    `${curLap != null && lapDur ? 'lap ' + curLap + ' · ' + lapDur + ' · ' : ''}agent ${secs}s ago`;
+}, 1000);
+
+async function refresh() {
+  let s;
+  try { s = await (await fetch('/logs/status.json', {cache:'no-store'})).json(); }
+  catch (e) { document.getElementById('meta').textContent = 'status.json not found — is harness/dashboard.sh running?'; return; }
+
+  loopRunning = s.loop_running;
+  lastActivity = s.last_activity + (Math.floor(Date.now()/1000) - s.now);
+  runStarted = s.run_elapsed != null ? Math.floor(Date.now()/1000) - s.run_elapsed : 0;
+  const skew = Math.floor(Date.now()/1000) - s.now;
+  lapStarted = s.current_lap.started ? s.current_lap.started + skew : 0;
+  curLap = s.current_lap.n;
+
+  setStat('st-lap', 'lap', String(s.last_gates.iter));
+  document.getElementById('laptime').textContent = s.last_gates.time ? 'inspected ' + s.last_gates.time : '';
+  const loopEl = document.getElementById('loop');
+  loopEl.textContent = s.loop_running ? '●' : '○';
+  loopEl.className = 'value ' + (s.loop_running ? 'running pulse' : 'stopped');
+  if (!s.loop_running) document.getElementById('loopnote').textContent = 'stopped';
+
+  const last = s.reviews[s.reviews.length - 1];
+  setStat('st-score', 'score', last ? (last.rubric ?? last.overall) + '/10' : '–');
+  setStat('st-icml', 'icml', last && last.rubric != null ? last.overall + '/10' : '–');
+  const rd = s.readability;
+  setStat('st-read', 'read', rd ? rd.flesch.toFixed(0) : '–');
+  if (rd) document.getElementById('readnote').textContent =
+    'Flesch ease \u00b7 \u2248 grade ' + rd.grade.toFixed(0) + ' \u00b7 ' + rd.words + ' words';
+  const arc = s.reviews.slice(-6).map(r => r.rubric ?? r.overall).join(' → ');
+  document.getElementById('scorerec').textContent = last ? (arc.includes('→') ? arc : `lap ${last.iter} · ${last.recommendation}`) : 'no reviews yet';
+
+  const papers = s.tags.filter(t => t.startsWith('paper'));
+  const greens = s.tags.filter(t => t.startsWith('green'));
+  setStat('st-tag', 'besttag', papers.length ? papers[papers.length-1] : (greens.length ? greens[greens.length-1] : '–'));
+  document.getElementById('tagcount').textContent = `${papers.length} paper · ${greens.length} green`;
+  if (lastPaperCount !== null && papers.length > lastPaperCount) confettiBurst();
+  lastPaperCount = papers.length;
+
+  document.getElementById('gates').innerHTML = s.last_gates.gates.length
+    ? s.last_gates.gates.map(g => `<span class="chip ${g.ok?'ok':'bad'}">${g.ok?'✓':'✗'} ${g.name.replace('citations-resolve','citations').replace('no-number-literals','numbers').replace('pipeline-fresh','pipeline').replace('results-sane','sanity').replace('latex-compiles','latex')}</span>`).join('')
+    : '<span class="muted">no gate runs yet</span>';
+
+  if (!viewingDraft && s.paper.pdf_exists && s.paper.pdf_mtime !== pdfMtime) {
+    pdfMtime = s.paper.pdf_mtime;
+    document.getElementById('pdf').src = `/paper/main.pdf?v=${pdfMtime}#toolbar=0&view=FitH`;
+  }
+  const mtok = s.total_tokens >= 1e6 ? (s.total_tokens/1e6).toFixed(1) + 'M' : Math.round(s.total_tokens/1e3) + 'k';
+  document.getElementById('pdfmeta').textContent = s.paper.pdf_exists
+    ? `${s.paper.pdf_kb} KB · ${s.paper.tex_words} source words · ${s.paper.values} computed values · ${mtok} tokens spent`
+    : 'no PDF yet — appears after the first successful compile';
+
+  document.getElementById('paperlog').innerHTML = s.paper_log.length
+    ? s.paper_log.map(e => {
+        const label = e.tag ? `${e.tag} · lap ${e.lap}` : `lap ${e.lap}`;
+        const badge = e.tag ? `<span class="chip papertag" style="font-size:10px;padding:1px 8px">tagged</span>` : '';
+        const preview = e.msg ? `<span class="muted" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${e.msg.slice(0, 90)}</span>` : '';
+        const desc = e.msg ? `<div class="desc">${e.msg}</div>` : `<div class="desc muted">no agent note recorded</div>`;
+        return `<details class="rowd"><summary><span class="n" style="min-width:110px">${label}</span><span class="muted">${e.time}</span>` +
+               `<span class="add">+${e.add}</span><span class="rm">−${e.rm}</span>${badge}${preview}</summary>${desc}</details>`;
+      }).join('')
+    : '<span class="muted">no paper edits committed yet</span>';
+
+  lapTimeline(s.gate_history, s.reviews);
+  const gh = s.gate_history[s.gate_history.length - 1];
+  document.getElementById('lastevent').textContent = gh
+    ? `last: lap ${gh.iter} at ${gh.time} — ${gh.fails === 0 ? 'all gates passed' : gh.fails + ' gate(s) failed'}`
+    : '';
+
+  const scoreByIter = Object.fromEntries(s.reviews.map(r => [r.iter, r.rubric ?? r.overall]));
+  document.getElementById('drafts').innerHTML = s.drafts.length
+    ? s.drafts.slice().reverse().map(d =>
+        `<div class="draft" onclick="showDraft('${d.path}', ${d.iter})">
+           <span class="n" style="min-width:110px">${d.tag ? d.tag : 'draft'} · lap ${d.iter}</span>
+           <span class="s">${scoreByIter[d.iter] !== undefined ? scoreByIter[d.iter] + '/10' : '–'}</span>
+           <span class="muted">${d.kb} KB</span>
+           ${d.tag ? '<span class="chip papertag" style="font-size:10px;padding:1px 8px">tagged</span>' : ''}
+         </div>`).join('')
+    : '<span class="muted">snapshots appear every 3rd lap</span>';
+
+  document.getElementById('editorial').textContent = s.editorial || '(appears after the first editor lap)';
+  document.getElementById('scores').innerHTML = s.reviews.length
+    ? s.reviews.map(r => `<span><b>${r.rubric != null ? r.rubric + ' | ' + r.overall : r.overall}</b><small>lap ${r.iter}${r.confirm != null ? ' · 2nd read ' + r.confirm : ''}</small>` +
+        (r.ledger ? `<small>${r.ledger.resolved} fixed · ${r.ledger.persisting} open · ${r.ledger.new} new</small>` : '') + `</span>`).join('')
+    : '<span class="muted">no reviews yet</span>';
+  const lastLed = [...s.reviews].reverse().find(r => r.ledger)?.ledger;
+  if (lastLed?.oldest) document.getElementById('scorerec').textContent += ` · oldest open: ${lastLed.oldest}`;
+  sparkline(s.reviews);
+
+  document.getElementById('todo').textContent = s.todo || '(empty)';
+  document.getElementById('tags').innerHTML = s.tags.length
+    ? s.tags.map(t => `<span class="chip ${t.startsWith('paper')?'papertag':'tag'}">${t}</span>`).join(' ')
+    : '<span class="muted">none yet</span>';
+  document.getElementById('agent').textContent = (s.agent_msg.file ? s.agent_msg.file + '\n\n' : '') + (s.agent_msg.text || '(none yet)');
+  document.getElementById('verify').textContent = s.verify_tail || '(empty)';
+  document.getElementById('meta').textContent = `updated ${s.generated} · ${s.branch} · ${s.last_commit}` +
+    (s.run_elapsed != null ? ` · run total ${fmtDur(s.run_elapsed)}` : '');
+}
+refresh();
+setInterval(refresh, 3000);
+</script>
+</body>
+</html>

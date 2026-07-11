@@ -1,0 +1,2932 @@
+R00001.00    [PUBID]                                        Survey Year: 1997
+  PRIMARY VARIABLE
+
+             PUBID, YOUTH CASE IDENTIFICATION CODE
+ 
+COMMENT: YOUTH CASE IDENTIFICATION CODE
+ 
+       0           0
+     998           1 TO 999
+     999        1000 TO 1999
+     997        2000 TO 2999
+     996        3000 TO 3999
+     998        4000 TO 4999
+     996        5000 TO 5999
+     994        6000 TO 6999
+     994        7000 TO 7999
+     989        8000 TO 8999
+      23        9000 TO 9999
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              1        Max:           9022        Mean:              4504.3
+ 
+Lead In: R72976.00[Default]
+Default Next Question: R05363.00
+--------------------------------------------------------------------------------
+R05363.00    [KEY!SEX]                                      Survey Year: 1997
+  PRIMARY VARIABLE
+
+             KEY!SEX, RS SEX (SYMBOL)
+ 
+COMMENT: Sex of Youth
+ 
+    4599       1 Male
+    4385       2 Female
+       0       0 No Information
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              1        Max:              2        Mean:                1.49
+ 
+Lead In: R00001.00[Default]
+Default Next Question: R05364.00
+--------------------------------------------------------------------------------
+R05364.01    [KEY!BDATE_M]                                  Survey Year: 1997
+  PRIMARY VARIABLE
+
+             KEY!BDATE, RS BIRTHDATE MONTH/YEAR (SYMBOL)
+ 
+COMMENT: Birthdate of Youth
+ 
+     816           1: January
+     693           2: February
+     760           3: March
+     659           4: April
+     689           5: May
+     720           6: June
+     762           7: July
+     782           8: August
+     839           9: September
+     765          10: October
+     763          11: November
+     736          12: December
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              1        Max:             12        Mean:                6.56
+ 
+Earliest (NonMissing): JANUARY/1980
+Latest   (NonMissing): DECEMBER/1984
+ 
+Lead In: None.
+Default Next Question: R05364.02
+--------------------------------------------------------------------------------
+R05364.02    [KEY!BDATE_Y]                                  Survey Year: 1997
+  PRIMARY VARIABLE
+
+             KEY!BDATE, RS BIRTHDATE MONTH/YEAR (SYMBOL)
+ 
+COMMENT: Birthdate of Youth
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:           1980        Max:           1984        Mean:             1982.01
+ 
+Earliest (NonMissing): JANUARY/1980
+Latest   (NonMissing): DECEMBER/1984
+ 
+Lead In: R05364.01[Default]
+Default Next Question: R05366.00
+--------------------------------------------------------------------------------
+R12045.00    [CV_INCOME_GROSS_YR]                           Survey Year: 1997
+  PRIMARY VARIABLE
+
+             GROSS HH INCOME IN PAST YEAR
+ 
+Gross household income in the previous year.
+ 
+NOTE: /*Topcoded at the 2% level.  Truncated values are applied to the top 2 
+percent of respondents with valid non-missing responses.  The average value of 
+the top 2 percent of cases is used as the value.  Negative values of -1, -2, -3,
+-4, or -5 do not reflect negative monetary amounts; these numbers represent 
+standard NLSY97 codes.*/
+ 
+       3     -999999 TO -3000: < -2999
+       0       -2999 TO -2000
+       0       -1999 TO -1000
+       0        -999 TO -1
+     100           0
+      71           1 TO 1000
+      41        1001 TO 2000
+      98        2001 TO 3000
+     139        3001 TO 5000
+     465        5001 TO 10000
+     925       10001 TO 20000
+     819       20001 TO 30000
+     835       30001 TO 40000
+     765       40001 TO 50000
+     834       50001 TO 65000
+     610       65001 TO 80000
+     397       80001 TO 100000
+     321      100001 TO 150000
+      32      150001 TO 200000
+     133      200001 TO 999999: 200001+
+  -------
+    6588
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)    1458
+TOTAL =========>    8046   VALID SKIP(-4)     938     NON-INTERVIEW(-5)       0
+ 
+Min:         -48100        Max:         246474        Mean:             46361.7
+ 
+Lead In: R13027.00[Default]
+Default Next Question: R12046.00
+--------------------------------------------------------------------------------
+R12047.00    [CV_HH_NET_WORTH_P]                            Survey Year: 1997
+  PRIMARY VARIABLE
+
+             NET WORTH OF HOUSEHOLD ACCORDING TO PARENT
+ 
+Household net worth.
+ 
+COMMENT: from parent interview
+ 
+NOTE: /*Topcoded at predetermined values.  Respondents with household net worth 
+values above $600,000 were topcoded to a value of $600,000.  Negative values of 
+-1, -2, -3, -4, or -5 do not reflect negative monetary amounts; these numbers 
+represent standard NLSY97 codes.*/
+ 
+     286     -999999 TO -3000: < -2999
+      37       -2999 TO -2000
+      56       -1999 TO -1000
+      47        -999 TO -6
+       3           0
+     313           1 TO 1000
+     273        1001 TO 2000
+     160        2001 TO 3000
+     426        3001 TO 5000
+     507        5001 TO 10000
+     602       10001 TO 20000
+     435       20001 TO 30000
+     334       30001 TO 40000
+     285       40001 TO 50000
+     393       50001 TO 65000
+     304       65001 TO 80000
+     321       80001 TO 100000
+     567      100001 TO 150000
+     350      150001 TO 200000
+     677      200001 TO 500000
+     243      500001 TO 1000000
+       0     1000001 TO 1500000
+       0     1500001 TO 2000000
+       0     2000001 TO 999999999: 2000001+
+  -------
+    6619
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)    1314
+TOTAL =========>    7933   VALID SKIP(-4)    1051     NON-INTERVIEW(-5)       0
+ 
+Min:        -935251        Max:         600000        Mean:            90180.98
+ 
+Lead In: R12046.00[Default]
+Default Next Question: R12048.00
+--------------------------------------------------------------------------------
+R12048.00    [CV_HH_NET_WORTH_Y]                            Survey Year: 1997
+  PRIMARY VARIABLE
+
+             NET WORTH OF HOUSEHOLD ACCORDING TO R
+ 
+Household net worth.
+ 
+COMMENT: from youth interview
+ 
+NOTE: /*Topcoded at predetermined values.  Respondents with household net worth 
+values above $600,000 were topcoded to a value of $600,000.  Negative values of 
+-1, -2, -3, -4, or -5 do not reflect negative monetary amounts; these numbers 
+represent standard NLSY97 codes.*/
+ 
+       1     -999999 TO -3000: < -2999
+       0       -2999 TO -2000
+       1       -1999 TO -1000
+       0        -999 TO -6
+       0           0
+     105           1 TO 1000
+      24        1001 TO 2000
+       5        2001 TO 3000
+      30        3001 TO 5000
+      32        5001 TO 10000
+      26       10001 TO 20000
+       3       20001 TO 30000
+      16       30001 TO 40000
+       5       40001 TO 50000
+       6       50001 TO 65000
+       8       65001 TO 80000
+       1       80001 TO 100000
+       6      100001 TO 150000
+       3      150001 TO 200000
+       1      200001 TO 500000
+       5      500001 TO 1000000
+       0     1000001 TO 1500000
+       0     1500001 TO 2000000
+       0     2000001 TO 999999999: 2000001+
+  -------
+     278
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)     154
+TOTAL =========>     432   VALID SKIP(-4)    8552     NON-INTERVIEW(-5)       0
+ 
+Min:          -6500        Max:         600000        Mean:            26510.28
+ 
+Lead In: R12047.00[Default]
+Default Next Question: R12049.00
+--------------------------------------------------------------------------------
+R12358.00    [CV_SAMPLE_TYPE]                               Survey Year: 1997
+  PRIMARY VARIABLE
+
+             SAMPLE TYPE.  CROSS-SECTIONAL OR OVERSAMPLE
+ 
+Sample type: Is the respondent a member of the cross-sectional sample or the 
+oversample?
+ 
+    6748       1 Cross-sectional
+    2236       0 Oversample
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:              1        Mean:                 .75
+ 
+Lead In: R12338.00[Default]
+Default Next Question: R12359.00
+--------------------------------------------------------------------------------
+R12361.00    [SAMPLING_WEIGHT]                              Survey Year: 1997
+  TERTIARY VARIABLE
+
+             ROUND 1 SAMPLING WEIGHT
+ 
+Sampling Weight - 1 thru 9999999  (2 implied decimal places)
+ 
+NOTE: 1 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+       0           0
+    1804       30000 TO 59999: 300.00-599.99
+     305       60000 TO 99999: 600.00-999.99
+     110      100000 TO 149999: 1000.00-1499.99
+    1217      150000 TO 199999: 1500.00-1999.99
+     636      200000 TO 249999: 2000.00-2499.99
+    3247      250000 TO 299999: 2500.00-2999.99
+    1459      300000 TO 349999: 3000.00-3499.99
+     109      350000 TO 399999: 3500.00-3999.99
+      33      400000 TO 449999: 4000.00-4499.99
+      20      450000 TO 499999: 4500.00-4999.99
+      13      500000 TO 549999: 5000.00-5499.99
+      18      550000 TO 599999: 5500.00-5999.99
+       2      600000 TO 649999: 6000.00-6499.99
+       2      650000 TO 699999: 6500.00-6999.99
+       1      700000 TO 749999: 7000.00-7499.99
+       3      750000 TO 799999: 7500.00-7999.99
+       1      800000 TO 849999: 8000.00-8499.99
+       4      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:          32330        Max:        1575942        Mean:           215699.61
+ 
+Lead In: R12360.00[Default]
+Default Next Question: R12361.01
+--------------------------------------------------------------------------------
+R12361.01    [SAMPLING_WEIGHT_CC]                           Survey Year: 1997
+  PRIMARY VARIABLE
+
+             ROUND 1 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+       0           0
+       0       30000 TO 59999: 300.00-599.99
+    1445       60000 TO 99999: 600.00-999.99
+    1883      100000 TO 149999: 1000.00-1499.99
+     214      150000 TO 199999: 1500.00-1999.99
+     514      200000 TO 249999: 2000.00-2499.99
+    3354      250000 TO 299999: 2500.00-2999.99
+    1442      300000 TO 349999: 3000.00-3499.99
+      97      350000 TO 399999: 3500.00-3999.99
+      22      400000 TO 449999: 4000.00-4499.99
+       8      450000 TO 499999: 4500.00-4999.99
+       4      500000 TO 549999: 5000.00-5499.99
+       0      550000 TO 599999: 5500.00-5999.99
+       0      600000 TO 649999: 6000.00-6499.99
+       0      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:          76071        Max:        1576182        Mean:           215699.61
+ 
+Lead In: R12361.00[Default]
+Default Next Question: R12362.01
+--------------------------------------------------------------------------------
+R14826.00    [KEY!RACE_ETHNICITY]                           Survey Year: 1997
+  PRIMARY VARIABLE
+
+             KEY!RACE_ETHNICITY, COMBINED RACE AND ETHNICITY (SYMBOL)
+ 
+COMMENT: Combined race - ethnicity variable
+ 
+    2335       1 Black
+    1901       2 Hispanic
+      83       3 Mixed Race (Non-Hispanic)
+    4665       4 Non-Black / Non-Hispanic
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              1        Max:              4        Mean:                2.79
+ 
+Lead In: R05387.00[Default]
+Default Next Question: R05389.00
+--------------------------------------------------------------------------------
+R25633.00    [CV_INCOME_GROSS_YR]                           Survey Year: 1998
+  PRIMARY VARIABLE
+
+             GROSS HH INCOME IN PAST YEAR
+ 
+Gross household income in the previous year.
+ 
+NOTE: /*Topcoded at the 2% level.  Truncated values are applied to the top 2 
+percent of respondents with valid non-missing responses.  The average value of 
+the top 2 percent of cases is used as the value.  Negative values of -1, -2, -3,
+-4, or -5 do not reflect negative monetary amounts; these numbers represent 
+standard NLSY97 codes.*/
+ 
+       0     -999999 TO -3000: < -2999
+       0       -2999 TO -2000
+       0       -1999 TO -1000
+       0        -999 TO -1
+      77           0
+      36           1 TO 1000
+      19        1001 TO 2000
+      34        2001 TO 3000
+      33        3001 TO 5000
+      79        5001 TO 10000
+     142       10001 TO 20000
+      85       20001 TO 30000
+     123       30001 TO 40000
+      84       40001 TO 50000
+      91       50001 TO 65000
+      95       65001 TO 80000
+      64       80001 TO 100000
+      47      100001 TO 150000
+       0      150001 TO 200000
+      40      200001 TO 999999: 200001+
+  -------
+    1049
+ 
+Refusal(-1)           25
+Don't Know(-2)       744
+Invalid Skip(-3)      17
+TOTAL =========>    1835   VALID SKIP(-4)    6551     NON-INTERVIEW(-5)     598
+ 
+Min:              0        Max:         425586        Mean:            51228.72
+ 
+Lead In: R25632.01[Default]
+Default Next Question: R25634.00
+--------------------------------------------------------------------------------
+R25634.00    [CV_HH_NET_WORTH_Y]                            Survey Year: 1998
+  PRIMARY VARIABLE
+
+             NET WORTH OF HOUSEHOLD ACCORDING TO R
+ 
+Household net worth.
+ 
+COMMENT: from youth interview
+ 
+NOTE: /*Topcoded at predetermined values.  Respondents with household net worth 
+values above $600,000 were topcoded to a value of $600,000.  Negative values of 
+-1, -2, -3, -4, or -5 do not reflect negative monetary amounts; these numbers 
+represent standard NLSY97 codes.*/
+ 
+      10     -999999 TO -3000: < -2999
+       0       -2999 TO -2000
+       2       -1999 TO -1000
+       1        -999 TO -1
+       1           0
+      10           1 TO 1000
+      12        1001 TO 2000
+     686        2001 TO 3000
+     124        3001 TO 5000
+     282        5001 TO 10000
+     151       10001 TO 20000
+      20       20001 TO 30000
+      51       30001 TO 40000
+      16       40001 TO 50000
+       1       50001 TO 65000
+      32       65001 TO 80000
+       6       80001 TO 100000
+       0      100001 TO 150000
+      33      150001 TO 200000
+      28      200001 TO 999999999: 200001+
+  -------
+    1466
+ 
+Refusal(-1)           49
+Don't Know(-2)       319
+Invalid Skip(-3)       1
+TOTAL =========>    1835   VALID SKIP(-4)    6551     NON-INTERVIEW(-5)     598
+ 
+Min:         -45000        Max:         517500        Mean:            17486.47
+ 
+Lead In: R25633.00[Default]
+Default Next Question: R25635.00
+--------------------------------------------------------------------------------
+R26003.00    [SAMPLING_WEIGHT]                              Survey Year: 1998
+  TERTIARY VARIABLE
+
+             ROUND 2 SAMPLING WEIGHT
+ 
+Sampling Weight - 1 thru 9999999  (2 implied decimal places)
+ 
+NOTE: 1 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+     598           0
+    1423       30000 TO 59999: 300.00-599.99
+     559       60000 TO 99999: 600.00-999.99
+      50      100000 TO 149999: 1000.00-1499.99
+     825      150000 TO 199999: 1500.00-1999.99
+     849      200000 TO 249999: 2000.00-2499.99
+    1681      250000 TO 299999: 2500.00-2999.99
+    2376      300000 TO 349999: 3000.00-3499.99
+     505      350000 TO 399999: 3500.00-3999.99
+      43      400000 TO 449999: 4000.00-4499.99
+      30      450000 TO 499999: 4500.00-4999.99
+       9      500000 TO 549999: 5000.00-5499.99
+      18      550000 TO 599999: 5500.00-5999.99
+       7      600000 TO 649999: 6000.00-6499.99
+       4      650000 TO 699999: 6500.00-6999.99
+       1      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       5      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:         888942        Mean:           215365.68
+ 
+Lead In: R26002.00[Default]
+Default Next Question: R26003.01
+--------------------------------------------------------------------------------
+R26003.01    [SAMPLING_WEIGHT_CC]                           Survey Year: 1998
+  PRIMARY VARIABLE
+
+             ROUND 2 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+     598           0
+       0       30000 TO 59999: 300.00-599.99
+     936       60000 TO 99999: 600.00-999.99
+    2151      100000 TO 149999: 1000.00-1499.99
+     132      150000 TO 199999: 1500.00-1999.99
+     439      200000 TO 249999: 2000.00-2499.99
+    1715      250000 TO 299999: 2500.00-2999.99
+    2457      300000 TO 349999: 3000.00-3499.99
+     495      350000 TO 399999: 3500.00-3999.99
+      35      400000 TO 449999: 4000.00-4499.99
+      15      450000 TO 499999: 4500.00-4999.99
+       6      500000 TO 549999: 5000.00-5499.99
+       4      550000 TO 599999: 5500.00-5999.99
+       0      600000 TO 649999: 6000.00-6499.99
+       0      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1671819        Mean:           215699.62
+ 
+Lead In: R26003.00[Default]
+Default Next Question: R26004.01
+--------------------------------------------------------------------------------
+R38849.00    [CV_INCOME_GROSS_YR]                           Survey Year: 1999
+  PRIMARY VARIABLE
+
+             GROSS HH INCOME IN PAST YEAR
+ 
+Gross household income in the previous year.
+ 
+NOTE: /*Topcoded at the 2% level.  Truncated values are applied to the top 2 
+percent of respondents with valid non-missing responses.  The average value of 
+the top 2 percent of cases is used as the value.  Negative values of -1, -2, -3,
+-4, or -5 do not reflect negative monetary amounts; these numbers represent 
+standard NLSY97 codes.*/
+ 
+       0     -999999 TO -3000: < -2999
+       0       -2999 TO -2000
+       0       -1999 TO -1000
+       0        -999 TO -1
+     155           0
+      47           1 TO 1000
+      38        1001 TO 2000
+      86        2001 TO 3000
+      66        3001 TO 5000
+     206        5001 TO 10000
+     332       10001 TO 20000
+     200       20001 TO 30000
+     232       30001 TO 40000
+     200       40001 TO 50000
+     242       50001 TO 65000
+     217       65001 TO 80000
+     162       80001 TO 100000
+     150      100001 TO 150000
+      66      150001 TO 200000
+      58      200001 TO 999999: 200001+
+  -------
+    2457
+ 
+Refusal(-1)           47
+Don't Know(-2)       590
+Invalid Skip(-3)      10
+TOTAL =========>    3104   VALID SKIP(-4)    5104     NON-INTERVIEW(-5)     776
+ 
+Min:              0        Max:         291681        Mean:            48698.22
+ 
+Lead In: R38848.01[Default]
+Default Next Question: R38850.00
+--------------------------------------------------------------------------------
+R38850.00    [CV_HH_NET_WORTH_Y]                            Survey Year: 1999
+  PRIMARY VARIABLE
+
+             NET WORTH OF HOUSEHOLD ACCORDING TO R
+ 
+Household net worth.
+ 
+COMMENT: from youth interview
+ 
+NOTE: /*Topcoded at predetermined values.  Respondents with household net worth 
+values above $600,000 were topcoded to a value of $600,000.  Negative values of 
+-1, -2, -3, -4, or -5 do not reflect negative monetary amounts; these numbers 
+represent standard NLSY97 codes.*/
+ 
+      25     -999999 TO -3000: < -2999
+       3       -2999 TO -2000
+       8       -1999 TO -1000
+      13        -999 TO -1
+       2           0
+      23           1 TO 1000
+      40        1001 TO 2000
+     963        2001 TO 3000
+     303        3001 TO 5000
+     518        5001 TO 10000
+     330       10001 TO 20000
+      78       20001 TO 30000
+     110       30001 TO 40000
+      41       40001 TO 50000
+      25       50001 TO 65000
+     102       65001 TO 80000
+      21       80001 TO 100000
+      14      100001 TO 150000
+      58      150001 TO 200000
+      51      200001 TO 999999999: 200001+
+  -------
+    2728
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)     376
+TOTAL =========>    3104   VALID SKIP(-4)    5104     NON-INTERVIEW(-5)     776
+ 
+Min:         -51500        Max:         600000        Mean:            21171.64
+ 
+Lead In: R38849.00[Default]
+Default Next Question: R38851.00
+--------------------------------------------------------------------------------
+R39237.00    [SAMPLING_WEIGHT]                              Survey Year: 1999
+  TERTIARY VARIABLE
+
+             ROUND 3 SAMPLING WEIGHT
+ 
+Sampling Weight - 1 thru 9999999  (2 implied decimal places)
+ 
+NOTE: 1 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+     776           0
+    1230       30000 TO 59999: 300.00-599.99
+     677       60000 TO 99999: 600.00-999.99
+      53      100000 TO 149999: 1000.00-1499.99
+     762      150000 TO 199999: 1500.00-1999.99
+     785      200000 TO 249999: 2000.00-2499.99
+    1387      250000 TO 299999: 2500.00-2999.99
+    2453      300000 TO 349999: 3000.00-3499.99
+     727      350000 TO 399999: 3500.00-3999.99
+      52      400000 TO 449999: 4000.00-4499.99
+      32      450000 TO 499999: 4500.00-4999.99
+      13      500000 TO 549999: 5000.00-5499.99
+       8      550000 TO 599999: 5500.00-5999.99
+      13      600000 TO 649999: 6000.00-6499.99
+       2      650000 TO 699999: 6500.00-6999.99
+       5      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       2      800000 TO 849999: 8000.00-8499.99
+       7      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1664436        Mean:           215668.92
+ 
+Lead In: R39236.00[Default]
+Default Next Question: R39237.01
+--------------------------------------------------------------------------------
+R39237.01    [SAMPLING_WEIGHT_CC]                           Survey Year: 1999
+  PRIMARY VARIABLE
+
+             ROUND 3 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+     776           0
+       0       30000 TO 59999: 300.00-599.99
+     654       60000 TO 99999: 600.00-999.99
+    2291      100000 TO 149999: 1000.00-1499.99
+     177      150000 TO 199999: 1500.00-1999.99
+     383      200000 TO 249999: 2000.00-2499.99
+    1419      250000 TO 299999: 2500.00-2999.99
+    2492      300000 TO 349999: 3000.00-3499.99
+     715      350000 TO 399999: 3500.00-3999.99
+      50      400000 TO 449999: 4000.00-4499.99
+      14      450000 TO 499999: 4500.00-4999.99
+       8      500000 TO 549999: 5000.00-5499.99
+       3      550000 TO 599999: 5500.00-5999.99
+       1      600000 TO 649999: 6000.00-6499.99
+       0      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1664680        Mean:           215699.61
+ 
+Lead In: R39237.00[Default]
+Default Next Question: R39585.01
+--------------------------------------------------------------------------------
+R54641.00    [CV_INCOME_GROSS_YR]                           Survey Year: 2000
+  PRIMARY VARIABLE
+
+             GROSS HH INCOME IN PAST YEAR
+ 
+Gross household income in the previous year.
+ 
+NOTE: /*Topcoded at the 2% level.  Truncated values are applied to the top 2 
+percent of respondents with valid non-missing responses.  The average value of 
+the top 2 percent of cases is used as the value.  Negative values of -1, -2, -3,
+-4, or -5 do not reflect negative monetary amounts; these numbers represent 
+standard NLSY97 codes.*/
+ 
+       0     -999999 TO -3000: < -2999
+       0       -2999 TO -2000
+       0       -1999 TO -1000
+       0        -999 TO -1
+     176           0
+      59           1 TO 1000
+      46        1001 TO 2000
+     111        2001 TO 3000
+     103        3001 TO 5000
+     305        5001 TO 10000
+     414       10001 TO 20000
+     355       20001 TO 30000
+     367       30001 TO 40000
+     251       40001 TO 50000
+     324       50001 TO 65000
+     311       65001 TO 80000
+     276       80001 TO 100000
+     244      100001 TO 150000
+      70      150001 TO 200000
+      89      200001 TO 999999: 200001+
+  -------
+    3501
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)    1083
+TOTAL =========>    4584   VALID SKIP(-4)    3496     NON-INTERVIEW(-5)     904
+ 
+Min:              0        Max:         270543        Mean:            49837.77
+ 
+Lead In: R54640.01[Default]
+Default Next Question: R54642.00
+--------------------------------------------------------------------------------
+R54642.00    [CV_HH_NET_WORTH_Y]                            Survey Year: 2000
+  PRIMARY VARIABLE
+
+             NET WORTH OF HOUSEHOLD ACCORDING TO R
+ 
+Household net worth.
+ 
+COMMENT: from youth interview
+ 
+NOTE: /*Topcoded at predetermined values.  Respondents with household net worth 
+values above $600,000 were topcoded to a value of $600,000.  Negative values of 
+-1, -2, -3, -4, or -5 do not reflect negative monetary amounts; these numbers 
+represent standard NLSY97 codes.*/
+ 
+      36     -999999 TO -3000: < -2999
+       9       -2999 TO -2000
+      17       -1999 TO -1000
+      22        -999 TO -1
+       5           0
+      27           1 TO 1000
+      70        1001 TO 2000
+    1106        2001 TO 3000
+     410        3001 TO 5000
+     758        5001 TO 10000
+     556       10001 TO 20000
+     162       20001 TO 30000
+     168       30001 TO 40000
+      58       40001 TO 50000
+      27       50001 TO 65000
+     110       65001 TO 80000
+      34       80001 TO 100000
+      17      100001 TO 150000
+      86      150001 TO 200000
+      60      200001 TO 999999999: 200001+
+  -------
+    3738
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)     425
+TOTAL =========>    4163   VALID SKIP(-4)    3917     NON-INTERVIEW(-5)     904
+ 
+Min:         -78100        Max:         509525        Mean:            20583.69
+ 
+Lead In: R54641.00[Default]
+Default Next Question: R54643.00
+--------------------------------------------------------------------------------
+R55105.00    [SAMPLING_WEIGHT]                              Survey Year: 2000
+  TERTIARY VARIABLE
+
+             ROUND 4 SAMPLING WEIGHT OLD METHOD
+ 
+Sampling Weight - Created using same method as in previous rounds   0 thru 
+9999999  (2 implied decimal places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+     904           0
+    1294       30000 TO 59999: 300.00-599.99
+     602       60000 TO 99999: 600.00-999.99
+      56      100000 TO 149999: 1000.00-1499.99
+     648      150000 TO 199999: 1500.00-1999.99
+     825      200000 TO 249999: 2000.00-2499.99
+    1148      250000 TO 299999: 2500.00-2999.99
+    2480      300000 TO 349999: 3000.00-3499.99
+     817      350000 TO 399999: 3500.00-3999.99
+     117      400000 TO 449999: 4000.00-4499.99
+      39      450000 TO 499999: 4500.00-4999.99
+      16      500000 TO 549999: 5000.00-5499.99
+      16      550000 TO 599999: 5500.00-5999.99
+       5      600000 TO 649999: 6000.00-6499.99
+       5      650000 TO 699999: 6500.00-6999.99
+       2      700000 TO 749999: 7000.00-7499.99
+       1      750000 TO 799999: 7500.00-7999.99
+       3      800000 TO 849999: 8000.00-8499.99
+       6      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1694784        Mean:           215669.67
+ 
+Lead In: R55104.00[Default]
+Default Next Question: R55106.00
+--------------------------------------------------------------------------------
+R55106.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2000
+  PRIMARY VARIABLE
+
+             ROUND 4 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+     904           0
+       0       30000 TO 59999: 300.00-599.99
+     615       60000 TO 99999: 600.00-999.99
+    2311      100000 TO 149999: 1000.00-1499.99
+     157      150000 TO 199999: 1500.00-1999.99
+     358      200000 TO 249999: 2000.00-2499.99
+    1154      250000 TO 299999: 2500.00-2999.99
+    2531      300000 TO 349999: 3000.00-3499.99
+     811      350000 TO 399999: 3500.00-3999.99
+     108      400000 TO 449999: 4000.00-4499.99
+      21      450000 TO 499999: 4500.00-4999.99
+       9      500000 TO 549999: 5000.00-5499.99
+       3      550000 TO 599999: 5500.00-5999.99
+       1      600000 TO 649999: 6000.00-6499.99
+       0      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1695037        Mean:           215699.61
+ 
+Lead In: R55105.00[Default]
+Default Next Question: R55107.00
+--------------------------------------------------------------------------------
+R72278.00    [CV_INCOME_GROSS_YR]                           Survey Year: 2001
+  PRIMARY VARIABLE
+
+             GROSS HH INCOME IN PAST YEAR
+ 
+Gross household income in the previous year.
+ 
+NOTE: /*Topcoded at the 2% level.  Truncated values are applied to the top 2 
+percent of respondents with valid non-missing responses.  The average value of 
+the top 2 percent of cases is used as the value.  Negative values of -1, -2, -3,
+-4, or -5 do not reflect negative monetary amounts; these numbers represent 
+standard NLSY97 codes.*/
+ 
+       0     -999999 TO -3000: < -2999
+       0       -2999 TO -2000
+       0       -1999 TO -1000
+       0        -999 TO -1
+     229           0
+      74           1 TO 1000
+      60        1001 TO 2000
+     118        2001 TO 3000
+     129        3001 TO 5000
+     331        5001 TO 10000
+     628       10001 TO 20000
+     495       20001 TO 30000
+     450       30001 TO 40000
+     396       40001 TO 50000
+     482       50001 TO 65000
+     445       65001 TO 80000
+     378       80001 TO 100000
+     402      100001 TO 150000
+      98      150001 TO 200000
+     129      200001 TO 999999: 200001+
+  -------
+    4844
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)    1049
+TOTAL =========>    5893   VALID SKIP(-4)    1989     NON-INTERVIEW(-5)    1102
+ 
+Min:              0        Max:         285805        Mean:            52665.29
+ 
+Lead In: R72277.01[Default]
+Default Next Question: R72279.00
+--------------------------------------------------------------------------------
+R72279.00    [CV_HH_NET_WORTH_Y]                            Survey Year: 2001
+  PRIMARY VARIABLE
+
+             NET WORTH OF HOUSEHOLD ACCORDING TO R
+ 
+Household net worth.
+ 
+COMMENT: from youth interview
+ 
+NOTE: /*Topcoded at predetermined values.  Respondents with household net worth 
+values above $600,000 were topcoded to a value of $600,000.  Negative values of 
+-1, -2, -3, -4, or -5 do not reflect negative monetary amounts; these numbers 
+represent standard NLSY97 codes.*/
+ 
+      56     -999999 TO -3000: < -2999
+      15       -2999 TO -2000
+      16       -1999 TO -1000
+      17        -999 TO -1
+       7           0
+      27           1 TO 1000
+      61        1001 TO 2000
+     885        2001 TO 3000
+     383        3001 TO 5000
+     797        5001 TO 10000
+     611       10001 TO 20000
+     145       20001 TO 30000
+     219       30001 TO 40000
+      77       40001 TO 50000
+      21       50001 TO 65000
+     122       65001 TO 80000
+      43       80001 TO 100000
+      16      100001 TO 150000
+      83      150001 TO 200000
+      66      200001 TO 999999999: 200001+
+  -------
+    3667
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)     299
+TOTAL =========>    3966   VALID SKIP(-4)    3916     NON-INTERVIEW(-5)    1102
+ 
+Min:         -97500        Max:         600000        Mean:            22971.64
+ 
+Lead In: R72278.00[Default]
+Default Next Question: R72280.00
+--------------------------------------------------------------------------------
+R72742.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2001
+  PRIMARY VARIABLE
+
+             ROUND 5 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    1102           0
+       0       30000 TO 59999: 300.00-599.99
+     418       60000 TO 99999: 600.00-999.99
+    2335      100000 TO 149999: 1000.00-1499.99
+     218      150000 TO 199999: 1500.00-1999.99
+     322      200000 TO 249999: 2000.00-2499.99
+     854      250000 TO 299999: 2500.00-2999.99
+    2680      300000 TO 349999: 3000.00-3499.99
+     888      350000 TO 399999: 3500.00-3999.99
+     130      400000 TO 449999: 4000.00-4499.99
+      22      450000 TO 499999: 4500.00-4999.99
+       9      500000 TO 549999: 5000.00-5499.99
+       4      550000 TO 599999: 5500.00-5999.99
+       1      600000 TO 649999: 6000.00-6499.99
+       0      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1727702        Mean:           215699.61
+ 
+Lead In: R72735.00[Default]
+Default Next Question: R72743.00
+--------------------------------------------------------------------------------
+R98707.00    [TRANS_CRD_GPA_YR_9293]                        Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA 92_93
+ 
+Credit weighted GPA by Academic year 1992-1993.  This variable indicates grade 
+point averages across all courses on a 4 point grading scale. For each course, 
+the quality grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing.  Please see Appendix 11 of 
+the Codebook Supplement for more information on the collection and coding of 
+transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+       0          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+       1          -7: No credits earned
+    6153          -6: No courses taken
+       0           0 TO 99: 0 to .99
+       0         100 TO 199: 1.00 to 1.99
+       0         200 TO 299: 2.00 to 2.99
+       1         300 TO 399: 3.00 to 3.99
+       0         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -8        Max:            300        Mean:               -5.98
+ 
+Lead In: R98706.00[Default]
+Default Next Question: R98708.00
+--------------------------------------------------------------------------------
+R98708.00    [TRANS_CRD_GPA_YR_9394]                        Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA 93_94
+ 
+Credit weighted GPA by Academic year 1993-1994.  This variable indicates grade 
+point averages across all courses on a 4 point grading scale. For each course, 
+the quality grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing.  Please see Appendix 11 of 
+the Codebook Supplement for more information on the collection and coding of 
+transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+       2          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+       6          -7: No credits earned
+    6112          -6: No courses taken
+       0           0 TO 99: 0 to .99
+       2         100 TO 199: 1.00 to 1.99
+      17         200 TO 299: 2.00 to 2.99
+      11         300 TO 399: 3.00 to 3.99
+       5         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            430        Mean:               -4.32
+ 
+Lead In: R98707.00[Default]
+Default Next Question: R98709.00
+--------------------------------------------------------------------------------
+R98709.00    [TRANS_CRD_GPA_YR_9495]                        Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA 94_95
+ 
+Credit weighted GPA by Academic year 1994-1995.  This variable indicates grade 
+point averages across all courses on a 4 point grading scale. For each course, 
+the quality grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing.  Please see Appendix 11 of 
+the Codebook Supplement for more information on the collection and coding of 
+transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+       7          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+      28          -7: No credits earned
+    5396          -6: No courses taken
+       1           0 TO 99: 0 to .99
+      79         100 TO 199: 1.00 to 1.99
+     329         200 TO 299: 2.00 to 2.99
+     295         300 TO 399: 3.00 to 3.99
+      20         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            413        Mean:               27.64
+ 
+Lead In: R98708.00[Default]
+Default Next Question: R98710.00
+--------------------------------------------------------------------------------
+R98710.00    [TRANS_CRD_GPA_YR_9596]                        Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA 95_96
+ 
+Credit weighted GPA by Academic year 1995-1996.  This variable indicates grade 
+point averages across all courses on a 4 point grading scale. For each course, 
+the quality grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing.  Please see Appendix 11 of 
+the Codebook Supplement for more information on the collection and coding of 
+transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+      13          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+      71          -7: No credits earned
+    4082          -6: No courses taken
+      12           0 TO 99: 0 to .99
+     226         100 TO 199: 1.00 to 1.99
+     874         200 TO 299: 2.00 to 2.99
+     824         300 TO 399: 3.00 to 3.99
+      53         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            423        Mean:                  86
+ 
+Lead In: R98709.00[Default]
+Default Next Question: R98711.00
+--------------------------------------------------------------------------------
+R98711.00    [TRANS_CRD_GPA_YR_9697]                        Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA 96_97
+ 
+Credit weighted GPA by Academic year 1996-1997.  This variable indicates grade 
+point averages across all courses on a 4 point grading scale. For each course, 
+the quality grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing.  Please see Appendix 11 of 
+the Codebook Supplement for more information on the collection and coding of 
+transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+      16          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+     125          -7: No credits earned
+    2884          -6: No courses taken
+      17           0 TO 99: 0 to .99
+     364         100 TO 199: 1.00 to 1.99
+    1363         200 TO 299: 2.00 to 2.99
+    1304         300 TO 399: 3.00 to 3.99
+      82         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            426        Mean:              139.18
+ 
+Lead In: R98710.00[Default]
+Default Next Question: R98712.00
+--------------------------------------------------------------------------------
+R98712.00    [TRANS_CRD_GPA_YR_9798]                        Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA 97_98
+ 
+Credit weighted GPA by Academic year 1997-1998.  This variable indicates grade 
+point averages across all courses on a 4 point grading scale. For each course, 
+the quality grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing.  Please see Appendix 11 of 
+the Codebook Supplement for more information on the collection and coding of 
+transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+      22          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+     155          -7: No credits earned
+    1867          -6: No courses taken
+      27           0 TO 99: 0 to .99
+     433         100 TO 199: 1.00 to 1.99
+    1778         200 TO 299: 2.00 to 2.99
+    1752         300 TO 399: 3.00 to 3.99
+     121         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            419        Mean:              185.86
+ 
+Lead In: R98711.00[Default]
+Default Next Question: R98713.00
+--------------------------------------------------------------------------------
+R98713.00    [TRANS_CRD_GPA_YR_9899]                        Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA 98_99
+ 
+Credit weighted GPA by Academic year 1998-1999.  This variable indicates grade 
+point averages across all courses on a 4 point grading scale. For each course, 
+the quality grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing.  Please see Appendix 11 of 
+the Codebook Supplement for more information on the collection and coding of 
+transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+      21          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+     139          -7: No credits earned
+    1580          -6: No courses taken
+      19           0 TO 99: 0 to .99
+     479         100 TO 199: 1.00 to 1.99
+    1846         200 TO 299: 2.00 to 2.99
+    1945         300 TO 399: 3.00 to 3.99
+     126         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            419        Mean:              201.19
+ 
+Lead In: R98712.00[Default]
+Default Next Question: R98714.00
+--------------------------------------------------------------------------------
+R98714.00    [TRANS_CRD_GPA_YR_9900]                        Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA 99_00
+ 
+Credit weighted GPA by Academic year 1999-2000.  This variable indicates grade 
+point averages across all courses on a 4 point grading scale. For each course, 
+the quality grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing.  Please see Appendix 11 of 
+the Codebook Supplement for more information on the collection and coding of 
+transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+      11          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+     106          -7: No credits earned
+    2442          -6: No courses taken
+      22           0 TO 99: 0 to .99
+     374         100 TO 199: 1.00 to 1.99
+    1516         200 TO 299: 2.00 to 2.99
+    1584         300 TO 399: 3.00 to 3.99
+     100         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            419        Mean:              162.72
+ 
+Lead In: R98713.00[Default]
+Default Next Question: R98715.00
+--------------------------------------------------------------------------------
+R98715.00    [TRANS_CRD_GPA_YR_0001]                        Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA 00_01
+ 
+Credit weighted GPA by Academic year 2000-2001.  This variable indicates grade 
+point averages across all courses on a 4 point grading scale. For each course, 
+the quality grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing.  Please see Appendix 11 of 
+the Codebook Supplement for more information on the collection and coding of 
+transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+       8          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+      78          -7: No credits earned
+    3583          -6: No courses taken
+      20           0 TO 99: 0 to .99
+     258         100 TO 199: 1.00 to 1.99
+     992         200 TO 299: 2.00 to 2.99
+    1142         300 TO 399: 3.00 to 3.99
+      74         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            421        Mean:              110.85
+ 
+Lead In: R98714.00[Default]
+Default Next Question: R98716.00
+--------------------------------------------------------------------------------
+R98716.00    [TRANS_CRD_GPA_YR_0102]                        Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA 01_02
+ 
+Credit weighted GPA by Academic year 2001-2002.  This variable indicates grade 
+point averages across all courses on a 4 point grading scale. For each course, 
+the quality grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing.  Please see Appendix 11 of 
+the Codebook Supplement for more information on the collection and coding of 
+transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+       5          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+      50          -7: No credits earned
+    4653          -6: No courses taken
+      13           0 TO 99: 0 to .99
+     125         100 TO 199: 1.00 to 1.99
+     589         200 TO 299: 2.00 to 2.99
+     676         300 TO 399: 3.00 to 3.99
+      44         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            415        Mean:                  63
+ 
+Lead In: R98715.00[Default]
+Default Next Question: R98717.00
+--------------------------------------------------------------------------------
+R98717.00    [TRANS_CRD_GPA_YR_0203]                        Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA 02_03
+ 
+Credit weighted GPA by Academic year 2002-2003.  This variable indicates grade 
+point averages across all courses on a 4 point grading scale. For each course, 
+the quality grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing.  Please see Appendix 11 of 
+the Codebook Supplement for more information on the collection and coding of 
+transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+       3          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+      21          -7: No credits earned
+    5693          -6: No courses taken
+       3           0 TO 99: 0 to .99
+      38         100 TO 199: 1.00 to 1.99
+     174         200 TO 299: 2.00 to 2.99
+     207         300 TO 399: 3.00 to 3.99
+      16         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            404        Mean:               14.87
+ 
+Lead In: R98716.00[Default]
+Default Next Question: R98718.00
+--------------------------------------------------------------------------------
+R98718.00    [TRANS_CRD_GPA_YR_0304]                        Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA 03_04
+ 
+Credit weighted GPA by Academic year 2003-2004.  This variable indicates grade 
+point averages across all courses on a 4 point grading scale. For each course, 
+the quality grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing.  Please see Appendix 11 of 
+the Codebook Supplement for more information on the collection and coding of 
+transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+       1          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+       6          -7: No credits earned
+    6105          -6: No courses taken
+       1           0 TO 99: 0 to .99
+       5         100 TO 199: 1.00 to 1.99
+      15         200 TO 299: 2.00 to 2.99
+      17         300 TO 399: 3.00 to 3.99
+       5         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            400        Mean:               -4.02
+ 
+Lead In: R98717.00[Default]
+Default Next Question: R98719.00
+--------------------------------------------------------------------------------
+R98719.00    [TRANS_CRD_GPA_OVERALL]                        Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA ALL
+ 
+Credit weighted overall GPA.  This variable indicates grade point averages 
+across all courses on a 4 point grading scale. For each course, the quality 
+grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing.  Please see Appendix 11 of 
+the Codebook Supplement for more information on the collection and coding of 
+transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+      11          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+     130          -7: No credits earned
+      10          -6: No courses taken
+      32           0 TO 99: 0 to .99
+     522         100 TO 199: 1.00 to 1.99
+    2965         200 TO 299: 2.00 to 2.99
+    2443         300 TO 399: 3.00 to 3.99
+      42         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            417        Mean:              271.26
+ 
+Lead In: R98718.00[Default]
+Default Next Question: R98720.00
+--------------------------------------------------------------------------------
+R98720.00    [TRANS_CRD_GPA_ENGLISH]                        Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA ENG
+ 
+Credit weighted GPA in English.  This variable indicates grade point averages 
+across all courses on a 4 point grading scale. For each course, the quality 
+grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing. Please see Appendix 11 in 
+the codebook supplement for specific courses used to calculate this variable.  
+Please see Appendix 11 of the Codebook Supplement for more information on the 
+collection and coding of transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+      11          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+     281          -7: No credits earned
+      65          -6: No courses taken
+      55           0 TO 99: 0 to .99
+     949         100 TO 199: 1.00 to 1.99
+    2582         200 TO 299: 2.00 to 2.99
+    2039         300 TO 399: 3.00 to 3.99
+     173         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            418        Mean:              253.15
+ 
+Lead In: R98719.00[Default]
+Default Next Question: R98721.00
+--------------------------------------------------------------------------------
+R98721.00    [TRANS_CRD_GPA_FGN_LANG]                       Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA FGN LANG
+ 
+Credit weighted GPA in Foreign Languages.  This variable indicates grade point 
+averages across all courses on a 4 point grading scale. For each course, the 
+quality grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing. Please see Appendix 11 in 
+the codebook supplement for specific courses used to calculate this variable.  
+Please see Appendix 11 of the Codebook Supplement for more information on the 
+collection and coding of transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+      12          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+     341          -7: No credits earned
+    1649          -6: No courses taken
+      50           0 TO 99: 0 to .99
+     634         100 TO 199: 1.00 to 1.99
+    1485         200 TO 299: 2.00 to 2.99
+    1546         300 TO 399: 3.00 to 3.99
+     438         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            430        Mean:              188.47
+ 
+Lead In: R98720.00[Default]
+Default Next Question: R98722.00
+--------------------------------------------------------------------------------
+R98722.00    [TRANS_CRD_GPA_MATH]                           Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA MATH
+ 
+Credit weighted GPA in Math.  This variable indicates grade point averages 
+across all courses on a 4 point grading scale. For each course, the quality 
+grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing. Please see Appendix 11 in 
+the codebook supplement for specific courses used to calculate this variable.  
+Please see Appendix 11 of the Codebook Supplement for more information on the 
+collection and coding of transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+      12          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+     331          -7: No credits earned
+      46          -6: No courses taken
+      54           0 TO 99: 0 to .99
+    1188         100 TO 199: 1.00 to 1.99
+    2745         200 TO 299: 2.00 to 2.99
+    1621         300 TO 399: 3.00 to 3.99
+     158         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            423        Mean:              240.55
+ 
+Lead In: R98721.00[Default]
+Default Next Question: R98723.00
+--------------------------------------------------------------------------------
+R98723.00    [TRANS_CRD_GPA_SOC_SCI]                        Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA SOC SCI
+ 
+Credit weighted GPA in Social Science.  This variable indicates grade point 
+averages across all courses on a 4 point grading scale. For each course, the 
+quality grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing. Please see Appendix 11 in 
+the codebook supplement for specific courses used to calculate this variable.  
+Please see Appendix 11 of the Codebook Supplement for more information on the 
+collection and coding of transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+      14          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+     327          -7: No credits earned
+      90          -6: No courses taken
+      63           0 TO 99: 0 to .99
+     917         100 TO 199: 1.00 to 1.99
+    2395         200 TO 299: 2.00 to 2.99
+    2087         300 TO 399: 3.00 to 3.99
+     262         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            425        Mean:              252.79
+ 
+Lead In: R98722.00[Default]
+Default Next Question: R98724.00
+--------------------------------------------------------------------------------
+R98724.00    [TRANS_CRD_GPA_LP_SCI]                         Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS CRD GPA LP SCI
+ 
+Credit weighted GPA in Life Sciences.  This variable indicates grade point 
+averages across all courses on a 4 point grading scale. For each course, the 
+quality grade (TRANS_CRS_GRADE.xxx) is weighted by Carnegie credits 
+(TRANS_CRS_CARNEGIE_CREDIT.xxx). Quality grades were recoded as follows: 1 = 
+4.3, 2=4.0, 3=3.7, 4=3.3, 5=3.0, 6=2.7, 7=2.3, 8=2.0, 9=1.7, 10=1.3, 11=1.0, 
+12=0.7, 13=0.0, all other values recoded to missing. Please see Appendix 11 in 
+the codebook supplement for specific courses used to calculate this variable.  
+Please see Appendix 11 of the Codebook Supplement for more information on the 
+collection and coding of transcript data.
+ 
+COMMENT: Transcript Survey
+ 
+NOTE: 2 IMPLIED DECIMAL PLACES
+ 
+      13          -9: No courses with valid credits and grades
+      77          -8: Pre-High school only
+     336          -7: No credits earned
+     122          -6: No courses taken
+      69           0 TO 99: 0 to .99
+    1114         100 TO 199: 1.00 to 1.99
+    2569         200 TO 299: 2.00 to 2.99
+    1745         300 TO 399: 3.00 to 3.99
+     187         400 TO 500: 4.00 to 5.00
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:             -9        Max:            424        Mean:              240.56
+ 
+Lead In: R98723.00[Default]
+Default Next Question: R98725.00
+--------------------------------------------------------------------------------
+R98725.00    [TRANS_PROBFLAG]                               Survey Year: HSTR
+  PRIMARY VARIABLE
+
+             TRANS PROB FLAG
+ 
+The TRANS_PROBFLAG variable was constructed to alert users to the existence of 
+cases whose data may be incomplete or flawed in a way that would make the case 
+less likely to provide useful information.  The flag is a composite of five 
+separate tests flagging different types of problems; a description of these 
+tests can be found in Appendix 11 of the Codebook Supplement.  A positive result
+for any one (or more) of those tests resulted in the case being coded 1 in this 
+variable.  The variable does not indicate how many flaws are present in a given 
+case.
+ 
+COMMENT: Transcript Survey
+ 
+     559       1 Yes
+    5673       0 No
+  -------
+    6232
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    6232   VALID SKIP(-4)    2752     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:              1        Mean:                 .09
+ 
+Lead In: R98724.00[Default]
+Default Next Question: 
+--------------------------------------------------------------------------------
+S15417.00    [CV_INCOME_GROSS_YR]                           Survey Year: 2002
+  PRIMARY VARIABLE
+
+             GROSS HH INCOME IN PAST YEAR
+ 
+Gross household income in the previous year.
+ 
+NOTE: /*Topcoded at the 2% level.  Truncated values are applied to the top 2 
+percent of respondents with valid non-missing responses.  The average value of 
+the top 2 percent of cases is used as the value.  Negative values of -1, -2, -3,
+-4, or -5 do not reflect negative monetary amounts; these numbers represent 
+standard NLSY97 codes.*/
+ 
+       0     -999999 TO -3000: < -2999
+       0       -2999 TO -2000
+       0       -1999 TO -1000
+       0        -999 TO -1
+     245           0
+      62           1 TO 1000
+      56        1001 TO 2000
+     180        2001 TO 3000
+     152        3001 TO 5000
+     450        5001 TO 10000
+     772       10001 TO 20000
+     580       20001 TO 30000
+     620       30001 TO 40000
+     450       40001 TO 50000
+     553       50001 TO 65000
+     507       65001 TO 80000
+     513       80001 TO 100000
+     544      100001 TO 150000
+     110      150001 TO 200000
+     160      200001 TO 999999: 200001+
+  -------
+    5954
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)    1274
+TOTAL =========>    7228   VALID SKIP(-4)     668     NON-INTERVIEW(-5)    1088
+ 
+Min:              0        Max:         267940        Mean:            52920.61
+ 
+Lead In: S15416.01[Default]
+Default Next Question: S15418.00
+--------------------------------------------------------------------------------
+S15418.00    [CV_HH_NET_WORTH_Y]                            Survey Year: 2002
+  PRIMARY VARIABLE
+
+             NET WORTH OF HOUSEHOLD ACCORDING TO R
+ 
+Household net worth.
+ 
+COMMENT: from youth interview
+ 
+NOTE: /*Topcoded at predetermined values.  Respondents with household net worth 
+values above $600,000 were topcoded to a value of $600,000.  Negative values of 
+-1, -2, -3, -4, or -5 do not reflect negative monetary amounts; these numbers 
+represent standard NLSY97 codes.*/
+ 
+      58     -999999 TO -3000: < -2999
+      14       -2999 TO -2000
+      21       -1999 TO -1000
+      20        -999 TO -1
+       5           0
+      36           1 TO 1000
+      90        1001 TO 2000
+    1320        2001 TO 3000
+     525        3001 TO 5000
+     758        5001 TO 10000
+     472       10001 TO 20000
+     131       20001 TO 30000
+      73       30001 TO 40000
+      29       40001 TO 50000
+      25       50001 TO 65000
+      44       65001 TO 80000
+      10       80001 TO 100000
+      11      100001 TO 150000
+      20      150001 TO 200000
+      25      200001 TO 999999999: 200001+
+  -------
+    3687
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)     257
+TOTAL =========>    3944   VALID SKIP(-4)    3952     NON-INTERVIEW(-5)    1088
+ 
+Min:        -197500        Max:         600000        Mean:            11377.79
+ 
+Lead In: S15417.00[Default]
+Default Next Question: S15419.00
+--------------------------------------------------------------------------------
+S15981.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2002
+  PRIMARY VARIABLE
+
+             ROUND 6 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    1088           0
+       0       30000 TO 59999: 300.00-599.99
+     453       60000 TO 99999: 600.00-999.99
+    2366      100000 TO 149999: 1000.00-1499.99
+     204      150000 TO 199999: 1500.00-1999.99
+     338      200000 TO 249999: 2000.00-2499.99
+     730      250000 TO 299999: 2500.00-2999.99
+    2719      300000 TO 349999: 3000.00-3499.99
+     842      350000 TO 399999: 3500.00-3999.99
+     199      400000 TO 449999: 4000.00-4499.99
+      30      450000 TO 499999: 4500.00-4999.99
+      10      500000 TO 549999: 5000.00-5499.99
+       3      550000 TO 599999: 5500.00-5999.99
+       1      600000 TO 649999: 6000.00-6499.99
+       0      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1716726        Mean:           215699.61
+ 
+Lead In: S15980.00[Default]
+Default Next Question: S15982.00
+--------------------------------------------------------------------------------
+S20115.00    [CV_INCOME_GROSS_YR]                           Survey Year: 2003
+  PRIMARY VARIABLE
+
+             GROSS HH INCOME IN PAST YEAR
+ 
+Gross household income in the previous year.
+ 
+NOTE: /*Topcoded at the 2% level.  Truncated values are applied to the top 2 
+percent of respondents with valid non-missing responses.  The average value of 
+the top 2 percent of cases is used as the value.  Negative values of -1, -2, -3,
+-4, or -5 do not reflect negative monetary amounts; these numbers represent 
+standard NLSY97 codes.*/
+ 
+       0     -999999 TO -3000: < -2999
+       0       -2999 TO -2000
+       0       -1999 TO -1000
+       0        -999 TO -1
+     184           0
+     118           1 TO 1000
+      76        1001 TO 2000
+     169        2001 TO 3000
+     197        3001 TO 5000
+     537        5001 TO 10000
+     891       10001 TO 20000
+     673       20001 TO 30000
+     636       30001 TO 40000
+     477       40001 TO 50000
+     620       50001 TO 65000
+     449       65001 TO 80000
+     502       80001 TO 100000
+     487      100001 TO 150000
+     122      150001 TO 200000
+     171      200001 TO 999999: 200001+
+  -------
+    6309
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)    1445
+TOTAL =========>    7754   VALID SKIP(-4)       0     NON-INTERVIEW(-5)    1230
+ 
+Min:              0        Max:         257697        Mean:            50279.14
+ 
+Lead In: S20114.01[Default]
+Default Next Question: S20116.00
+--------------------------------------------------------------------------------
+S20116.00    [CV_HH_NET_WORTH_Y]                            Survey Year: 2003
+  PRIMARY VARIABLE
+
+             NET WORTH OF HOUSEHOLD ACCORDING TO R
+ 
+Household net worth.
+ 
+COMMENT: from youth interview
+ 
+NOTE: /*Topcoded at predetermined values.  Respondents with household net worth 
+values above $600,000 were topcoded to a value of $600,000.  Negative values of 
+-1, -2, -3, -4, or -5 do not reflect negative monetary amounts; these numbers 
+represent standard NLSY97 codes.*/
+ 
+     119     -999999 TO -3000: < -2999
+      19       -2999 TO -2000
+      26       -1999 TO -1000
+      26        -999 TO -1
+       7           0
+      44           1 TO 1000
+      63        1001 TO 2000
+     555        2001 TO 3000
+     258        3001 TO 5000
+     431        5001 TO 10000
+     248       10001 TO 20000
+      70       20001 TO 30000
+      47       30001 TO 40000
+      16       40001 TO 50000
+      10       50001 TO 65000
+      17       65001 TO 80000
+       6       80001 TO 100000
+       7      100001 TO 150000
+       6      150001 TO 200000
+      19      200001 TO 999999999: 200001+
+  -------
+    1994
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)     204
+TOTAL =========>    2198   VALID SKIP(-4)    5556     NON-INTERVIEW(-5)    1230
+ 
+Min:         -47500        Max:         500002        Mean:            10659.65
+ 
+Lead In: S20115.00[Default]
+Default Next Question: S20117.00
+--------------------------------------------------------------------------------
+S20670.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2003
+  PRIMARY VARIABLE
+
+             ROUND 7 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    1230           0
+       0       30000 TO 59999: 300.00-599.99
+     347       60000 TO 99999: 600.00-999.99
+    2439      100000 TO 149999: 1000.00-1499.99
+     194      150000 TO 199999: 1500.00-1999.99
+     307      200000 TO 249999: 2000.00-2499.99
+     550      250000 TO 299999: 2500.00-2999.99
+    2685      300000 TO 349999: 3000.00-3499.99
+     849      350000 TO 399999: 3500.00-3999.99
+     328      400000 TO 449999: 4000.00-4499.99
+      29      450000 TO 499999: 4500.00-4999.99
+      18      500000 TO 549999: 5000.00-5499.99
+       6      550000 TO 599999: 5500.00-5999.99
+       1      600000 TO 649999: 6000.00-6499.99
+       0      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1785202        Mean:           215699.63
+ 
+Lead In: S20669.00[Default]
+Default Next Question: S20671.00
+--------------------------------------------------------------------------------
+S38616.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2004
+  PRIMARY VARIABLE
+
+             ROUND 8 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    1482           0
+       0       30000 TO 59999: 300.00-599.99
+     315       60000 TO 99999: 600.00-999.99
+    2289      100000 TO 149999: 1000.00-1499.99
+     285      150000 TO 199999: 1500.00-1999.99
+     229      200000 TO 249999: 2000.00-2499.99
+     383      250000 TO 299999: 2500.00-2999.99
+    2369      300000 TO 349999: 3000.00-3499.99
+     993      350000 TO 399999: 3500.00-3999.99
+     552      400000 TO 449999: 4000.00-4499.99
+      59      450000 TO 499999: 4500.00-4999.99
+      16      500000 TO 549999: 5000.00-5499.99
+       9      550000 TO 599999: 5500.00-5999.99
+       2      600000 TO 649999: 6000.00-6499.99
+       0      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1802617        Mean:           215699.62
+ 
+Lead In: S38615.00[Default]
+Default Next Question: S38617.00
+--------------------------------------------------------------------------------
+S54442.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2005
+  PRIMARY VARIABLE
+
+             ROUND 9 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    1646           0
+       0       30000 TO 59999: 300.00-599.99
+     214       60000 TO 99999: 600.00-999.99
+    2319      100000 TO 149999: 1000.00-1499.99
+     299      150000 TO 199999: 1500.00-1999.99
+     206      200000 TO 249999: 2000.00-2499.99
+     309      250000 TO 299999: 2500.00-2999.99
+    1640      300000 TO 349999: 3000.00-3499.99
+    1599      350000 TO 399999: 3500.00-3999.99
+     667      400000 TO 449999: 4000.00-4499.99
+      54      450000 TO 499999: 4500.00-4999.99
+      19      500000 TO 549999: 5000.00-5499.99
+       8      550000 TO 599999: 5500.00-5999.99
+       3      600000 TO 649999: 6000.00-6499.99
+       0      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1859409        Mean:           215699.61
+ 
+Lead In: S54378.00[Default]
+Default Next Question: S54443.00
+--------------------------------------------------------------------------------
+S75455.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2006
+  PRIMARY VARIABLE
+
+             ROUND 10 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+UNIVERSE: All
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    1425           0
+       0       30000 TO 59999: 300.00-599.99
+     270       60000 TO 99999: 600.00-999.99
+    2398      100000 TO 149999: 1000.00-1499.99
+     246      150000 TO 199999: 1500.00-1999.99
+     281      200000 TO 249999: 2000.00-2499.99
+     354      250000 TO 299999: 2500.00-2999.99
+    2287      300000 TO 349999: 3000.00-3499.99
+    1258      350000 TO 399999: 3500.00-3999.99
+     404      400000 TO 449999: 4000.00-4499.99
+      37      450000 TO 499999: 4500.00-4999.99
+      13      500000 TO 549999: 5000.00-5499.99
+       9      550000 TO 599999: 5500.00-5999.99
+       1      600000 TO 649999: 6000.00-6499.99
+       0      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1852105        Mean:           215699.62
+ 
+Lead In: S75454.00[Default]
+Default Next Question: S75456.00
+--------------------------------------------------------------------------------
+T00421.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2007
+  PRIMARY VARIABLE
+
+             ROUND 11 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+UNIVERSE: All
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    1566           0
+       0       30000 TO 59999: 300.00-599.99
+     187       60000 TO 99999: 600.00-999.99
+    2458      100000 TO 149999: 1000.00-1499.99
+     230      150000 TO 199999: 1500.00-1999.99
+     194      200000 TO 249999: 2000.00-2499.99
+     324      250000 TO 299999: 2500.00-2999.99
+    1928      300000 TO 349999: 3000.00-3499.99
+    1492      350000 TO 399999: 3500.00-3999.99
+     519      400000 TO 449999: 4000.00-4499.99
+      60      450000 TO 499999: 4500.00-4999.99
+      14      500000 TO 549999: 5000.00-5499.99
+      10      550000 TO 599999: 5500.00-5999.99
+       1      600000 TO 649999: 6000.00-6499.99
+       0      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1885791        Mean:           215699.61
+ 
+Lead In: T00351.00[Default]
+Default Next Question: T00422.00
+--------------------------------------------------------------------------------
+T20225.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2008
+  PRIMARY VARIABLE
+
+             ROUND 12 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+UNIVERSE: All
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    1494           0
+       0       30000 TO 59999: 300.00-599.99
+     234       60000 TO 99999: 600.00-999.99
+    2464      100000 TO 149999: 1000.00-1499.99
+     221      150000 TO 199999: 1500.00-1999.99
+     236      200000 TO 249999: 2000.00-2499.99
+     294      250000 TO 299999: 2500.00-2999.99
+    1975      300000 TO 349999: 3000.00-3499.99
+    1614      350000 TO 399999: 3500.00-3999.99
+     389      400000 TO 449999: 4000.00-4499.99
+      35      450000 TO 499999: 4500.00-4999.99
+      13      500000 TO 549999: 5000.00-5499.99
+      12      550000 TO 599999: 5500.00-5999.99
+       2      600000 TO 649999: 6000.00-6499.99
+       0      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1916540        Mean:           215699.63
+ 
+Lead In: T20224.00[Default]
+Default Next Question: T20226.00
+--------------------------------------------------------------------------------
+T36133.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2009
+  PRIMARY VARIABLE
+
+             ROUND 13 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    1425           0
+       0       30000 TO 59999: 300.00-599.99
+     386       60000 TO 99999: 600.00-999.99
+    2373      100000 TO 149999: 1000.00-1499.99
+     204      150000 TO 199999: 1500.00-1999.99
+     237      200000 TO 249999: 2000.00-2499.99
+     336      250000 TO 299999: 2500.00-2999.99
+    2032      300000 TO 349999: 3000.00-3499.99
+    1587      350000 TO 399999: 3500.00-3999.99
+     348      400000 TO 449999: 4000.00-4499.99
+      27      450000 TO 499999: 4500.00-4999.99
+      16      500000 TO 549999: 5000.00-5499.99
+       9      550000 TO 599999: 5500.00-5999.99
+       3      600000 TO 649999: 6000.00-6499.99
+       0      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1891182        Mean:           215699.61
+ 
+Lead In: T36132.00[Default]
+Default Next Question: T36134.00
+--------------------------------------------------------------------------------
+T52132.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2010
+  PRIMARY VARIABLE
+
+             ROUND 14 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    1505           0
+       0       30000 TO 59999: 300.00-599.99
+     332       60000 TO 99999: 600.00-999.99
+    2359      100000 TO 149999: 1000.00-1499.99
+     244      150000 TO 199999: 1500.00-1999.99
+     262      200000 TO 249999: 2000.00-2499.99
+     309      250000 TO 299999: 2500.00-2999.99
+    1722      300000 TO 349999: 3000.00-3499.99
+    1714      350000 TO 399999: 3500.00-3999.99
+     455      400000 TO 449999: 4000.00-4499.99
+      55      450000 TO 499999: 4500.00-4999.99
+      15      500000 TO 549999: 5000.00-5499.99
+       9      550000 TO 599999: 5500.00-5999.99
+       2      600000 TO 649999: 6000.00-6499.99
+       0      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1922275        Mean:            215699.6
+ 
+Lead In: T52131.00[Default]
+Default Next Question: T52133.00
+--------------------------------------------------------------------------------
+T66650.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2011
+  PRIMARY VARIABLE
+
+             ROUND 15 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    1561           0
+       0       30000 TO 59999: 300.00-599.99
+     282       60000 TO 99999: 600.00-999.99
+    2436      100000 TO 149999: 1000.00-1499.99
+     201      150000 TO 199999: 1500.00-1999.99
+     266      200000 TO 249999: 2000.00-2499.99
+     322      250000 TO 299999: 2500.00-2999.99
+    1513      300000 TO 349999: 3000.00-3499.99
+    1585      350000 TO 399999: 3500.00-3999.99
+     703      400000 TO 449999: 4000.00-4499.99
+      80      450000 TO 499999: 4500.00-4999.99
+      19      500000 TO 549999: 5000.00-5499.99
+      12      550000 TO 599999: 5500.00-5999.99
+       3      600000 TO 649999: 6000.00-6499.99
+       0      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1937782        Mean:            215699.6
+ 
+Lead In: T66649.00[Default]
+Default Next Question: T66651.00
+--------------------------------------------------------------------------------
+T81359.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2013
+  PRIMARY VARIABLE
+
+             ROUND 16 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    1844           0
+       0       30000 TO 59999: 300.00-599.99
+     177       60000 TO 99999: 600.00-999.99
+    2313      100000 TO 149999: 1000.00-1499.99
+     302      150000 TO 199999: 1500.00-1999.99
+     193      200000 TO 249999: 2000.00-2499.99
+     316      250000 TO 299999: 2500.00-2999.99
+     876      300000 TO 349999: 3000.00-3499.99
+    1952      350000 TO 399999: 3500.00-3999.99
+     853      400000 TO 449999: 4000.00-4499.99
+     121      450000 TO 499999: 4500.00-4999.99
+      18      500000 TO 549999: 5000.00-5499.99
+       9      550000 TO 599999: 5500.00-5999.99
+       5      600000 TO 649999: 6000.00-6499.99
+       3      650000 TO 699999: 6500.00-6999.99
+       1      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        2009405        Mean:           215699.61
+ 
+Lead In: T81358.00[Default]
+Default Next Question: T81360.00
+--------------------------------------------------------------------------------
+U00171.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2015
+  PRIMARY VARIABLE
+
+             ROUND 17 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    1881           0
+       0       30000 TO 59999: 300.00-599.99
+     159       60000 TO 99999: 600.00-999.99
+    2312      100000 TO 149999: 1000.00-1499.99
+     319      150000 TO 199999: 1500.00-1999.99
+     192      200000 TO 249999: 2000.00-2499.99
+     311      250000 TO 299999: 2500.00-2999.99
+     725      300000 TO 349999: 3000.00-3499.99
+    2100      350000 TO 399999: 3500.00-3999.99
+     761      400000 TO 449999: 4000.00-4499.99
+     182      450000 TO 499999: 4500.00-4999.99
+      20      500000 TO 549999: 5000.00-5499.99
+      11      550000 TO 599999: 5500.00-5999.99
+       6      600000 TO 649999: 6000.00-6499.99
+       3      650000 TO 699999: 6500.00-6999.99
+       1      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        1980354        Mean:           215699.62
+ 
+Lead In: U00168.00[Default]
+Default Next Question: U00172.00
+--------------------------------------------------------------------------------
+U18554.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2017
+  PRIMARY VARIABLE
+
+             ROUND 18 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    2250           0
+       0       30000 TO 59999: 300.00-599.99
+      83       60000 TO 99999: 600.00-999.99
+    1882      100000 TO 149999: 1000.00-1499.99
+     588      150000 TO 199999: 1500.00-1999.99
+     157      200000 TO 249999: 2000.00-2499.99
+     272      250000 TO 299999: 2500.00-2999.99
+     346      300000 TO 349999: 3000.00-3499.99
+    2019      350000 TO 399999: 3500.00-3999.99
+     938      400000 TO 449999: 4000.00-4499.99
+     384      450000 TO 499999: 4500.00-4999.99
+      30      500000 TO 549999: 5000.00-5499.99
+      20      550000 TO 599999: 5500.00-5999.99
+      10      600000 TO 649999: 6000.00-6499.99
+       2      650000 TO 699999: 6500.00-6999.99
+       1      700000 TO 749999: 7000.00-7499.99
+       1      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        2007281        Mean:           215699.61
+ 
+Lead In: U18553.00[Default]
+Default Next Question: U18555.00
+--------------------------------------------------------------------------------
+U34555.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2019
+  PRIMARY VARIABLE
+
+             ROUND 19 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    2037           0
+       0       30000 TO 59999: 300.00-599.99
+     106       60000 TO 99999: 600.00-999.99
+    2102      100000 TO 149999: 1000.00-1499.99
+     454      150000 TO 199999: 1500.00-1999.99
+     178      200000 TO 249999: 2000.00-2499.99
+     250      250000 TO 299999: 2500.00-2999.99
+     778      300000 TO 349999: 3000.00-3499.99
+    2065      350000 TO 399999: 3500.00-3999.99
+     727      400000 TO 449999: 4000.00-4499.99
+     241      450000 TO 499999: 4500.00-4999.99
+      21      500000 TO 549999: 5000.00-5499.99
+      13      550000 TO 599999: 5500.00-5999.99
+       8      600000 TO 649999: 6000.00-6499.99
+       3      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        2004366        Mean:           215699.61
+ 
+Lead In: U34554.00[Default]
+Default Next Question: U34556.00
+--------------------------------------------------------------------------------
+U49587.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2021
+  PRIMARY VARIABLE
+
+             ROUND 20 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    2271           0
+       0       30000 TO 59999: 300.00-599.99
+      79       60000 TO 99999: 600.00-999.99
+    1981      100000 TO 149999: 1000.00-1499.99
+     534      150000 TO 199999: 1500.00-1999.99
+     154      200000 TO 249999: 2000.00-2499.99
+     218      250000 TO 299999: 2500.00-2999.99
+     267      300000 TO 349999: 3000.00-3499.99
+    1918      350000 TO 399999: 3500.00-3999.99
+    1021      400000 TO 449999: 4000.00-4499.99
+     466      450000 TO 499999: 4500.00-4999.99
+      44      500000 TO 549999: 5000.00-5499.99
+      16      550000 TO 599999: 5500.00-5999.99
+      11      600000 TO 649999: 6000.00-6499.99
+       2      650000 TO 699999: 6500.00-6999.99
+       1      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        2109085        Mean:            215699.6
+ 
+Lead In: U49586.00[Default]
+Default Next Question: U49588.00
+--------------------------------------------------------------------------------
+U63654.00    [SAMPLING_WEIGHT_CC]                           Survey Year: 2023
+  PRIMARY VARIABLE
+
+             ROUND 21 SAMPLING WEIGHT CUMULATIVE CASES METHOD
+ 
+Sampling Weight: Cumulative Cases Method   0 thru 9999999  (2 implied decimal 
+places)
+ 
+NOTE: 0 THRU 9999999 (2 IMPLIED DECIMAL PLACES)
+ 
+    2415           0
+       0       30000 TO 59999: 300.00-599.99
+      56       60000 TO 99999: 600.00-999.99
+    1906      100000 TO 149999: 1000.00-1499.99
+     547      150000 TO 199999: 1500.00-1999.99
+     172      200000 TO 249999: 2000.00-2499.99
+     227      250000 TO 299999: 2500.00-2999.99
+     193      300000 TO 349999: 3000.00-3499.99
+    1642      350000 TO 399999: 3500.00-3999.99
+    1122      400000 TO 449999: 4000.00-4499.99
+     591      450000 TO 499999: 4500.00-4999.99
+      79      500000 TO 549999: 5000.00-5499.99
+      19      550000 TO 599999: 5500.00-5999.99
+      10      600000 TO 649999: 6000.00-6499.99
+       4      650000 TO 699999: 6500.00-6999.99
+       0      700000 TO 749999: 7000.00-7499.99
+       0      750000 TO 799999: 7500.00-7999.99
+       0      800000 TO 849999: 8000.00-8499.99
+       1      850000 TO 9999999: 8500.00+
+  -------
+    8984
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:        2166243        Mean:           215699.61
+ 
+Lead In: U63653.00[Default]
+Default Next Question: U63655.00
+--------------------------------------------------------------------------------
+Z90489.00    [CVC_HH_NET_WORTH_20]                          Survey Year: XRND
+  PRIMARY VARIABLE
+
+             NET WORTH OF HOUSEHOLD AT AGE 20
+ 
+CUMULATIVE VARIABLE: Household net worth at age 20. This variable is created for
+all respondents regardless of interview status in the current round; 
+CVC_ASSETS_RND_20 provides the round of the respondent's age 20 assets 
+interview.
+ 
+NOTE: /*Topcoded at predetermined values.  Respondents with household net worth 
+values above $600,000 were topcoded to a value of $600,000.  Negative values of 
+-1, -2, -3, -4, or -5 do not reflect negative monetary amounts; these numbers 
+represent standard NLSY97 codes.*/
+ 
+NOTE: Researchers should note that the age 20 and age 25 variables do not 
+include assets/debts solely held by the respondent's partner/spouse as the 
+questionnaire did not collect this information. As a result, these variables are
+not strictly comparable to similar items collected beginning with the age 30 
+interview which, due to a questionnaire change, include those values.
+ 
+     357    -9999999 TO -3000: < -2999
+      68       -2999 TO -2000
+      90       -1999 TO -1000
+      97        -999 TO -1
+      83           0
+     141           1 TO 1000
+     250        1001 TO 2000
+    1923        2001 TO 3000
+     927        3001 TO 5000
+    1559        5001 TO 10000
+    1158       10001 TO 20000
+     360       20001 TO 30000
+     236       30001 TO 40000
+     118       40001 TO 50000
+      55       50001 TO 65000
+     119       65001 TO 80000
+      42       80001 TO 100000
+      31      100001 TO 150000
+      65      150001 TO 200000
+      87      200001 TO 999999999: 200001+
+  -------
+    7766
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)     776
+TOTAL =========>    8542   VALID SKIP(-4)     442     NON-INTERVIEW(-5)       0
+ 
+Min:        -197500        Max:         600000        Mean:             14692.9
+ 
+Lead In: Z91226.00[Default]
+Default Next Question: Z90490.00
+--------------------------------------------------------------------------------
+Z90490.00    [CVC_HH_NET_WORTH_25]                          Survey Year: XRND
+  PRIMARY VARIABLE
+
+             NET WORTH OF HOUSEHOLD AT AGE 25
+ 
+CUMULATIVE VARIABLE: Household net worth at age 25. This variable is created for
+all respondents regardless of interview status in the current round; 
+CVC_ASSETS_RND_25 provides the round of the respondent's age 25 assets 
+interview.
+ 
+NOTE: /*Topcoded at predetermined values.  Respondents with household net worth 
+values above $600,000 were topcoded to a value of $600,000.  Negative values of 
+-1, -2, -3, -4, or -5 do not reflect negative monetary amounts; these numbers 
+represent standard NLSY97 codes.*/
+ 
+NOTE: Researchers should note that the age 20 and age 25 variables do not 
+include assets/debts solely held by the respondent's partner/spouse as the 
+questionnaire did not collect this information. As a result, these variables are
+not strictly comparable to similar items collected beginning with the age 30 
+interview which, due to a questionnaire change, include those values.
+ 
+    1037    -9999999 TO -3000: < -2999
+      89       -2999 TO -2000
+      79       -1999 TO -1000
+      99        -999 TO -1
+     173           0
+     134           1 TO 1000
+     166        1001 TO 2000
+     791        2001 TO 3000
+     446        3001 TO 5000
+     921        5001 TO 10000
+     852       10001 TO 20000
+     470       20001 TO 30000
+     310       30001 TO 40000
+     195       40001 TO 50000
+     178       50001 TO 65000
+     140       65001 TO 80000
+     132       80001 TO 100000
+     189      100001 TO 150000
+     103      150001 TO 200000
+     208      200001 TO 999999999: 200001+
+  -------
+    6712
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)    1438
+TOTAL =========>    8150   VALID SKIP(-4)     834     NON-INTERVIEW(-5)       0
+ 
+Min:        -997500        Max:         600000        Mean:             25702.7
+ 
+Lead In: Z90489.00[Default]
+Default Next Question: Z90491.00
+--------------------------------------------------------------------------------
+Z90838.00    [CVC_HGC_EVER]                                 Survey Year: XRND
+  PRIMARY VARIABLE
+
+             RS HIGHEST GRADE COMPLETED
+ 
+CUMULATIVE VARIABLE: The highest grade completed. This variable is created for 
+all respondents regardless of interview status in the current round; CVC_RND 
+provides the actual round of the respondent's most recent interview.
+ 
+       1       0 None
+       0       1 1st grade
+       1       2 2nd grade
+       0       3 3rd grade
+       0       4 4th grade
+       5       5 5th grade
+      28       6 6th grade
+      53       7 7th grade
+     285       8 8th grade
+     441       9 9th grade
+     495      10 10th grade
+     534      11 11th grade
+    1836      12 12th grade
+     674      13 1st year college
+     976      14 2nd year college
+     495      15 3rd year college
+    1330      16 4th year college
+     464      17 5th year college
+     522      18 6th year college
+     280      19 7th year college
+     443      20 8th year college or more
+      18      95 Ungraded
+  -------
+    8881
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)     103
+TOTAL =========>    8984   VALID SKIP(-4)       0     NON-INTERVIEW(-5)       0
+ 
+Min:              0        Max:             95        Mean:               13.96
+ 
+Lead In: Z90837.00[Default]
+Default Next Question: Z90839.00
+--------------------------------------------------------------------------------
+Z91219.00    [CVC_HH_NET_WORTH_30]                          Survey Year: XRND
+  PRIMARY VARIABLE
+
+             NET WORTH OF HOUSEHOLD AT AGE 30
+ 
+CUMULATIVE VARIABLE: Household net worth at age 30. This variable is created for
+all respondents regardless of interview status in the current round; 
+CVC_ASSETS_RND_30 provides the round of the respondent's age 30 assets 
+interview.
+ 
+NOTE: /*Topcoded at predetermined values.  Respondents with household net worth 
+values above $600,000 were topcoded to a value of $600,000.  Negative values of 
+-1, -2, -3, -4, or -5 do not reflect negative monetary amounts; these numbers 
+represent standard NLSY97 codes.*/
+ 
+/*Researchers should note that a skip error caused respondents without pensions 
+to skip questions on tax-advantaged accounts. Please see the User’s Guide for 
+more information.*/
+ 
+    1146    -9999999 TO -3000: < -2999
+      55       -2999 TO -2000
+      46       -1999 TO -1000
+      65        -999 TO -1
+     201           0
+     104           1 TO 1000
+      89        1001 TO 2000
+     506        2001 TO 3000
+     265        3001 TO 5000
+     620        5001 TO 10000
+     736       10001 TO 20000
+     452       20001 TO 30000
+     301       30001 TO 40000
+     266       40001 TO 50000
+     248       50001 TO 65000
+     221       65001 TO 80000
+     247       80001 TO 100000
+     359      100001 TO 150000
+     231      150001 TO 200000
+     506      200001 TO 999999999: 200001+
+  -------
+    6664
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)    1046
+TOTAL =========>    7710   VALID SKIP(-4)    1274     NON-INTERVIEW(-5)       0
+ 
+Min:       -5014150        Max:         600000        Mean:            48245.24
+ 
+Lead In: None.
+Default Next Question: Z91220.00
+--------------------------------------------------------------------------------
+Z91414.00    [CVC_HH_NET_WORTH_35]                          Survey Year: XRND
+  PRIMARY VARIABLE
+
+             NET WORTH OF HOUSEHOLD AT AGE 35
+ 
+CUMULATIVE VARIABLE: Household net worth at age 35. This variable is created for
+all respondents regardless of interview status in the current round; 
+CVC_ASSETS_RND_35 provides the round of the respondent's age 35 assets 
+interview.
+ 
+NOTE: THIS VARIABLE MAY BE TOPCODED AND BOTTOM CODED IF DATA REQUIREMENTS ARE 
+MET.  IF NECESSARY, THE TOPCODE ASSIGNED IS THE AVERAGE VALUE FOR APPROXIMATELY 
+2 PERCENT OF THE RESPONDENTS REPORTING VALID NON-MISSING RESPONSES AT THE TOP OF
+THE DISTRIBUTION.  ALTERNATIVE TOPCODE THRESHOLDS WILL BE APPLIED IF NECESSARY, 
+TO LOW FREQUENCY VARIABLES WITH FEWER THAN 75 VALID RESPONSES. VALUES BELOW 
+-$200,000 ARE BOTTOM CODED TO THE AVERAGE OF ALL SUCH VALUES.
+ 
+/*Researchers should note that a skip error caused respondents without pensions 
+to skip questions on tax-advantaged accounts. Please see the User’s Guide for 
+more information.*/
+ 
+     844    -9999999 TO -3000: < -2999
+      42       -2999 TO -2000
+      33       -1999 TO -1000
+      42        -999 TO -1
+     160           0
+      51           1 TO 1000
+      57        1001 TO 2000
+     425        2001 TO 3000
+     170        3001 TO 5000
+     514        5001 TO 10000
+     541       10001 TO 20000
+     329       20001 TO 30000
+     283       30001 TO 40000
+     215       40001 TO 50000
+     287       50001 TO 65000
+     243       65001 TO 80000
+     247       80001 TO 100000
+     441      100001 TO 150000
+     355      150001 TO 200000
+    1224      200001 TO 999999999: 200001+
+  -------
+    6503
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)    1024
+TOTAL =========>    7527   VALID SKIP(-4)    1457     NON-INTERVIEW(-5)       0
+ 
+Min:        -380319        Max:        2225735        Mean:           143545.33
+ 
+Lead In: Z90504.00[Default]
+Default Next Question: Z91415.00
+--------------------------------------------------------------------------------
+Z91645.00    [CVC_HH_NET_WORTH_40]                          Survey Year: XRND
+  PRIMARY VARIABLE
+
+             NET WORTH OF HOUSEHOLD AT AGE 40
+ 
+CUMULATIVE VARIABLE: Household net worth at age 40. This variable is created for
+all respondents regardless of interview status in the current round; 
+CVC_ASSETS_RND_40 provides the round of the respondent's age 40 assets 
+interview.
+ 
+NOTE: THIS VARIABLE MAY BE TOPCODED AND BOTTOM CODED IF DATA REQUIREMENTS ARE 
+MET.  IF NECESSARY, THE TOPCODE ASSIGNED IS THE AVERAGE VALUE FOR APPROXIMATELY 
+2 PERCENT OF THE RESPONDENTS REPORTING VALID NON-MISSING RESPONSES AT THE TOP OF
+THE DISTRIBUTION.  ALTERNATIVE TOPCODE THRESHOLDS WILL BE APPLIED IF NECESSARY, 
+TO LOW FREQUENCY VARIABLES WITH FEWER THAN 75 VALID RESPONSES. VALUES BELOW 
+-$200,000 ARE BOTTOM CODED TO THE AVERAGE OF ALL SUCH VALUES.
+ 
+/*Researchers should note that a skip error caused respondents without pensions 
+to skip questions on tax-advantaged accounts. Please see the User’s Guide for 
+more information.*/
+ 
+     393    -9999999 TO -3000: < -2999
+      17       -2999 TO -2000
+      16       -1999 TO -1000
+      20        -999 TO -1
+     115           0
+      30           1 TO 1000
+      33        1001 TO 2000
+     205        2001 TO 3000
+      86        3001 TO 5000
+     253        5001 TO 10000
+     294       10001 TO 20000
+     224       20001 TO 30000
+     159       30001 TO 40000
+     116       40001 TO 50000
+     149       50001 TO 65000
+     138       65001 TO 80000
+     144       80001 TO 100000
+     290      100001 TO 150000
+     288      150001 TO 200000
+    1718      200001 TO 999999999: 200001+
+  -------
+    4688
+ 
+Refusal(-1)            0
+Don't Know(-2)         0
+Invalid Skip(-3)     785
+TOTAL =========>    5473   VALID SKIP(-4)    3511     NON-INTERVIEW(-5)       0
+ 
+Min:        -525099        Max:        4651594        Mean:           332207.91
+ 
+Lead In: Z91421.00[Default]
+Default Next Question: Z91647.00

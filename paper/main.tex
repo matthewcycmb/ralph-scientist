@@ -1,0 +1,81 @@
+\documentclass{article}
+
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+% Attempt to make hyperref and algorithmic work together better:
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+\usepackage[accepted]{icml2026}
+
+% Macros generated from results.json — the ONLY legal source of numbers.
+\InputIfFileExists{values.tex}{}{}
+
+% Running title MUST stay short (~40 chars max) — the ICML class replaces over-wide
+% ones with "Title Suppressed Due to Excessive Size" (survived 4 reviews in practice).
+\icmltitlerunning{Does More Context Degrade Performance?}
+
+\begin{document}
+
+\twocolumn[
+\icmltitle{Does More Context Degrade Model Performance? \\
+           Measuring When It Starts and How Much It Costs}
+\icmlsetsymbol{equal}{*}
+\begin{icmlauthorlist}
+\icmlauthor{Ralph Scientist (autonomous agent)}{ralph}
+\icmlauthor{Matthew Chan}{ralph}
+\end{icmlauthorlist}
+\icmlaffiliation{ralph}{Ralphthon @ICML 2026, Track 1 (AI Scientist), Seoul}
+\icmlcorrespondingauthor{Matthew Chan}{jchanh@gmail.com}
+\icmlkeywords{autonomous research, long context, lost in the middle, small language models}
+\vskip 0.3in
+]
+\printAffiliationsAndNotice{}
+
+% ============================================================================
+% AGENT INSTRUCTIONS (delete these comments as sections are written):
+% - Write the OUTLINE first (as comments below), then prose from the outline.
+% - Every number: a macro from values.tex. Never type digits (gate-enforced).
+% - Claims are PREDICTIVE, never causal. Honest limitations. See SPEC.md rubric.
+% - Citations: add to refs.bib, then uncomment the bibliography lines below.
+% ============================================================================
+
+\begin{abstract}
+% TODO(agent): 4-6 sentences — question, data, method, headline result
+% (via macros), one-sentence limitation. Written LAST, from real results.
+TODO: abstract pending first results.
+\end{abstract}
+
+\section{Introduction}
+% TODO(agent): the question, why it matters, what we do, contributions list.
+
+\section{Related Work}
+% TODO(agent): grades->earnings (French et al.), IQ->wealth (Zagorsky),
+% mobility (Chetty et al.). Cite only verified entries in refs.bib.
+
+\section{Data}
+% TODO(agent): NLSY97 description, extract provenance (see
+% data/cache/nlsy97/PROVENANCE.md), variables used, quality filters
+% (TRANS_PROBFLAG), missing-code handling, final sampleSize macro.
+
+\section{Method}
+% TODO(agent): RQ1-RQ3 from SPEC.md; simple stats, pre-specified.
+
+\section{Results}
+% TODO(agent): >= 2 figures or tables, all values via macros.
+
+\section{Limitations}
+% TODO(agent): prediction-not-causation; household net worth; topcoding;
+% transcript subsample; US millennial cohort only.
+
+\section{Reproducibility Statement}
+% TODO(agent): frozen data + tagset, `make clean && make all` regenerates
+% every number; gates enforce citation and number provenance.
+
+% Uncomment when refs.bib has verified entries:
+% \bibliography{refs}
+% \bibliographystyle{icml2026}
+
+\end{document}
