@@ -17,23 +17,25 @@ run_gate() {  # run_gate <name> <cmd...>
   else
     echo "FAIL  $name"
     FAILS=$((FAILS + 1))
-    # TODO(practice week): de-dup repeated failures of the same gate and add an attempt
-    # counter — after ~3 consecutive fails, escalate the TODO message to "N failed
-    # attempts: stop retrying the same fix, try a fundamentally different approach".
-    {
-      echo "- [ ] GATE FAIL ($name, iter $ITER): $(head -c 400 /tmp/gate_out | tr '\n' ' ')"
-    } >> TODO.md
+    DETAIL=$(head -c 400 /tmp/gate_out | tr '\n' ' ')
+    echo "DETAIL $name: $DETAIL"
+    # Keep one open task per gate. Once an agent removes/completes it, a future
+    # regression creates a fresh task; repeated red laps do not flood the logbook.
+    if ! grep -Fq -- "- [ ] GATE FAIL ($name," TODO.md 2>/dev/null; then
+      echo "- [ ] GATE FAIL ($name, iter $ITER): $DETAIL" >> TODO.md
+    fi
   fi
 }
 
 # Order matters: regenerate truth (results -> values) BEFORE compiling, so the
 # PDF can never be built from hand-edited macros.
+run_gate "frozen-inputs"       bash harness/gates/check_frozen.sh                  # model + fallback data still match declared hashes
 run_gate "citations-resolve"   .venv/bin/python harness/gates/check_citations.py  # refs.bib ↔ Crossref/S2, cached
 run_gate "no-number-literals"  .venv/bin/python harness/gates/check_numbers.py    # scan paper/*.tex for raw numerics
 run_gate "pipeline-fresh"      bash harness/gates/check_fresh.sh                  # regen from raw data must reproduce the lap's exact results.json + values.tex (tamper/stale/non-determinism)
 run_gate "results-sane"        .venv/bin/python harness/gates/check_sanity.py     # schema + sanity bounds
 run_gate "prose-style"         .venv/bin/python harness/gates/check_style.py      # no em dashes, no AI-slop vocabulary (Matthew's editorial bar)
-run_gate "latex-compiles"      tectonic paper/main.tex                            # ICML 2026 template, compiled from regenerated truth
+run_gate "latex-compiles"      bash harness/gates/check_pdf.sh                   # compile + page/layout/running-title checks
 
 echo "gates failed: $FAILS"
 exit "$FAILS"

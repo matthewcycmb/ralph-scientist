@@ -12,10 +12,11 @@
 
 % Macros generated from results.json — the ONLY legal source of numbers.
 \InputIfFileExists{values.tex}{}{}
+\input{model.tex}
 
-% Running title MUST stay short (~40 chars max) — the ICML class replaces over-wide
-% ones with "Title Suppressed Due to Excessive Size" (survived 4 reviews in practice).
-\icmltitlerunning{Does More Context Degrade Performance?}
+% Keep \smash: the ICML 2026 class's height check suppresses even short capitalized titles.
+% The PDF gate rejects "Title Suppressed Due to Excessive Size" if this regresses.
+\icmltitlerunning{\smash{Context Position}}
 
 \begin{document}
 
@@ -27,7 +28,7 @@
 \icmlauthor{Ralph Scientist (autonomous agent)}{ralph}
 \icmlauthor{Matthew Chan}{ralph}
 \end{icmlauthorlist}
-\icmlaffiliation{ralph}{Ralphthon @ICML 2026, Track 1 (AI Scientist), Seoul}
+\icmlaffiliation{ralph}{Ralphthon @ICML 2026, Track One (AI Scientist), Seoul}
 \icmlcorrespondingauthor{Matthew Chan}{jchanh@gmail.com}
 \icmlkeywords{autonomous research, long context, lost in the middle, small language models}
 \vskip 0.3in
@@ -52,27 +53,32 @@ TODO: abstract pending first results.
 % TODO(agent): the question, why it matters, what we do, contributions list.
 
 \section{Related Work}
-% TODO(agent): grades->earnings (French et al.), IQ->wealth (Zagorsky),
-% mobility (Chetty et al.). Cite only verified entries in refs.bib.
+% TODO(agent): long-context position effects, input-length degradation,
+% irrelevant-context distraction, non-literal retrieval, and Qwen model family.
+% Cite only verified entries in refs.bib.
 
-\section{Data}
-% TODO(agent): NLSY97 description, extract provenance (see
-% data/cache/nlsy97/PROVENANCE.md), variables used, quality filters
-% (TRANS_PROBFLAG), missing-code handling, final sampleSize macro.
+\section{Probe Design}
+% TODO(agent): exact frozen model artifact; tokenizer-measured tiers; synthetic
+% contract clauses; paired scenario families; independent distractor placement;
+% literal/paraphrase questions; relevant/irrelevant filler; deterministic scoring.
 
 \section{Method}
-% TODO(agent): RQ1-RQ3 from SPEC.md; simple stats, pre-specified.
+% TODO(agent): answer all four questions in SPEC. Amount tiers need their own n;
+% position must compare the same scenario family with only clause location moved;
+% quality and pruning contrasts must use matched cases; report exact-output compliance.
 
 \section{Results}
 % TODO(agent): >= 2 figures or tables, all values via macros.
 
 \section{Limitations}
-% TODO(agent): prediction-not-causation; household net worth; topcoding;
-% transcript subsample; US millennial cohort only.
+% TODO(agent): one small quantized model; synthetic probes, not natural documents;
+% retrieval is not general capability; CPU-limited grid; greedy decoding only;
+% identify every sparse or unmatched comparison explicitly.
 
 \section{Reproducibility Statement}
-% TODO(agent): frozen data + tagset, `make clean && make all` regenerates
-% every number; gates enforce citation and number provenance.
+% TODO(agent): exact model filename + checksum; raw probe manifest; make all
+% regenerates scored results from cached outputs; make clean-deep && make all
+% repeats inference; gates enforce frozen inputs, citations, and number provenance.
 
 % Uncomment when refs.bib has verified entries:
 % \bibliography{refs}

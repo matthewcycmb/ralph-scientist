@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
 # Ralph loop: fresh Codex iteration -> deterministic gates -> periodic adversarial review -> ratchet.
-# UNTESTED SKELETON — validate codex CLI flags + sandbox/network config during practice week.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 # Never inherit a live stdin: a silent-but-open input pipe from the launcher made
 # codex wait for EOF until the role timeout killed it (reviews died this way twice,
 # 2026-07-07). The loop needs no stdin — sever it once, for every child.
 exec < /dev/null
+
+# Event provenance depends on starting from a declared commit. Refuse to let
+# pre-run harness edits or forgotten files become "iteration 1" by accident.
+if [[ -n "$(git status --porcelain --untracked-files=normal)" ]]; then
+  echo "FATAL: working tree is dirty. Commit the declared pre-run state before starting the loop."
+  git status --short
+  exit 1
+fi
 
 # Archive the previous run's working state — lap numbers and review files repeat
 # across runs, and stale state must never bleed into this run's records.
@@ -31,10 +38,32 @@ TIMEOUT=$(command -v timeout || command -v gtimeout) || {
 # reach: any lap that modifies harness/ or Makefile gets auto-reverted + logged.
 START_SHA=$(git rev-parse HEAD)
 harness_fingerprint() {
-  cat harness/loop.sh harness/run_gates.sh harness/ratchet.sh harness/REVIEWER.md \
-      harness/EDITOR.md harness/HUMANIZER.md harness/gates/* Makefile PROMPT.md SPEC.md 2>/dev/null | shasum -a 256 | cut -d' ' -f1
+  cat harness/loop.sh harness/checkpoint.sh harness/run_gates.sh harness/ratchet.sh harness/REVIEWER.md \
+      harness/EDITOR.md harness/HUMANIZER.md harness/gates/* Makefile PROMPT.md SPEC.md \
+      analysis/make_values.py analysis/RESULTS_SCHEMA.md data/models/CHECKSUMS.txt \
+      data/models/FETCH.sh data/cache/nlsy97/CHECKSUMS.txt requirements.txt \
+      paper/model.tex paper/*.sty paper/*.bst 2>/dev/null | shasum -a 256 | cut -d' ' -f1
 }
 BASELINE_FP=$(harness_fingerprint)
+
+restore_protected_files() {
+  if [[ "$(harness_fingerprint)" != "$BASELINE_FP" ]]; then
+    echo "TAMPER: protected harness inputs modified at iter $ITER — restoring from $START_SHA" | tee -a VERIFY.log
+    git checkout "$START_SHA" -- harness/loop.sh harness/checkpoint.sh harness/run_gates.sh \
+      harness/ratchet.sh harness/REVIEWER.md harness/EDITOR.md harness/HUMANIZER.md \
+      harness/gates Makefile PROMPT.md SPEC.md analysis/make_values.py \
+      analysis/RESULTS_SCHEMA.md data/models/CHECKSUMS.txt data/models/FETCH.sh \
+      data/cache/nlsy97/CHECKSUMS.txt requirements.txt paper/*.sty paper/*.bst
+    git checkout "$START_SHA" -- paper/model.tex
+    echo "- [ ] TAMPER DETECTED (iter $ITER): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead." >> TODO.md
+  fi
+}
+
+citation_fingerprint() {
+  find data/cache/citations -type f -print 2>/dev/null | LC_ALL=C sort | while IFS= read -r file; do
+    shasum -a 256 "$file"
+  done | shasum -a 256 | cut -d' ' -f1
+}
 
 ITER=0
 while true; do
@@ -45,6 +74,7 @@ while true; do
     exit 0
   fi
   echo "=== iteration $ITER $(date +%H:%M:%S) ==="
+  CITATION_FP=$(citation_fingerprint)
 
   # 1. One fresh agent iteration. Flags VERIFIED 2026-07-01 on codex-cli 0.128.0 (bundled
   #    in Codex.app, symlinked to ~/.npm-global/bin/codex). Smoke test passed: auth via
@@ -98,13 +128,14 @@ while true; do
     continue
   fi
 
-  # 2. Anti-reward-hacking: verify the harness fingerprint; on mismatch restore the
-  #    originals from the loop-start commit and log it. Agents fix papers, not gates.
-  if [[ "$(harness_fingerprint)" != "$BASELINE_FP" ]]; then
-    echo "TAMPER: harness/SPEC/PROMPT modified at iter $ITER — restoring from $START_SHA" | tee -a VERIFY.log
-    git checkout "$START_SHA" -- harness/loop.sh harness/run_gates.sh harness/ratchet.sh \
-      harness/REVIEWER.md harness/EDITOR.md harness/HUMANIZER.md harness/gates Makefile PROMPT.md SPEC.md
-    echo "- [ ] TAMPER DETECTED (iter $ITER): an agent modified the harness, Makefile, SPEC.md or PROMPT.md. Forbidden (SPEC hard rules) — fix the underlying problem instead." >> TODO.md
+  # 2. Anti-reward-hacking: restore protected code and reject citation-cache records
+  #    written by the worker. Only the networked harness citation gate may add cache files.
+  restore_protected_files
+  if [[ "$(citation_fingerprint)" != "$CITATION_FP" ]]; then
+    echo "TAMPER: citation cache modified by worker at iter $ITER — restoring committed cache" | tee -a VERIFY.log
+    git checkout HEAD -- data/cache/citations 2>/dev/null || true
+    git clean -fd -- data/cache/citations >/dev/null 2>&1 || true
+    echo "- [ ] TAMPER DETECTED (iter $ITER): citation cache changes must come from the networked citation gate, not a worker." >> TODO.md
   fi
 
   # 3. Deterministic gates (never skipped, never agent-run). Failures land in TODO.md.
@@ -112,6 +143,7 @@ while true; do
 
   # 4. Adversarial ICML-style review every 3rd iteration once a draft exists.
   #    read-only sandbox: the reviewer judges, it must not be able to edit anything.
+  REVIEW_COMPLETED=0
   if [[ -f paper/main.tex && $((ITER % 3)) -eq 0 ]]; then
     # Draft archive: snapshot the compiled paper every review lap — the progress story.
     mkdir -p drafts
@@ -140,31 +172,38 @@ Previous review for the ledger: ${PREV_REVIEW:-none — first review, every ledg
         "$TIMEOUT" 25m codex exec -s read-only --skip-git-repo-check \
           -o "reviews/confirm-$ITER.md" "$REVIEWER_PROMPT" > "logs/confirm-$ITER.log" 2>&1 || true
       fi
-
-      # Editor lap: after every review, the strategy layer reads everything and
-      # restructures TODO around the paper's honest thesis. May only edit
-      # TODO.md and EDITORIAL.md (tamper guard + gates cover the rest).
-      "$TIMEOUT" 15m codex exec -s workspace-write --skip-git-repo-check \
-        -o "logs/editor-msg-$ITER.txt" "$(cat harness/EDITOR.md)" > "logs/editor-$ITER.log" 2>&1 || true
-
-      # Humanizer lap (Matthew's rule, 2026-07-04): after review+editor, one pass
-      # that rewrites prose for human flow. Facts are untouchable — macros, numbers,
-      # claims, citations. Its edits are gated at the next lap; tags only ever point
-      # at fully gated commits, so a bad rewrite can delay a tag but never fake one.
-      echo "HUMANIZER pass at iter $ITER" | tee -a VERIFY.log
-      "$TIMEOUT" 15m codex exec -s workspace-write --skip-git-repo-check \
-        -o "logs/humanizer-msg-$ITER.txt" "$(cat harness/HUMANIZER.md)" > "logs/humanizer-$ITER.log" 2>&1 || true
+      REVIEW_COMPLETED=1
     else
       echo "REVIEW FAILED at iter $ITER (quota or timeout) — will retry next review lap" | tee -a VERIFY.log
     fi
   fi
 
-  # 5. Ratchet: tag paper-vN iff all gates green AND reviewer score >= last tagged score.
-  #    TODO(practice): also shadow-tag every all-gates-green commit as green-vN regardless
-  #    of review score, so there is ALWAYS a verified fallback to submit at 8 PM.
-  harness/ratchet.sh "$ITER" || true
+  # 5. Commit the exact gated/reviewed state BEFORE tagging it. This fixes the historical
+  #    one-lap tag lag: a tag must point to the paper the gates just inspected.
+  bash harness/checkpoint.sh "$ITER"
 
-  git add -A && git commit -m "loop: iteration $ITER" --allow-empty -q
+  # 6. Strategy/prose roles run only after the verified checkpoint. Their changes are
+  #    intentionally not included in this lap's tag; the next lap's gates inspect them.
+  if [[ "$REVIEW_COMPLETED" -eq 1 ]]; then
+    "$TIMEOUT" 15m codex exec -s workspace-write --skip-git-repo-check \
+      -o "logs/editor-msg-$ITER.txt" "$(cat harness/EDITOR.md)" > "logs/editor-$ITER.log" 2>&1 || true
+    echo "HUMANIZER pass at iter $ITER" | tee -a VERIFY.log
+    "$TIMEOUT" 15m codex exec -s workspace-write --skip-git-repo-check \
+      -o "logs/humanizer-msg-$ITER.txt" "$(cat harness/HUMANIZER.md)" > "logs/humanizer-$ITER.log" 2>&1 || true
+    restore_protected_files
+    if [[ -n "$(git status --porcelain -- data/cache/citations)" ]]; then
+      echo "TAMPER: citation cache modified by post-review role at iter $ITER — restoring checkpoint" | tee -a VERIFY.log
+      git checkout HEAD -- data/cache/citations 2>/dev/null || true
+      git clean -fd -- data/cache/citations >/dev/null 2>&1 || true
+      echo "- [ ] TAMPER DETECTED (iter $ITER): a post-review role modified the citation cache; the checkpoint copy was restored." >> TODO.md
+    fi
+  fi
+
+  # Persist ratchet logs and post-review edits without moving the verified tag.
+  git add -A
+  if ! git diff --cached --quiet; then
+    git commit -m "harness: follow-up after iteration $ITER" -q
+  fi
   # PUSH=1: livestream progress to the public repo (judges watch commits land).
   # --follow-tags (NOT --tags): only annotated tags on the pushed lineage go out —
   # --tags would leak every practice tag and its commit history to the public repo.

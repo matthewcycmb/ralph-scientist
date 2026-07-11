@@ -34,9 +34,19 @@ Do this:
      not "change length"); no term before its introduction; every knob names its
      machine with real values (never bare "length/position/type").
    - The contract example carried through: one sentence in everyday words
-     after every table, in contract terms.
+     after every table, in contract terms. Integrate it naturally; do not repeat the frame
+     "In the contract example" or force the same analogy sentence after every table.
    - Methods and Results stay precise: plain, never cute. No new analogies
      beyond the contract example.
+   - Do not define ordinary words merely to sound accessible. "Baseline," "mitigation," and
+     "synthetic" can be explained once only if their technical use is genuinely unclear.
+   - Replace tautologies ("the target clause is the clause with the correct answer"), casual
+     labels such as "made-up," and chains of short subject-repeating sentences. Combine only
+     when one sentence has one logical job and a clear actor.
+   - Vary paragraph and sentence openings. Repeated "This paper...", "The model...", and
+     "Table X shows..." frames make correct prose sound machine-generated.
+   - Preserve the difference between descriptive and causal language. An unpaired comparison
+     "is associated with" an outcome; it does not show that "placing" something caused it.
 3. NEVER change: any \macro name or usage, values.tex, any number, the
    meaning of any claim, any citation, tables, the preamble, packages, or
    section structure. Sentence-level prose ONLY. If a sentence is unclear

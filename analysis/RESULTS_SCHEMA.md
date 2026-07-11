@@ -8,7 +8,11 @@ states numerically must live here.
 {
   "meta": {
     "generated_by": "analysis/run_all.py",
-    "data": "data/probes/ (raw outputs of the frozen model in data/models/)"
+    "data": "data/probes/ (raw outputs of the frozen model in data/models/)",
+    "model_file": "data/models/qwen2.5-0.5b-instruct-q8_0.gguf",
+    "model_sha256": "ca59ca7f13d0e15a8cfa77bd17e65d24f6844b554a7b6c12e07a5f89ff76844e",
+    "manifest_complete": true,
+    "missing_probe_count": 0
   },
   "values": {
     "sampleSize":       {"value": 216,  "unit": "count", "desc": "total probes scored across the full grid", "script": "analysis/run_all.py"},
@@ -26,6 +30,13 @@ Rules (enforced by harness/gates/check_sanity.py):
 - Reserved key `sampleSize` is REQUIRED and must be ≥ 100 — here it means the
   total number of scored probes; report per-cell probe counts as their own entries.
 - Optional `fmt`: Python format spec used by make_values.py (e.g. `.2f`, `,.0f`).
+- `meta.generated_by` and every value's `script` must name existing repository Python files.
+- Units are restricted to the list above; counts are non-negative integers, while token
+  means and durations may be non-negative decimals.
+- For the primary topic, record the exact model file/checksum and manifest completion in
+  `meta`. A partial manifest is valid work-in-progress but must be described as such.
+- Include matched position, filler-quality, and pruning summaries. The pruning gain must use
+  the paired full/pruned denominator. Include exact-output compliance and invalid-output count.
 
 Two-tier pipeline: `make probes` runs `analysis/run_probes.py` (you create it) —
 seeded generators emit every prompt file, the frozen model runs on each

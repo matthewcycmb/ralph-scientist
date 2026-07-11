@@ -29,7 +29,8 @@ cp harness/seed/TODO.md TODO.md
 
 git add -A
 git commit -q -m "Pre-built inputs: harness, SPEC, frozen model + data caches (declared; authored before event start)"
-echo "Event branch '$BRANCH' ready (single clean commit)."
+git tag -a "${BRANCH}-start" -m "Declared pre-event boundary for $BRANCH"
+echo "Event branch '$BRANCH' ready; '${BRANCH}-start' marks the declared pre-event boundary."
 # NOTE: never push --tags from this repo — it would carry every practice tag (and the
 # commits they reach) into the public event repo. Event tags push individually as minted.
 echo "Next: create the public GitHub repo, then: git push -u origin $BRANCH"

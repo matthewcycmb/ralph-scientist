@@ -1,16 +1,21 @@
 #!/usr/bin/env bash
-# Ratchet: tag paper-vN iff all gates green AND latest reviewer overall >= last tagged score.
+# Ratchet: tag paper-vN iff all gates green AND latest reviewer rubric >= last tagged score.
 # The tag is always the submittable state; the loop can never regress below it.
-# UNTESTED SKELETON — finish during practice week.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 ITER="${1:-0}"
 
-# All gates green? (re-check cheaply via last VERIFY.log block)
-tail -n 8 VERIFY.log 2>/dev/null | grep -q "gates failed: 0" || exit 0
+# All gates green? Parse the final complete gate block rather than assuming a fixed
+# number of gates or lines. checkpoint.sh has already committed this exact state.
+LAST_GATE_BLOCK=$(awk '
+  /^--- gates @ iteration / { block = "" }
+  { block = block $0 ORS }
+  END { printf "%s", block }
+' VERIFY.log 2>/dev/null)
+grep -q '^gates failed: 0$' <<< "$LAST_GATE_BLOCK" || exit 0
 
 # Shadow tag: EVERY all-gates-green state is verified and submittable, regardless of
-# review score — the fallback if the reviewer threshold is never met by 8 PM.
+# review score — the fallback if the reviewer threshold is never met by submission.
 # Numbering is GLOBAL (no --merged): tag names are repo-wide, so a sim branch sharing
 # .git with practice tags must continue the sequence or creation collides and fails.
 LAST_GREEN=$(git tag -l 'green-v*' --sort=-v:refname | head -1)

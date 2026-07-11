@@ -11,9 +11,8 @@ Rules (strict on purpose — the agent adapts, the gate doesn't):
     - any number attached to % / \\%               (12%, 12\\%)
     - any number with thousands separators         (40,000)
     - any number preceded by a currency \\$        (\\$500)
-    - any bare integer > 120, unless it looks like a year (1900-2100)
+    - any numeric literal, unless it is a year (1900-2100)
   ALLOWED:
-    - bare integers 0-120 (ages, grades, small counts: "age 30", "grade 9")
     - years 1900-2100 ("since 1997", "\\usepackage{icml2025}")
     - anything inside comments is stripped first, but don't hide numbers there:
       comments are for humans, results are for results.json
@@ -23,7 +22,7 @@ import sys
 from pathlib import Path
 
 PAPER_DIR = Path("paper")
-EXEMPT = {"values.tex"}
+EXEMPT = {"values.tex", "model.tex"}  # both generated/protected, never worker-authored prose
 
 
 def strip_tex(text: str) -> str:
@@ -58,8 +57,7 @@ def violations_in(text: str):
         except ValueError:
             continue
         is_year = 1900 <= intpart <= 2100 and not (has_decimal or has_pct or has_currency or has_comma)
-        small_int = intpart <= 120 and not (has_decimal or has_pct or has_currency or has_comma)
-        if not (is_year or small_int):
+        if not is_year:
             out.append(tok.strip())
     return out
 

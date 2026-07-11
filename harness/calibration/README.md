@@ -1,7 +1,9 @@
 # Sabotage test results — 2026-07-02
 
-Five attacks against the verification machinery, all defeated. Run before the
-first unattended session; evidence for the "how do you know it can't fake it" question.
+Five historical attacks against the verification machinery, all defeated. These tests
+established the original baseline, not a proof that every bypass was impossible. The
+event-readiness pass later added automated regression coverage for checkpoint/tag ordering,
+small numeric literals, schema provenance, and frozen-input tampering in `tests/`.
 
 | # | Attack | Defense | Result |
 |---|--------|---------|--------|

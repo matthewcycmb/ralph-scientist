@@ -1,11 +1,12 @@
 # Ralph Scientist
 
 An unattended agent loop (Ralphthon @ICML 2026, Track 1) that writes a real research paper
-where **every citation resolves and every number is compiled from experiments in this repo**.
-Fabrication isn't discouraged — it's structurally impossible.
+where **every citation resolves and every reported result number is compiled from experiments
+in this repo**.
+The system makes fabrication difficult, visible, and reproducible enough to audit.
 
-The design in one breath: **the writer is creative and untrusted, the gates are dumb and
-incorruptible, the reviewer is skeptical.**
+The design in one breath: **the writer is creative and untrusted, protected checks are
+deterministic, and the reviewer is skeptical.**
 
 ## The loop
 
@@ -13,11 +14,11 @@ incorruptible, the reviewer is skeptical.**
 flowchart TD
     SPEC["SPEC.md<br>mission + rubric + exemplar papers<br>(never changes during the run)"]
     AGENT["1 · Fresh agent wakes up — no memory<br>reads SPEC.md, TODO.md, VERIFY.log"]
-    TASK["2 · Does ONE task<br>download data / run analysis / write / fix<br>then commits to git"]
-    GATES{"3 · Dumb gates (scripts, not AI)<br>citations resolve? · zero typed numbers?<br>PDF compiles? · pipeline re-runs clean?"}
+    TASK["2 · Does ONE task<br>run analysis / write / fix<br>then leaves a working tree"]
+    GATES{"3 · Seven deterministic gates<br>frozen inputs? · citations? · zero typed numbers?<br>fresh results? · sane schema? · plain prose? · PDF?"}
     FIX["failure appended to TODO.md<br>(a future agent must fix it)"]
     REVIEW["4 · Every 3rd lap: separate skeptical agent<br>writes an ICML-style review, scores /10"]
-    RATCHET["5 · Ratchet: all gates green AND score ≥ last tag<br>→ git tag paper-vN — always submittable"]
+    RATCHET["5 · Commit verified checkpoint, then ratchet<br>all gates green AND score ≥ last tag<br>→ git tag paper-vN"]
     SPEC --> AGENT --> TASK --> GATES
     GATES -- "any fail" --> FIX --> AGENT
     GATES -- "all pass" --> REVIEW --> RATCHET --> AGENT
@@ -29,7 +30,7 @@ The agent that caused a failure never sees it — it has already exited by the t
 The **next** agent inherits the fix:
 
 ```
- lap 7:  agent adds a citation that turns out to be fake → commits → exits
+ lap 7:  agent adds a citation that turns out to be fake → exits
          harness runs gates → citation gate FAILS
          → failure written into TODO.md and VERIFY.log
  lap 8:  brand-new agent reads TODO.md + VERIFY.log first
@@ -54,17 +55,20 @@ Fresh eyes every lap.
 the harness counts consecutive fails of the same gate and escalates the TODO message to
 "stop retrying the same fix, try a different approach.")
 
-## Why the numbers can't be fake
+## How numeric provenance is checked
 
 ```mermaid
 flowchart LR
     MODEL["frozen model<br>(checksummed, offline)"] --> PROBES["data/probes/<br>raw model outputs"] --> PY["analysis/*.py<br>scripts do all scoring"] --> RJ["results.json<br>every number lives here"] --> VT["values.tex<br>fill-in-the-blank macros"] --> PDF["paper PDF"]
 ```
 
-The agent may not type digits into the paper — a gate greps the LaTeX source and fails the
-iteration if it finds any. The only road a number can travel is the one above. Before any
-version is tagged, the harness deletes `results.json` and re-runs the whole pipeline: if the
-same numbers come back, they were real.
+Except for publication years, the agent may not type numeric literals into the paper. Every
+other number must pass through `results.json` and generated LaTeX macros. Every lap verifies
+the frozen model checksum and regenerates scoring plus macros from cached raw outputs before
+the PDF is compiled. Before submission, `make clean-deep && make all` deletes the raw outputs
+and repeats inference. The analysis code and raw artifacts remain public for inspection; the
+harness proves reproducibility and traceability, while scientific correctness still depends
+on review of the experiment design and scoring code.
 
 ## Build status
 
@@ -74,16 +78,17 @@ same numbers come back, they were real.
 | Agent constitution (`SPEC.md`, `PROMPT.md`) — topic re-locked 2026-07-04 (context degradation) | ✅ done |
 | Frozen model (Qwen2.5-0.5B-Instruct Q8, sha256 + FETCH.sh; determinism spike passed) | ✅ done |
 | Frozen dataset (NLSY97, 71 vars × 8,984, checksummed + tagset) — now fallback #1 | ✅ done |
-| Citation gate — live-tested vs Crossref, 3 exemplars verified | ✅ working |
-| Number-literal gate — tested, dimension false-positives fixed | ✅ working |
+| Frozen-input gate — model and fallback-data SHA-256 manifests | ✅ working |
+| Citation gate — 11 current bibliography entries cached and verified | ✅ working |
+| Number-literal gate — all numeric literals except publication years rejected | ✅ working |
 | Sanity gate + results.json contract (`analysis/RESULTS_SCHEMA.md`) | ✅ working |
 | Gate runner (`run_gates.sh`) — subshell exit bug found+fixed in testing | ✅ working |
 | Makefile, venv (pinned), tectonic, ICML 2026 template compiling | ✅ working |
 | Codex CLI unattended mode (`codex exec -s workspace-write`) | ✅ verified |
-| Loop + ratchet — 3-lap micro-run: all gates green, real paper produced | ✅ working |
+| Loop + ratchet — checkpoint-before-tag ordering covered by regression test | ✅ fixed |
 | Sabotage suite: 5 attacks (fake cite, typed number, macro tamper, gate tamper, overclaiming) | ✅ all caught |
 | Reviewer calibration — honest 4/10 vs sabotaged 2/10 (`harness/calibration/`) | ✅ done |
 | Endurance run: 9 effective laps, 12/12 gates green, 12 shadow tags, analysis 18→76 values | ✅ done |
 | Quota-outage behavior: degraded gracefully; backoff + review-pointer added to loop | ✅ fixed |
-| Reviewer trajectory 4→5→4 (deeper analysis exposed real fragility — reviewer caught it) | 📈 in progress |
-| Dress rehearsal (full-day, on refreshed quota) + paper-v1 tag | ❌ Jul 7–9 |
+| Latest context-paper review — rubric 6/7 but ICML overall 3/10 reject | ⚠️ design lessons folded into seed |
+| Dress rehearsal — context paper through paper-v13, independent review + confirmation | ✅ done |

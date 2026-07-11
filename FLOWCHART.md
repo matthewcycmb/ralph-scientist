@@ -30,7 +30,8 @@ We built an agent that designs context experiments, runs them on a
  │  3 · TAMPER CHECK   if the agent edited the rules or the checkers,    │
  │                     the edit is reverted and logged.                  │
  │                                   ▼                                   │
- │  4 · SIX CHECKS     simple scripts. Every lap. Cannot be skipped.     │
+ │  4 · SEVEN CHECKS   simple scripts. Every lap. Cannot be skipped.     │
+ │       · frozen model and fallback data still match their checksums     │
  │       · every cited paper really exists (checked in paper databases)  │
  │       · no number typed by hand — numbers only come from the code     │
  │       · re-running the scoring gives the exact same results.json      │
@@ -50,12 +51,12 @@ We built an agent that designs context experiments, runs them on a
  │       HUMANIZER   rewrites hard-to-read sentences in plain language.  │
  │                   Not allowed to change numbers or claims.            │
  │                                   ▼                                   │
- │  6 · VERSION TAG   all six checks pass AND the review score held or   │
- │                    rose → tag this version (paper-v1, v2, ...).       │
+ │  6 · VERSION TAG   commit the checked state; all seven checks pass    │
+ │                    AND review held/rose → tag that exact commit.       │
  │                    Every all-green lap also gets a backup tag, so     │
  │                    there is always a finished version to submit.      │
  │                                   ▼                                   │
- │  7 · SAVE          git commit. The lap is permanent history.          │
+ │  7 · FOLLOW-UP     editor/humanizer changes wait for next lap's gates.│
  │                                   │                                   │
  │                                   └────► next new agent (back to 1)   │
  └───────────────────────────────────┬────────────────────────────────────┘
@@ -290,14 +291,14 @@ Where each stage is VISIBLE, on disk, in public git history:
         └────────────── repeat until 5 PM ──────────────────┘
 ```
 
-> **Say:** "The writer is creative and untrusted. The checkers are dumb
-> and incorruptible. The reviewer is skeptical and keeps score of every
+> **Say:** "The writer is creative and untrusted. The protected checks are
+> deterministic. The reviewer is skeptical and keeps score of every
 > complaint. The editor sets the story. Four roles, and none of them
 > can do another's job."
 
 ---
 
-## 3 · The three locks — why it can't fake anything
+## 3 · The three locks — how fabrication becomes visible
 
 ```
  LOCK 1 · numbers have only ONE road into the paper
@@ -307,8 +308,8 @@ Where each stage is VISIBLE, on disk, in public git history:
     data)         copy)           do all        number           the-blank
                                   the math)     lives here)      paper)
 
-   If the agent types a digit directly into the paper,
-   a dumb script spots it instantly → FAIL. No side door exists.
+   If the agent types a numeric literal directly into the paper,
+   a script spots it instantly → FAIL. Publication years are the exception.
 
  LOCK 2 · citations must be real
  ───────────────────────────────
@@ -323,15 +324,15 @@ Where each stage is VISIBLE, on disk, in public git history:
 
  FINAL PROOF · the re-run
  ────────────────────────
-   Before any version counts: delete every result, re-run the whole
-   pipeline from the raw data. Same numbers come back = they were real.
+   Every lap rebuilds scoring from cached raw outputs. Before submission,
+   delete raw outputs too and repeat model inference from frozen weights.
 ```
 
-> **Say:** "We never ask the AI to be honest — asking doesn't work.
-> We made lying structurally impossible: numbers can only be compiled
-> from experiments, citations must match real databases, and the
-> checkers are fingerprinted so the agent can't rewrite the rules.
-> You can delete the results and re-run it yourself, live."
+> **Say:** "We never rely on asking the AI to be honest. Numbers must pass
+> through public analysis code, citations must match real databases, frozen
+> inputs are checksummed, and protected checks are restored after tampering.
+> Reproduction proves traceability; reviewers still judge whether the design
+> and scoring are scientifically correct."
 
 ---
 
@@ -407,19 +408,18 @@ even if the grade is low. Something verified is always submittable.
 ## 7 · Judge Q&A — the hard questions, answered
 
 **"How is this different from just asking ChatGPT to write a paper?"**
-One-shot AI papers invent citations and make up numbers. Here that is
-structurally impossible: numbers only compile from experiments, citations
-must match real databases, and dumb scripts — not the AI — enforce this
-every lap.
+One-shot AI papers can invent citations and make up numbers. Here numbers
+must pass through public analysis code, citations must match real databases,
+frozen inputs are checksummed, and deterministic scripts enforce those rules
+every lap. Reviewers still inspect whether the analysis itself is sound.
 
 **"Did you write any of the paper?"**
 No. I wrote the rulebook before the start. The git log is the proof —
 every commit during the event came from the loop.
 
 **"How do you know the numbers are CORRECT, not just reproducible?"**
-Honest answer: reproducibility proves nobody faked them, not that the
-code is bug-free. Three defenses: deliberately simple analyses (counting
-and correlations — shallow code has shallow bugs), sanity checks
+Honest answer: reproducibility proves traceability, not that the code is
+bug-free. Three defenses: deliberately simple analyses, sanity checks
 (percentages must be 0–100, sample sizes above a floor), and the reviewer
 must read the code behind the headline result.
 
@@ -458,12 +458,10 @@ paper. The git timestamps draw that line publicly.
 **"How is this different from STORM, or Sakana's AI Scientist?"**
 STORM (Stanford) writes Wikipedia-style survey articles by reading and
 summarizing existing sources — it runs no experiments. Sakana's AI
-Scientist does run experiments and write ML papers end-to-end, but its
-papers were criticized as shallow and sometimes simply wrong: generation
-without verification. Ours computes new results from real data AND makes
-fabrication structurally impossible — the checkers and the skeptical
-review loop are the contribution. Generation was already solved;
-verification wasn't.
+Scientist does run experiments and write ML papers end-to-end. Our emphasis
+is a public chain from frozen inputs to paper macros, plus deterministic
+checks and a skeptical review loop. The contribution is stronger verification
+and auditability, not a claim that automated science becomes infallible.
 
 **"This is an ML event — why isn't your paper about machine learning?"**
 The track tests whether an agent can do verifiable research; the machine

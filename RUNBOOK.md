@@ -8,17 +8,21 @@ You type three commands all day. Everything else is watching and presenting.
 2. `harness/reset_for_event.sh` → creates the clean `event-day` branch:
    one commit containing ONLY the declared pre-built inputs (harness, SPEC,
    frozen data). The practice paper, its analysis, and all practice history
-   stay behind on the practice branch. This is the "new work only" line:
-   everything judges see after commit #1 was born at the event.
+   stay behind on the practice branch. The script creates `event-day-start` as
+   the declared boundary. If a final pre-run repair is needed, move that tag to
+   the reviewed repair commit before starting; everything after the tag is event work.
 3. Create the public GitHub repo, push the event branch.
 4. Charge laptop + power bank; pack charger and phone (hotspot backup).
 5. Print or save FLOWCHART.md (the crib sheet + judge script).
 6. Verify `codex` auth still works (`codex exec "say ok"`).
-7. Codex CLI health check — lesson of 2026-07-03, when Codex.app's signing cert
+7. Run `make test`; the event-critical checkpoint and integrity regressions must pass.
+8. Codex CLI health check — lesson of 2026-07-03, when Codex.app's signing cert
    was revoked overnight and macOS silently SIGKILLed the CLI (exit 137, no
    output): run `codex --version`. If it prints nothing / exit 137, diagnose
    with `spctl -a -vv /Applications/Codex.app` and reinstall the standalone
    CLI: `npm install -g @openai/codex` (auth in ~/.codex carries over).
+9. `git status --short` must be empty. The loop intentionally refuses to start from a
+   dirty tree so pre-run repairs cannot be misrepresented as autonomous event work.
 
 ## At the venue (before the gun, ~8:30–9:30)
 
@@ -83,7 +87,7 @@ reviews → SAC final pass. Live demo NOT confirmed — check the email reply.
 - ~4:30 PM: stop expecting new tags; the best `paper-vN` is the submission.
   Leave the loop running until the deadline — a late tag is free upside.
 - Submit: PDF of the best tag + public repo link + declare the line:
-  commit #1 = declared inputs, everything after = born at the event.
+  `event-day-start` = declared inputs, everything after = born at the event.
 - PEER-REVIEW HALF HOUR — your reviews are also graded. Use the machine's
   own checklist on each paper, ~5 min each: (1) pick one number — can you
   trace where it came from? (2) pick one citation — does the paper exist?
@@ -92,7 +96,8 @@ reviews → SAC final pass. Live demo NOT confirmed — check the email reply.
   per paper: strongest thing, weakest thing, one question. Specific beats
   clever — "Table 2's n is never stated" is a great review line.
 - If a demo slot DOES exist: FLOWCHART 30-second script + the kill shot
-  (`make clean && make all` — numbers regenerate live).
+  (`make clean && make all` — scoring and the PDF regenerate live). The full
+  inference proof is `make clean-deep && make all` and takes about 45 minutes.
 
 ## If everything goes wrong
 

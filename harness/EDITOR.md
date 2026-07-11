@@ -16,7 +16,11 @@ Then do exactly three things:
 
 2. **Guard readability.** The paper must be followable by a smart non-specialist
    (SPEC's readability bar). Where the current draft uses undefined jargon or
-   uninterpreted tables, that is a strategic defect — direct the writers to fix it.
+   uninterpreted tables, that is a strategic defect — direct the writers to fix it. Readability
+   is not simplification at any cost: remove tautologies, definitions of ordinary words,
+   repetitive "Table X shows" commentary, and canned returns to the contract example. Treat
+   six tiny tables in a four-page paper as table bloat; keep only displays that change the
+   argument. A polished ICML register should sound direct, adult, and selective.
 
 3. **Restructure TODO.md around that thesis.** Rewrite the top of TODO.md so the
    first 3 items are the highest-leverage STRATEGIC moves toward the thesis —

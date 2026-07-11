@@ -2,7 +2,7 @@
 PY := .venv/bin/python
 TECTONIC := tectonic
 
-.PHONY: all probes results values paper verify clean clean-deep
+.PHONY: all probes results values paper verify test clean clean-deep
 
 all: results values paper
 
@@ -31,6 +31,9 @@ paper: values
 
 verify:
 	harness/run_gates.sh manual
+
+test:
+	PYTHONDONTWRITEBYTECODE=1 $(PY) -m unittest -v tests.test_harness
 
 # Wipe the cheap tier's artifacts; probes stay (they are expensive and frozen).
 clean:

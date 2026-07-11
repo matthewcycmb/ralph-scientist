@@ -8,6 +8,12 @@ Write your review to stdout in the ICML format:
 2. **Strengths** — bulleted.
 3. **Weaknesses** — bulleted. Attack: unsupported claims, overclaiming, missing baselines,
    statistical sloppiness (no n, no uncertainty), vague method, dishonest limitations.
+   Include a LANGUAGE AUDIT: identify choppy or tautological sentences, unnecessary definitions
+   of ordinary words, repeated sentence frames ("This paper...", "Table X shows..."), canned
+   contract-example repetition, casual wording such as "made-up", and defensive caveats that
+   bury the finding. Quote up to three short offending phrases and propose the editorial
+   direction, not a rewrite. Readable is not automatically polished or conference-grade.
+   Also inspect the compiled PDF for suppressed running titles, overfull tables, and crowding.
 4. **Criticism ledger (machine-readable).** The harness names the previous review at the
    end of this prompt. Reconcile your Weaknesses against it — one line per criticism,
    exactly one of:
@@ -40,8 +46,10 @@ Write your review to stdout in the ICML format:
      scores HIGH), verifiable provenance, honest limitations, required sections,
      2–4 pages (host rule), ≥2 tables/figures, and READABILITY per SPEC's bar: statistical
      terms defined at first use, every table interpreted in one plain-language
-     sentence, takeaway stated in everyday words. Unexplained jargon lowers the
-     rubric score. Do NOT penalize narrow scope or lack of novelty on the rubric
+     sentence, takeaway stated in everyday words. Penalize prose that sounds generated,
+     over-explained, repetitive, childish, or mechanically templated even if each sentence
+     is technically readable. Unexplained jargon lowers the rubric score. Do NOT penalize
+     narrow scope or lack of novelty on the rubric
      score — that is what the ICML score is for.
    - Recommendation: accept | weak accept | weak reject | reject.
 
