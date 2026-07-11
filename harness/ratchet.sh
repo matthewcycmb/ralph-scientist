@@ -14,15 +14,18 @@ LAST_GATE_BLOCK=$(awk '
 ' VERIFY.log 2>/dev/null)
 grep -q '^gates failed: 0$' <<< "$LAST_GATE_BLOCK" || exit 0
 
-# Shadow tag: EVERY all-gates-green state is verified and submittable, regardless of
-# review score — the fallback if the reviewer threshold is never met by submission.
-# Numbering is GLOBAL (no --merged): tag names are repo-wide, so a sim branch sharing
-# .git with practice tags must continue the sequence or creation collides and fails.
-LAST_GREEN=$(git tag -l 'green-v*' --sort=-v:refname | head -1)
-if [[ -z "$LAST_GREEN" ]]; then GN=1; else GN=$(( ${LAST_GREEN#green-v} + 1 )); fi
-git tag -a "green-v$GN" -m "gates=green iter=$ITER" \
-  && echo "SHADOW: tagged green-v$GN (iter=$ITER)" | tee -a VERIFY.log \
-  || echo "SHADOW FAILED: could not tag green-v$GN (iter=$ITER)" | tee -a VERIFY.log
+# Shadow tag: EVERY all-gates-green checkpoint is verified and submittable, regardless
+# of review score. A post-review promotion sets RATCHET_PAPER_ONLY=1 so it does not mint
+# a duplicate green tag for the same checkpoint.
+if [[ -z "${RATCHET_PAPER_ONLY:-}" ]]; then
+  # Numbering is GLOBAL (no --merged): tag names are repo-wide, so a sim branch sharing
+  # .git with practice tags must continue the sequence or creation collides and fails.
+  LAST_GREEN=$(git tag -l 'green-v*' --sort=-v:refname | head -1)
+  if [[ -z "$LAST_GREEN" ]]; then GN=1; else GN=$(( ${LAST_GREEN#green-v} + 1 )); fi
+  git tag -a "green-v$GN" -m "gates=green iter=$ITER" \
+    && echo "SHADOW: tagged green-v$GN (iter=$ITER)" | tee -a VERIFY.log \
+    || echo "SHADOW FAILED: could not tag green-v$GN (iter=$ITER)" | tee -a VERIFY.log
+fi
 
 # Latest reviewer score (JSON line at end of newest review). No review yet -> require one.
 # Rubric score (fixed bar vs SPEC) preferred; holistic 'overall' as fallback for old files.

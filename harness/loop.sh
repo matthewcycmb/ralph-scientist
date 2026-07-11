@@ -38,7 +38,7 @@ TIMEOUT=$(command -v timeout || command -v gtimeout) || {
 # reach: any lap that modifies harness/ or Makefile gets auto-reverted + logged.
 START_SHA=$(git rev-parse HEAD)
 harness_fingerprint() {
-  cat harness/loop.sh harness/checkpoint.sh harness/run_gates.sh harness/ratchet.sh harness/REVIEWER.md \
+  cat harness/loop.sh harness/checkpoint.sh harness/review_due.sh harness/run_gates.sh harness/ratchet.sh harness/REVIEWER.md \
       harness/EDITOR.md harness/HUMANIZER.md harness/gates/* Makefile PROMPT.md SPEC.md \
       analysis/make_values.py analysis/RESULTS_SCHEMA.md data/models/CHECKSUMS.txt \
       data/models/FETCH.sh data/cache/nlsy97/CHECKSUMS.txt requirements.txt \
@@ -49,7 +49,7 @@ BASELINE_FP=$(harness_fingerprint)
 restore_protected_files() {
   if [[ "$(harness_fingerprint)" != "$BASELINE_FP" ]]; then
     echo "TAMPER: protected harness inputs modified at iter $ITER — restoring from $START_SHA" | tee -a VERIFY.log
-    git checkout "$START_SHA" -- harness/loop.sh harness/checkpoint.sh harness/run_gates.sh \
+    git checkout "$START_SHA" -- harness/loop.sh harness/checkpoint.sh harness/review_due.sh harness/run_gates.sh \
       harness/ratchet.sh harness/REVIEWER.md harness/EDITOR.md harness/HUMANIZER.md \
       harness/gates Makefile PROMPT.md SPEC.md analysis/make_values.py \
       analysis/RESULTS_SCHEMA.md data/models/CHECKSUMS.txt data/models/FETCH.sh \
@@ -90,6 +90,8 @@ while true; do
   # loudly to VERIFY.log (the dashboard surfaces it). Slow is allowed; stuck is not.
   AGENT_CAP_MIN="${AGENT_CAP_MIN:-75}"
   STALL_KILL_MIN="${STALL_KILL_MIN:-10}"
+  REVIEW_CAP_MIN="${REVIEW_CAP_MIN:-12}"
+  ROLE_CAP_MIN="${ROLE_CAP_MIN:-8}"
   # Log goes straight to the file (no tee): $! must hold the timeout/codex process
   # itself so the watchdog's kill reaches the agent, not a log pipe. Live view:
   # tail -f the iter log. GNU timeout forwards TERM to its child.
@@ -141,10 +143,21 @@ while true; do
   # 3. Deterministic gates (never skipped, never agent-run). Failures land in TODO.md.
   harness/run_gates.sh "$ITER" || true
 
-  # 4. Adversarial ICML-style review every 3rd iteration once a draft exists.
-  #    read-only sandbox: the reviewer judges, it must not be able to edit anything.
+  # 4. Decide whether review is due, then checkpoint BEFORE spending reviewer time.
+  #    This guarantees a green fallback tag even if review hits the event deadline.
+  REVIEW_DUE=0
   REVIEW_COMPLETED=0
-  if [[ -f paper/main.tex && $((ITER % 3)) -eq 0 ]]; then
+  if bash harness/review_due.sh "$ITER"; then
+    REVIEW_DUE=1
+  fi
+
+  # Commit the exact gated state and mint its green fallback immediately. This fixes
+  # both the historical one-lap tag lag and the deadline risk from slow reviewers.
+  bash harness/checkpoint.sh "$ITER"
+
+  # 5. Review the first fully green paper immediately, then every three completed
+  #    laps. The read-only reviewer cannot edit the checkpoint it judges.
+  if [[ "$REVIEW_DUE" -eq 1 ]]; then
     # Draft archive: snapshot the compiled paper every review lap — the progress story.
     mkdir -p drafts
     [[ -f paper/main.pdf ]] && cp paper/main.pdf "drafts/iter-$ITER.pdf"
@@ -157,7 +170,7 @@ while true; do
 Previous review for the ledger: ${PREV_REVIEW:-none — first review, every ledger item is new}"
 
     # -o captures ONLY the reviewer's final message (the review); full stream -> logs/.
-    "$TIMEOUT" 25m codex exec -s read-only --skip-git-repo-check \
+    "$TIMEOUT" "${REVIEW_CAP_MIN}m" codex exec -s read-only --skip-git-repo-check \
       -o "reviews/iter-$ITER.md" "$REVIEWER_PROMPT" > "logs/review-$ITER.log" 2>&1 || true
     # Guarantee the review reaches the logbook — agents can't miss what's in TODO.
     if [[ -s "reviews/iter-$ITER.md" ]]; then
@@ -169,26 +182,25 @@ Previous review for the ledger: ${PREV_REVIEW:-none — first review, every ledg
       RSCORE=$(grep -o '"rubric": *[0-9]*' "reviews/iter-$ITER.md" | tail -1 | grep -o '[0-9]*$' || true)
       if [[ -n "${RSCORE:-}" && "$RSCORE" -ge 6 ]]; then
         echo "CONFIRM: rubric $RSCORE >= 6 at iter $ITER — running confirmation review" | tee -a VERIFY.log
-        "$TIMEOUT" 25m codex exec -s read-only --skip-git-repo-check \
+        "$TIMEOUT" "${REVIEW_CAP_MIN}m" codex exec -s read-only --skip-git-repo-check \
           -o "reviews/confirm-$ITER.md" "$REVIEWER_PROMPT" > "logs/confirm-$ITER.log" 2>&1 || true
       fi
+      # Promote the already-committed checkpoint using the fresh review. Do not create
+      # a second green tag for the same commit.
+      RATCHET_PAPER_ONLY=1 harness/ratchet.sh "$ITER" || true
       REVIEW_COMPLETED=1
     else
       echo "REVIEW FAILED at iter $ITER (quota or timeout) — will retry next review lap" | tee -a VERIFY.log
     fi
   fi
 
-  # 5. Commit the exact gated/reviewed state BEFORE tagging it. This fixes the historical
-  #    one-lap tag lag: a tag must point to the paper the gates just inspected.
-  bash harness/checkpoint.sh "$ITER"
-
   # 6. Strategy/prose roles run only after the verified checkpoint. Their changes are
   #    intentionally not included in this lap's tag; the next lap's gates inspect them.
   if [[ "$REVIEW_COMPLETED" -eq 1 ]]; then
-    "$TIMEOUT" 15m codex exec -s workspace-write --skip-git-repo-check \
+    "$TIMEOUT" "${ROLE_CAP_MIN}m" codex exec -s workspace-write --skip-git-repo-check \
       -o "logs/editor-msg-$ITER.txt" "$(cat harness/EDITOR.md)" > "logs/editor-$ITER.log" 2>&1 || true
     echo "HUMANIZER pass at iter $ITER" | tee -a VERIFY.log
-    "$TIMEOUT" 15m codex exec -s workspace-write --skip-git-repo-check \
+    "$TIMEOUT" "${ROLE_CAP_MIN}m" codex exec -s workspace-write --skip-git-repo-check \
       -o "logs/humanizer-msg-$ITER.txt" "$(cat harness/HUMANIZER.md)" > "logs/humanizer-$ITER.log" 2>&1 || true
     restore_protected_files
     if [[ -n "$(git status --porcelain -- data/cache/citations)" ]]; then

@@ -35,6 +35,38 @@ def run(
 
 
 class HarnessRegressionTests(unittest.TestCase):
+    def test_review_waits_for_green_paper_then_fires_immediately(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            (repo / "paper").mkdir()
+            (repo / "reviews").mkdir()
+            (repo / "paper/main.pdf").write_bytes(b"pdf")
+            (repo / "results.json").write_text("{}\n")
+            (repo / "VERIFY.log").write_text(
+                "--- gates @ iteration 3 12:00:00 ---\n"
+                "FAIL  results-sane\n"
+                "gates failed: 1\n"
+            )
+            due = ROOT / "harness/review_due.sh"
+            red = run("bash", str(due), "3", cwd=repo)
+            self.assertNotEqual(red.returncode, 0)
+
+            (repo / "VERIFY.log").write_text(
+                "--- gates @ iteration 4 12:05:00 ---\n"
+                "PASS  results-sane\n"
+                "gates failed: 0\n"
+            )
+            first_green = run("bash", str(due), "4", cwd=repo)
+            self.assertEqual(first_green.returncode, 0, first_green.stdout + first_green.stderr)
+
+            (repo / "reviews/iter-4.md").write_text("review\n")
+            not_cadence = run("bash", str(due), "5", cwd=repo)
+            self.assertNotEqual(not_cadence.returncode, 0)
+            too_soon = run("bash", str(due), "6", cwd=repo)
+            self.assertNotEqual(too_soon.returncode, 0)
+            cadence = run("bash", str(due), "7", cwd=repo)
+            self.assertEqual(cadence.returncode, 0, cadence.stdout + cadence.stderr)
+
     def test_checkpoint_tags_the_tree_that_just_passed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo = Path(tmp)
@@ -75,6 +107,16 @@ class HarnessRegressionTests(unittest.TestCase):
             head = run("git", "rev-parse", "HEAD", cwd=repo, check=True).stdout.strip()
             target = run("git", "rev-parse", f"{tag}^{{}}", cwd=repo, check=True).stdout.strip()
             self.assertEqual(target, head)
+            promoted = run(
+                "bash",
+                "harness/ratchet.sh",
+                "3",
+                cwd=repo,
+                env_extra={"RATCHET_PAPER_ONLY": "1"},
+            )
+            self.assertEqual(promoted.returncode, 0, promoted.stdout + promoted.stderr)
+            green_tags = run("git", "tag", "-l", "green-v*", cwd=repo, check=True).stdout.splitlines()
+            self.assertEqual(len(green_tags), 1)
 
     def test_number_gate_rejects_small_hand_typed_integer(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
