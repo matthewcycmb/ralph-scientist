@@ -32,6 +32,10 @@ BANNED_WORDS = [
     "comprehensive", "comprehensively",
     "landscape",
     "underscore", "underscores", "underscoring",
+    # Casual rehearsal-v13 language that weakens a professional research register.
+    "made-up",
+    "knob", "knobs",
+    "readout", "readouts",
 ]
 BANNED_PHRASES = [
     "it is important to note",
@@ -42,6 +46,8 @@ BANNED_PHRASES = [
     "in today's",
     "rapidly evolving",
     "a wide range of",
+    "in this run",
+    "current grid",
 ]
 
 WORD_RE = re.compile(r"\b(" + "|".join(BANNED_WORDS) + r")\b", re.IGNORECASE)
@@ -49,6 +55,10 @@ PHRASE_RE = re.compile("|".join(re.escape(p) for p in BANNED_PHRASES), re.IGNORE
 # ASCII -- (not ---) is fine only as digit--digit; --- is always an em dash.
 TRIPLE_DASH_RE = re.compile(r"---")
 DOUBLE_DASH_RE = re.compile(r"(?<![-\d])--(?![-\d])")
+REPETITION_LIMITS = [
+    (re.compile(r"\bthis paper\b", re.IGNORECASE), 2, "This paper"),
+    (re.compile(r"\bin the contract example\b", re.IGNORECASE), 1, "In the contract example"),
+]
 
 
 def strip_comments(line: str) -> str:
@@ -60,7 +70,8 @@ def main() -> int:
         print("PASS: paper/main.tex does not exist yet (nothing to check)")
         return 0
     errors = 0
-    for lineno, raw in enumerate(TEX.read_text(errors="replace").splitlines(), 1):
+    raw_text = TEX.read_text(errors="replace")
+    for lineno, raw in enumerate(raw_text.splitlines(), 1):
         line = strip_comments(raw)
         if not line.strip():
             continue
@@ -80,10 +91,19 @@ def main() -> int:
         for m in PHRASE_RE.finditer(line):
             print(f"FAIL: line {lineno}: banned phrase '{m.group(0)}' — delete it or state the point directly")
             errors += 1
+    prose = "\n".join(strip_comments(line) for line in raw_text.splitlines())
+    for pattern, limit, label in REPETITION_LIMITS:
+        count = len(pattern.findall(prose))
+        if count > limit:
+            print(
+                f"FAIL: repeated frame '{label}' appears {count} times (limit {limit}) — "
+                "vary sentence structure and lead with the evidence"
+            )
+            errors += 1
     if errors:
         print(f"{errors} style failure(s) in paper/main.tex")
         return 1
-    print("PASS: prose is clean (no em dashes, no AI-slop vocabulary)")
+    print("PASS: prose meets deterministic professional-style checks")
     return 0
 
 

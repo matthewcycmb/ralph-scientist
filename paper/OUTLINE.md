@@ -10,6 +10,8 @@ through a macro generated in `paper/values.tex`.
 - Lead with the strongest comparison the design genuinely supports.
 - Call sparse or inconclusive axes inconclusive; do not promote pilot evidence.
 - Close with the practical takeaway and the narrow scope.
+- Use a compact professional arc: question, design, principal estimate, qualification,
+  takeaway. Do not define ordinary words or narrate the paper section by section.
 
 ## Introduction
 
@@ -56,7 +58,8 @@ through a macro generated in `paper/values.tex`.
 - Answer each question directly before presenting tables.
 - Use no more tables than the evidence needs. Prefer one central paired-position table,
   one amount/quality table with explicit n, and one mitigation/baseline table.
-- After each table, give one plain-language contract-clause interpretation.
+- Interpret each table in direct research prose. Return to the contract example only when it
+  makes the estimate easier to understand; never use it as a repeated sentence template.
 - Separate findings, null results, and design limitations. Never make an unpaired contrast
   sound like an intervention.
 

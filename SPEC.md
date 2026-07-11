@@ -151,10 +151,9 @@ papers produced; exemplar wing in data/exemplars/). Battle-tested but not ML-top
   degradation — see exemplars) + extension (the context-QUALITY axis, RQ3, and the
   mitigation comparison, RQ4, on a laptop-scale open model). Say so. Overclaiming will
   be rejected by the adversarial reviewer.
-- MOTIVATING EXAMPLE: frame the paper with ONE recurring plain-language example —
+- MOTIVATING EXAMPLE: frame the paper with ONE restrained plain-language example —
   asking a question about a single clause buried in a long contract. Introduce it in
-  the introduction, echo it in one sentence after each results table (e.g. "at this
-  length, one lookup in three returns the wrong clause"), and state explicitly that
+  the introduction, use it later only when it clarifies a result, and state explicitly that
   the probes are a synthetic, gradeable version of that situation — never imply real
   contracts were tested. One example used consistently; do not scatter new analogies.
 - THE OPENING IS A SCENE, NOT A SUMMARY: the introduction's first paragraph must
@@ -164,7 +163,8 @@ papers produced; exemplar wing in data/exemplars/). Battle-tested but not ML-top
   decoy sentence, the model's habit of word-matching) is SHOWN in the scene before
   any section names or defines it. Test: a reader who has only used a chatbot once
   should recognize the situation by sentence two. This standard applies to the
-  opening; methods and results stay plain but precise.
+  opening. End the scene after at most two sentences; methods and results use a conventional
+  professional research register.
 - PROSE STYLE (gate-enforced by harness/gates/check_style.py — violations fail the
   lap): NO em dashes of any kind (no ---, no U+2014/U+2013; rewrite with a comma,
   period, or parentheses; ASCII -- only inside numeric ranges like 1980--84), and
@@ -173,6 +173,28 @@ papers produced; exemplar wing in data/exemplars/). Battle-tested but not ML-top
   "it is important to note", and similar — the gate prints the full list on failure).
   Plain words beat impressive ones. Professional tone comes from precision, not
   vocabulary.
+- PROFESSIONAL REGISTER: write for a technically literate reader outside this narrow
+  subfield, not for a child and not for a marketing audience. Use normal research words
+  when they are the exact words: estimate, condition, paired comparison, synthetic probe,
+  confidence interval. Define specialized ideas once; do not define ordinary words such as
+  baseline, mitigation, document, or accuracy. Prefer "synthetic" to "made-up," "estimate"
+  to "readout," and "experimental factor" to "knob." First-person plural is allowed and
+  often cleaner than repeating "this paper." Never narrate the writing process.
+
+  BAD:  "The target clause is the clause with the correct answer. A mitigation is a cheap
+         change meant to reduce errors."
+  GOOD: "Each document contains a vendor clause with the correct code and a buyer clause
+         with a competing code. We evaluate keyword pruning as a retrieval baseline."
+
+  BAD:  "Table 3 shows the strongest pattern in the current grid. In the contract example,
+         the model is most trustworthy when the vendor clause appears first."
+  GOOD: "Accuracy fell from \accStart\% to \accEnd\% when the same clause moved from the
+         start to the end of the document (Table~\ref{tab:position})."
+
+  Paragraphs should lead with the claim, then evidence, then one necessary qualification.
+  Do not alternate every result with a disclaimer; collect secondary caveats in Limitations.
+  Avoid three short declarative sentences in a row. Vary sentence openings naturally rather
+  than replacing one repeated template with another.
 - SENTENCE LAW (the most important paper standard — a paper nobody can follow is a
   failed paper regardless of its numbers). Every sentence must survive four tests,
   each shown with a real failure from rehearsal and its fix:
@@ -180,15 +202,15 @@ papers produced; exemplar wing in data/exemplars/). Battle-tested but not ML-top
      what a sentence claims, it is broken no matter how simple it sounds.
      BAD:  "Putting more text in a prompt changes more than the amount a model must
            read." (changes more WHAT? the comparison never lands)
-     GOOD: "When a document grows, three things change at once: how much the model
-           must read, where the answer sits, and how much of the text looks like
-           the answer."
+     GOOD: "Increasing document length can also change the answer's relative position and
+           the number of competing clauses, so an unmatched length comparison does not
+           isolate a single cause."
   2. SUBJECTS DO THEIR VERBS: the subject of each sentence must be able to actually
      perform its verb; otherwise the sentence is making something up.
      BAD:  "A longer prompt never changes length alone." (a prompt cannot change
            length — being longer IS the length change)
-     GOOD: "Documents grow; models read; accuracy falls." (each subject really does
-           its verb)
+     GOOD: "We move the same target clause across three positions while holding the
+           question, filler, and competing clause fixed."
   3. NOTHING WALKS ON STAGE UNANNOUNCED: no term, name, or shorthand before the
      thing it names has been described in plain words.
      BAD:  "The safe answer should be the clause that governs the vendor." ("safe
@@ -198,10 +220,8 @@ papers produced; exemplar wing in data/exemplars/). Battle-tested but not ML-top
   4. EVERY KNOB NAMES ITS MACHINE: never bare "length, position, and filler type" —
      always length OF WHAT, with real (macro) values.
      BAD:  "The grid varies length, position, and filler type."
-     GOOD: "We generate hundreds of test documents and change one thing at a time:
-           how long the document is, where the answer sentence is placed (near the
-           start, the middle, or the end), and what kind of filler surrounds it
-           (off-topic sentences, or on-topic sentences about the same subject)."
+     GOOD: "We vary three properties of each synthetic document: tokenizer-measured length,
+           target-clause position, and whether surrounding clauses are topically related."
   Flow: one idea per sentence; a reader meets each concept before it is used; short
   sentences mixed with medium ones. Read every paragraph as if aloud — a stumble is
   a defect to fix, not a style choice.
@@ -211,12 +231,12 @@ papers produced; exemplar wing in data/exemplars/). Battle-tested but not ML-top
   sizes) — e.g. "1. As the document grows, how much does accuracy fall?" The Results
   section answers each question by number, with a measured value in the answering
   sentence. A reviewer must find any question and its answer in under a minute.
-- READABILITY BAR: a smart high-school student must be able to follow the argument.
-  Define every statistical term at first use in one plain clause — e.g. "Spearman
-  correlation (a rank-based measure of association)", "topcoded (extreme values capped
-  by the survey)". After every table: one sentence in everyday words saying what it
-  shows. The abstract's last sentence states the takeaway in plain language. Density
-  is genre; unexplained jargon is a defect.
+- READABILITY BAR: a technically literate reader who does not study long-context evaluation
+  must follow the argument on one pass. Define specialized statistical terms at first use
+  in one precise clause, but assume ordinary research vocabulary. Interpret every table in
+  prose without mechanically starting "Table X shows" or repeating the contract example.
+  The abstract's last sentence states the takeaway directly. Unexplained jargon is a defect;
+  over-explaining ordinary words is also a defect.
 - Limitations section must name at least: one small quantized model (findings may not
   transfer to larger models); synthetic probe tasks, not natural documents; retrieval
   accuracy is not general capability; grid size capped by the CPU probe budget (state

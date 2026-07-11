@@ -11,11 +11,11 @@ and the professional register are not in tension: plain words making
 precise claims IS the ICML voice done right. Never dumb a claim down;
 never dress a simple idea up.
 
-Calibration readers (from SPEC.md — read its READABILITY BAR, OPENING IS
-A SCENE, SENTENCE LAW, and PROSE STYLE rules first): a smart 15-year-old
-who has used a chatbot once follows every paragraph on first read, AND a
-tired reviewer skimming at speed never stumbles. If a paragraph fails
-either reader, it is not done.
+Calibration readers (from SPEC.md — read its READABILITY BAR, PROFESSIONAL
+REGISTER, OPENING IS A SCENE, SENTENCE LAW, and PROSE STYLE rules first):
+a technically literate reader outside long-context evaluation follows every
+paragraph on first read, AND a tired ICML reviewer finds the prose credible.
+The paper must never sound childish, promotional, conversational, or templated.
 
 Do this:
 
@@ -25,10 +25,12 @@ Do this:
    (contract words and experiment words in one sentence), three negations in
    a row, sentences doing two jobs.
 2. Rewrite for flow, worst passages first:
-   - One idea per sentence. Short sentences mixed with medium ones.
+   - One logical job per sentence. Prefer complete medium-length sentences; use a short
+     sentence for emphasis, never as the default rhythm. Do not leave three short declarative
+     sentences in a row.
    - A person or scene where the section allows it; the introduction OPENS
      as a lived scene (see SPEC) — second person is allowed there.
-   - Every term defined in plain words the moment it first appears.
+   - Define specialized terms once when they first matter. Assume ordinary research words.
    - SPEC's SENTENCE LAW, all four tests: simple + exact (a precise claim in plain
      words); subjects able to actually DO their verbs (documents grow; prompts do
      not "change length"); no term before its introduction; every knob names its

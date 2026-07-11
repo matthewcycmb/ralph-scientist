@@ -126,6 +126,21 @@ class HarnessRegressionTests(unittest.TestCase):
             result = run(sys.executable, str(ROOT / "harness/gates/check_numbers.py"), cwd=repo)
             self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
 
+    def test_style_gate_rejects_casual_and_repetitive_paper_voice(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            (repo / "paper").mkdir()
+            (repo / "paper/main.tex").write_text(
+                "This paper uses a made-up task. "
+                "This paper reports the task. "
+                "This paper explains the task. "
+                "This paper repeats itself.\n"
+            )
+            result = run(sys.executable, str(ROOT / "harness/gates/check_style.py"), cwd=repo)
+            self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("made-up", result.stdout.lower())
+            self.assertIn("repeated", result.stdout.lower())
+
     def test_sanity_gate_rejects_unknown_units_and_fake_script_paths(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo = Path(tmp)
