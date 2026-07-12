@@ -35,6 +35,19 @@ def run(
 
 
 class HarnessRegressionTests(unittest.TestCase):
+    def test_launch_memory_matches_submission_and_review_form(self) -> None:
+        todo = (ROOT / "TODO.md").read_text()
+        reviewer = (ROOT / "harness/REVIEWER.md").read_text()
+        humanizer = (ROOT / "harness/HUMANIZER.md").read_text()
+        self.assertIn("anonymous ICML submission", todo)
+        self.assertIn("concrete title and self-contained abstract first", todo)
+        self.assertIn("eight-gate pass", todo)
+        self.assertIn("6 strong accept", reviewer)
+        self.assertIn("1 strong reject", reviewer)
+        self.assertIn("references/appendices excluded", reviewer)
+        self.assertIn("strong accept|accept|weak accept|weak reject|reject|strong reject", reviewer)
+        self.assertIn("only when it materially clarifies a result", humanizer)
+
     def test_event_launcher_kills_complete_process_groups(self) -> None:
         launcher = (ROOT / "harness/start_event.sh").read_text()
         self.assertIn('kill -TERM -- "-$leader"', launcher)

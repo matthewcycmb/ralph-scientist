@@ -35,9 +35,9 @@ Do this:
      words); subjects able to actually DO their verbs (documents grow; prompts do
      not "change length"); no term before its introduction; every knob names its
      machine with real values (never bare "length/position/type").
-   - The contract example carried through: one sentence in everyday words
-     after every table, in contract terms. Integrate it naturally; do not repeat the frame
-     "In the contract example" or force the same analogy sentence after every table.
+   - Return to the contract example only when it materially clarifies a result. Integrate it
+     naturally; never require an analogy after every table or repeat the frame
+     "In the contract example." Some tables need only a precise research interpretation.
    - Methods and Results stay precise: plain, never cute. No new analogies
      beyond the contract example.
    - Do not define ordinary words merely to sound accessible. "Baseline," "mitigation," and

@@ -44,7 +44,7 @@ Write your review to stdout in the ICML format:
      sound methods for what is claimed, every claim sized to evidence (overclaiming
      and hidden fragility are the worst failures — a well-diagnosed weak result
      scores HIGH), verifiable provenance, honest limitations, required sections,
-     2–4 pages (host rule), ≥2 tables/figures, and READABILITY per SPEC's bar: statistical
+     2–4 main-body pages (references/appendices excluded), ≥2 tables/figures, and READABILITY per SPEC's bar: statistical
      terms defined at first use, every table interpreted in one plain-language
      sentence, takeaway stated in everyday words. The fixed rubric ALSO includes the
      competition's significance and originality criteria: a narrow study can score well only
@@ -52,9 +52,13 @@ Write your review to stdout in the ICML format:
      Penalize prose that sounds generated,
      over-explained, repetitive, childish, or mechanically templated even if each sentence
      is technically readable. Unexplained jargon lowers the rubric score.
-   - Recommendation: accept | weak accept | weak reject | reject.
+   - Overall mapping: 6 strong accept; 5 accept; 4 weak accept; 3 weak reject;
+     2 reject; 1 strong reject. Reserve 4 for technically solid work others could build on,
+     and use 3 when revision is still required before others could meaningfully build on it.
+   - Recommendation must match that score: strong accept | accept | weak accept |
+     weak reject | reject | strong reject.
 
 Finish with exactly one line of machine-readable JSON:
-{"overall": <int 1-6>, "rubric": <int 1-10>, "soundness": <int 1-4>, "presentation": <int 1-4>, "significance": <int 1-4>, "originality": <int 1-4>, "confidence": <int 1-5>, "recommendation": "<accept|weak accept|weak reject|reject>"}
+{"overall": <int 1-6>, "rubric": <int 1-10>, "soundness": <int 1-4>, "presentation": <int 1-4>, "significance": <int 1-4>, "originality": <int 1-4>, "confidence": <int 1-5>, "recommendation": "<strong accept|accept|weak accept|weak reject|reject|strong reject>"}
 
 Do not fix anything. Do not edit any file. Judge only.

@@ -22,9 +22,11 @@ Seed state — the loop has not started. Highest leverage first.
   compliance. A partial manifest is valid work-in-progress but cannot be presented as final.
 - [ ] Draft from paper/OUTLINE.md. Name the exact Qwen artifact. Make the honest thesis
   follow the strongest supported comparison; call sparse or null axes inconclusive.
-- [ ] Produce a 2–4 page ICML paper with at least 2 useful tables/figures, the recurring
-  contract example, all four questions answered, required limitations, and Reproducibility.
+- [ ] Produce an anonymous ICML submission with a 2–4 page main body, at least 2 useful
+  tables/figures, all four questions answered, required limitations, and Reproducibility.
+  Finish the concrete title and self-contained abstract first; references/appendices do not
+  count toward the four-page main-body limit. Use the contract example only where it clarifies.
 - [ ] Cite only verified context-wing exemplars. Read their frozen full text before writing
   Related Work. New citations must be resolved by the harness citation gate.
-- [ ] First full seven-gate pass plus reviewer rubric >= 6 produces paper-v1. Confirm that
+- [ ] First full eight-gate pass plus reviewer rubric >= 6 produces paper-v1. Confirm that
   the tag targets the verified checkpoint, not the preceding lap.
