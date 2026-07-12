@@ -270,13 +270,16 @@ Style/structure models (short, clean empirical papers in ICML format conventions
    ← the shape to imitate: skeptical question → simple measurements → honest answer.
 8. Dodge et al., 2019 — "Show Your Work" ← reporting norms; cite in Reproducibility.
 
-## Rubric (the adversarial reviewer's RUBRIC score /10 is anchored to exactly this fixed
-## bar — not ICML novelty; the ratchet requires rubric ≥ 6, confirmed by a second read)
+## Rubric (the adversarial reviewer's RUBRIC score /10 follows the competition's
+## ICML-style form; the ratchet requires rubric ≥ 6, confirmed by a second read)
 
 - Soundness: method faithfully replicates the cited approach; statistics appropriate;
-  probe counts reported for every estimate.
-- Contribution: the quality axis (RQ3) and mitigation comparison (RQ4) add something
-  the exemplars don't have; laptop-scale determinism is stated as a feature.
-- Clarity: a reviewer can find RQs, method, and headline result in 60 seconds.
-- Honesty: limitations real, claims sized to evidence.
-- Reproducibility: a stranger can re-run `make all` from the README.
+  paired/matched comparisons are valid; probe counts and uncertainty accompany estimates;
+  limitations are real and claims are sized to evidence.
+- Presentation: a reviewer can find the question, method, contribution, and headline result
+  in 60 seconds; prose is professional; displays are selective and legible.
+- Significance: the paper explains who should care, what decision the evidence informs, and
+  why the result matters beyond this one synthetic grid without overstating generality.
+- Originality: the quality axis, matched mitigation comparison, laptop-scale open-model
+  evidence, or an agent-generated finding adds a clear distinction from the cited work.
+- Reproducibility supports soundness: a stranger can trace and rerun every reported result.

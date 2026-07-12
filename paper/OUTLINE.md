@@ -21,6 +21,8 @@ through a macro generated in `paper/values.tex`.
 - End with four plain questions: context amount, target position, filler quality, and
   the paired keyword-pruning mitigation.
 - Preview only results supported by matched comparisons and adequate cell counts.
+- State significance concretely: what context-management decision could change if the result
+  holds for the tested model. State originality by contrast with the closest cited study.
 
 ## Related Work
 

@@ -13,6 +13,9 @@ Then do exactly three things:
    original hope — if results are weak, fragile, or contradictory, the honest
    diagnosis of that IS the story (a well-diagnosed fragile result beats a
    spun positive one; the reviewer punishes spin hardest). Be decisive.
+   Then state the paper's significance and originality in one sentence each. Significance
+   names the decision or reader affected by the result. Originality names the exact difference
+   from the closest cited work. If either sentence is vague, repairing it is strategic work.
 
 2. **Guard readability.** The paper must be followable by a smart non-specialist
    (SPEC's readability bar). Where the current draft uses undefined jargon or

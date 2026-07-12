@@ -37,8 +37,8 @@ Write your review to stdout in the ICML format:
      produced it. Report the chain or the break.
 6. **Questions for the authors** — the 3 hardest ones.
 7. **Scores** — two DIFFERENT scores:
-   - **ICML scores** (holistic, novelty-sensitive): Soundness /4, Contribution /4,
-     Presentation /4, Overall /10.
+   - **ICML-style competition scores:** Soundness /4, Presentation /4,
+     Significance /4, Originality /4, Overall /10. Score each separately and justify it.
    - **Rubric score /10** (fixed bar): does THIS paper do what SPEC.md demands, at
      the quality demanded? Score ONLY against SPEC's rubric and hard requirements:
      sound methods for what is claimed, every claim sized to evidence (overclaiming
@@ -46,14 +46,15 @@ Write your review to stdout in the ICML format:
      scores HIGH), verifiable provenance, honest limitations, required sections,
      2–4 pages (host rule), ≥2 tables/figures, and READABILITY per SPEC's bar: statistical
      terms defined at first use, every table interpreted in one plain-language
-     sentence, takeaway stated in everyday words. Penalize prose that sounds generated,
+     sentence, takeaway stated in everyday words. The fixed rubric ALSO includes the
+     competition's significance and originality criteria: a narrow study can score well only
+     if it states a credible practical implication and a specific distinction from prior work.
+     Penalize prose that sounds generated,
      over-explained, repetitive, childish, or mechanically templated even if each sentence
-     is technically readable. Unexplained jargon lowers the rubric score. Do NOT penalize
-     narrow scope or lack of novelty on the rubric
-     score — that is what the ICML score is for.
+     is technically readable. Unexplained jargon lowers the rubric score.
    - Recommendation: accept | weak accept | weak reject | reject.
 
 Finish with exactly one line of machine-readable JSON:
-{"overall": <int 1-10>, "rubric": <int 1-10>, "recommendation": "<accept|weak accept|weak reject|reject>"}
+{"overall": <int 1-10>, "rubric": <int 1-10>, "soundness": <int 1-4>, "presentation": <int 1-4>, "significance": <int 1-4>, "originality": <int 1-4>, "recommendation": "<accept|weak accept|weak reject|reject>"}
 
 Do not fix anything. Do not edit any file. Judge only.
