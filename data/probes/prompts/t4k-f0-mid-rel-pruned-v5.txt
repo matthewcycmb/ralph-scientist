@@ -1,0 +1,9 @@
+<|im_start|>system
+You are a careful assistant. Answer with the requested code only, nothing else.<|im_end|>
+<|im_start|>user
+Document:
+Thornqvist filed its quarterly procurement summary under reference BL-963. The service annex for Lucastra lists billing schedule NZ-452. An internal audit note for Grelling cites compliance tag RP-101. Warehouse deliveries for Halvern are logged against docket HD-909. The onboarding packet for Ostrander references training module ZH-153. Legal archived the Sollertis correspondence file under label RT-861. Corvess's master supply agreement carries the renewal identifier JV-343. The renewal code required to extend the contract with Ferrodyne is FR-784.
+
+Question: What is the renewal code required to extend the contract with Corvess?
+Answer with the code only.<|im_end|>
+<|im_start|>assistant

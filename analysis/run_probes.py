@@ -6,8 +6,9 @@ Design contract (SPEC.md):
   filler, question) is generated WITHOUT position in its seed; the same family
   is rendered with the target clause at start / middle / end. Only the target
   moves, so position comparisons are paired.
-- Distractor depth is chosen per family independently of target position and
-  stays fixed across the three renders.
+- Distractor depth is chosen per family independently of target position. Its
+  final sentence index stays fixed across the three renders, so only the
+  target clause moves in a paired position comparison.
 - Filler quality (relevant vs irrelevant) is balanced inside every tier.
 - Tier sizes are TOKENIZER-VERIFIED: prompts are sized with llama-tokenize and
   the measured counts land in the manifest; nominal labels never reach the
@@ -42,9 +43,11 @@ PROBE_DIR = ROOT / "data/probes"
 PROMPT_DIR = PROBE_DIR / "prompts"
 OUT_DIR = PROBE_DIR / "out"
 MANIFEST = PROBE_DIR / "manifest.json"
+GRID_VERSION = "v5-fixed-competitor-position-metal"
+PROBE_VERSION = "v5"
 
 LLAMA_ARGS = ["--temp", "0", "--seed", "42", "-c", "9216", "-n", "16",
-              "--no-display-prompt", "--simple-io", "--device", "none"]
+              "--no-display-prompt", "--simple-io"]
 
 # Grid: nested families per tier (families shared across tiers so the amount
 # axis reuses the same scenarios). Costs measured 2026-07-07 on this laptop.
@@ -186,16 +189,29 @@ def filler_sentences(family: Family, tier: str, kind: str, count: int):
 
 def assemble(filler: list, needle: str, distractor: str,
              target_depth: float, distractor_depth: float) -> list:
-    """Insert distractor then needle at fractional depths of the final doc."""
-    doc = list(filler)
-    n = len(doc) + 2
-    d_at = min(int(round(distractor_depth * n)), n - 2)
+    """Place both clauses into final-document slots without index shifts.
+
+    Computing slots before filling the document prevents insertion order from
+    moving the distractor when the target appears earlier. The distractor's
+    final index is consequently identical in every position render of a
+    family, while the filler retains its original order.
+    """
+    n = len(filler) + 2
+    d_at = min(int(round(distractor_depth * n)), n - 1)
     t_at = min(int(round(target_depth * n)), n - 1)
     if t_at == d_at:
-        t_at += 1
-    for pos, sent in sorted([(d_at, distractor), (t_at, needle)],
-                            reverse=True):
-        doc.insert(min(pos, len(doc)), sent)
+        t_at = t_at + 1 if t_at + 1 < n else t_at - 1
+    filler_iter = iter(filler)
+    doc = []
+    for index in range(n):
+        if index == d_at:
+            doc.append(distractor)
+        elif index == t_at:
+            doc.append(needle)
+        else:
+            doc.append(next(filler_iter))
+    if next(filler_iter, None) is not None:
+        raise AssertionError("assemble did not consume the filler exactly")
     return doc
 
 
@@ -350,20 +366,24 @@ class Grid:
                         needle, distractor = fam.clauses("para")
                         doc = assemble(filler, needle, distractor, depth,
                                        fam.distractor_depth)
-                        pid = f"{tier_label}-f{fi}-{pos}-{kind}-full"
+                        pid = (f"{tier_label}-f{fi}-{pos}-{kind}-full-"
+                               f"{PROBE_VERSION}")
                         prompt = build_prompt(doc, fam.question)
                         self._docs[pid] = doc
                         self._add(pid, prompt, est_s, family=fi,
                                   tier=tier_label, nominal_tokens=nominal,
                                   style="para", filler=kind, position=pos,
                                   variant="full",
+                                  target_sentence_index=doc.index(needle),
+                                  distractor_sentence_index=doc.index(distractor),
                                   target_code=fam.target_code,
                                   distractor_code=fam.distractor_code)
                         if tier_label == PRUNED_TIER:
                             pdoc = prune(doc, fam.question)
                             target_retained = needle in pdoc
                             distractor_retained = distractor in pdoc
-                            ppid = f"{tier_label}-f{fi}-{pos}-{kind}-pruned"
+                            ppid = (f"{tier_label}-f{fi}-{pos}-{kind}-pruned-"
+                                    f"{PROBE_VERSION}")
                             self._add(ppid, build_prompt(pdoc, fam.question),
                                       6, family=fi, tier=tier_label,
                                       nominal_tokens=nominal, style="para",
@@ -382,7 +402,7 @@ class Grid:
                                     f"{ppid}: pruning-control contract failed")
                             cdoc = [s for s in pdoc if s != distractor]
                             cpid = (f"{tier_label}-f{fi}-{pos}-{kind}-"
-                                    "prunednodecoy")
+                                    f"prunednodecoy-{PROBE_VERSION}")
                             self._add(
                                 cpid, build_prompt(cdoc, fam.question),
                                 CONTROL_EST_SECONDS, family=fi,
@@ -399,7 +419,7 @@ class Grid:
                             # this selector never reads the hidden answer label.
                             edoc = query_entity_select(doc, fam.question)
                             epid = (f"{tier_label}-f{fi}-{pos}-{kind}-"
-                                    "entitypruned")
+                                    f"entitypruned-{PROBE_VERSION}")
                             self._add(
                                 epid, build_prompt(edoc, fam.question),
                                 SELECTOR_EST_SECONDS, family=fi,
@@ -423,10 +443,12 @@ class Grid:
             needle, distractor = fam.clauses("lit")
             doc = assemble(filler, needle, distractor, POSITIONS["mid"],
                            fam.distractor_depth)
-            self._add(f"{tier_label}-f{fi}-mid-irr-lit",
+            self._add(f"{tier_label}-f{fi}-mid-irr-lit-{PROBE_VERSION}",
                       build_prompt(doc, fam.question), est_s, family=fi,
                       tier=tier_label, nominal_tokens=nominal, style="lit",
                       filler="irr", position="mid", variant="full",
+                      target_sentence_index=doc.index(needle),
+                      distractor_sentence_index=doc.index(distractor),
                       target_code=fam.target_code,
                       distractor_code=fam.distractor_code)
         # Closed-book baseline: question only, no document.
@@ -437,6 +459,21 @@ class Grid:
                       filler="none", position="none", variant="closedbook",
                       target_code=fam.target_code,
                       distractor_code=fam.distractor_code)
+
+        # A position pair is valid only if the competitor occupies the same
+        # final-document slot in all three versions of a scenario.
+        for tier_label, _, n_fam, _ in TIERS:
+            for fi in range(n_fam):
+                for kind in FILLERS:
+                    ids = [f"{tier_label}-f{fi}-{pos}-{kind}-full-"
+                           f"{PROBE_VERSION}" for pos in POSITIONS]
+                    distractor_indices = {
+                        self.probes[pid]["distractor_sentence_index"]
+                        for pid in ids
+                    }
+                    if len(distractor_indices) != 1:
+                        raise AssertionError(
+                            f"competitor moved across position renders: {ids}")
 
     def measure_all(self):
         for rec in self.probes.values():
@@ -469,7 +506,12 @@ def save_manifest(grid: Grid):
             "model_sha256": model_sha256(),
             "llama_command": "llama-completion -m <model> -f <prompt> "
                              + " ".join(LLAMA_ARGS),
-            "grid_version": "v3-query-entity-selector",
+            "grid_version": GRID_VERSION,
+            "position_control": (
+                "target clause moves among fixed final-document slots; "
+                "competitor final sentence index is invariant within each "
+                "tier-family-filler triplet"
+            ),
             "total_probes": len(grid.probes),
             "done_probes": sum(done.values()),
             "manifest_complete": all(done.values()),

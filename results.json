@@ -219,7 +219,7 @@
       "desc": "count of responses containing the distractor code but not the target code",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 72
+      "value": 68
     },
     "distractorCaptureFamilyCount": {
       "desc": "scenario-family count for responses containing the distractor code but not the target code",
@@ -232,7 +232,7 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 40.0
+      "value": 37.77777777777778
     },
     "entitySelectorAccuracy": {
       "desc": "normalized accuracy after query-entity selection",
@@ -246,7 +246,7 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "raw",
-      "value": 60.0
+      "value": 56.666666666666664
     },
     "entitySelectorCount": {
       "desc": "probe count for normalized accuracy after query-entity selection",
@@ -314,13 +314,13 @@
       "desc": "accuracy ties in paired query-entity-selected context minus full context comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 12
+      "value": 13
     },
     "entitySelectorWins": {
       "desc": "accuracy gains in paired query-entity-selected context minus full context comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 18
+      "value": 17
     },
     "exactOutputComplianceCount": {
       "desc": "count of responses containing exactly one code and nothing else",
@@ -345,7 +345,7 @@
       "desc": "count of responses containing exactly the target code and nothing else",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 95
+      "value": 98
     },
     "exactTargetFamilyCount": {
       "desc": "scenario-family count for responses containing exactly the target code and nothing else",
@@ -358,7 +358,7 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 52.77777777777778
+      "value": 54.44444444444444
     },
     "extraTokenOutputCount": {
       "desc": "count of responses containing one expected code plus extra output",
@@ -383,7 +383,7 @@
       "desc": "count of responses containing both expected codes or neither expected code",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 13
+      "value": 14
     },
     "invalidOutputFamilyCount": {
       "desc": "scenario-family count for responses containing both expected codes or neither expected code",
@@ -396,21 +396,21 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 7.222222222222222
+      "value": 7.777777777777778
     },
     "literalControlAccuracy": {
       "desc": "normalized literal-control accuracy",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 83.33333333333333
+      "value": 100.0
     },
     "literalControlChange": {
       "desc": "accuracy change in percentage points for paired literal wording minus paraphrase wording comparison",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "raw",
-      "value": 66.66666666666666
+      "value": 83.33333333333333
     },
     "literalControlCount": {
       "desc": "probe count for normalized literal-control accuracy",
@@ -440,13 +440,13 @@
       "desc": "accuracy ties in paired literal wording minus paraphrase wording comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 2
+      "value": 1
     },
     "literalControlWins": {
       "desc": "accuracy gains in paired literal wording minus paraphrase wording comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 4
+      "value": 5
     },
     "manifestProbeCount": {
       "desc": "total probes in the manifest",
@@ -465,7 +465,7 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 52.77777777777778
+      "value": 54.44444444444444
     },
     "overallCount": {
       "desc": "probe count for normalized accuracy across all completed probes",
@@ -690,7 +690,7 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 30.0
+      "value": 40.0
     },
     "positionFourMiddleCount": {
       "desc": "probe count for normalized accuracy with the target at mid in the t4k tier",
@@ -703,7 +703,7 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "raw",
-      "value": 40.0
+      "value": 30.0
     },
     "positionFourMiddleEndDenominator": {
       "desc": "matched pairs in paired end minus middle comparison",
@@ -727,13 +727,13 @@
       "desc": "accuracy ties in paired end minus middle comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 6
+      "value": 7
     },
     "positionFourMiddleEndWins": {
       "desc": "accuracy gains in paired end minus middle comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 4
+      "value": 3
     },
     "positionFourMiddleFamilyCount": {
       "desc": "scenario-family count for normalized accuracy with the target at mid in the t4k tier",
@@ -802,7 +802,7 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "raw",
-      "value": 10.0
+      "value": 20.0
     },
     "positionFourStartMiddleDenominator": {
       "desc": "matched pairs in paired middle minus start comparison",
@@ -826,20 +826,20 @@
       "desc": "accuracy ties in paired middle minus start comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 9
+      "value": 8
     },
     "positionFourStartMiddleWins": {
       "desc": "accuracy gains in paired middle minus start comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 1
+      "value": 2
     },
     "positionTwoEndAccuracy": {
       "desc": "normalized accuracy with the target at end in the t2k tier",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 75.0
+      "value": 83.33333333333333
     },
     "positionTwoEndCount": {
       "desc": "probe count for normalized accuracy with the target at end in the t2k tier",
@@ -871,7 +871,7 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "raw",
-      "value": 66.66666666666667
+      "value": 75.0
     },
     "positionTwoMiddleEndDenominator": {
       "desc": "matched pairs in paired end minus middle comparison",
@@ -895,13 +895,13 @@
       "desc": "accuracy ties in paired end minus middle comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 4
+      "value": 3
     },
     "positionTwoMiddleEndWins": {
       "desc": "accuracy gains in paired end minus middle comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 8
+      "value": 9
     },
     "positionTwoMiddleFamilyCount": {
       "desc": "scenario-family count for normalized accuracy with the target at mid in the t2k tier",
@@ -927,7 +927,7 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "raw",
-      "value": 58.33333333333333
+      "value": 66.66666666666666
     },
     "positionTwoStartEndDenominator": {
       "desc": "matched pairs in paired end minus start comparison",
@@ -951,13 +951,13 @@
       "desc": "accuracy ties in paired end minus start comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 5
+      "value": 4
     },
     "positionTwoStartEndWins": {
       "desc": "accuracy gains in paired end minus start comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 7
+      "value": 8
     },
     "positionTwoStartFamilyCount": {
       "desc": "scenario-family count for normalized accuracy with the target at start in the t2k tier",
@@ -1007,7 +1007,7 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "raw",
-      "value": -33.333333333333336
+      "value": -36.66666666666667
     },
     "pruningDenominator": {
       "desc": "matched pairs in paired keyword-pruned context minus full context comparison",
@@ -1045,7 +1045,7 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 40.0
+      "value": 43.333333333333336
     },
     "pruningFullCount": {
       "desc": "probe count for normalized full-context accuracy in matched pruning scenarios",
@@ -1063,7 +1063,7 @@
       "desc": "accuracy losses in paired keyword-pruned context minus full context comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 11
+      "value": 12
     },
     "pruningNoDecoyAccuracy": {
       "desc": "normalized accuracy after removing only the retained lexical decoy",
@@ -1157,7 +1157,7 @@
       "desc": "accuracy ties in paired keyword-pruned context minus full context comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 18
+      "value": 17
     },
     "pruningWins": {
       "desc": "accuracy gains in paired keyword-pruned context minus full context comparison",
@@ -1258,14 +1258,14 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 33.333333333333336
+      "value": 40.0
     },
     "qualityFourRelevantChange": {
       "desc": "accuracy change in percentage points for paired relevant filler minus irrelevant filler comparison",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "raw",
-      "value": -13.333333333333329
+      "value": -6.666666666666664
     },
     "qualityFourRelevantCount": {
       "desc": "probe count for normalized accuracy with relevant filler in the t4k tier",
@@ -1289,13 +1289,13 @@
       "desc": "accuracy losses in paired relevant filler minus irrelevant filler comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 3
+      "value": 2
     },
     "qualityFourRelevantTies": {
       "desc": "accuracy ties in paired relevant filler minus irrelevant filler comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 11
+      "value": 12
     },
     "qualityFourRelevantWins": {
       "desc": "accuracy gains in paired relevant filler minus irrelevant filler comparison",
@@ -1327,14 +1327,14 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 22.22222222222222
+      "value": 27.77777777777778
     },
     "qualityTwoRelevantChange": {
       "desc": "accuracy change in percentage points for paired relevant filler minus irrelevant filler comparison",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "raw",
-      "value": -22.22222222222222
+      "value": -16.666666666666664
     },
     "qualityTwoRelevantCount": {
       "desc": "probe count for normalized accuracy with relevant filler in the t2k tier",
@@ -1358,13 +1358,13 @@
       "desc": "accuracy losses in paired relevant filler minus irrelevant filler comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 5
+      "value": 4
     },
     "qualityTwoRelevantTies": {
       "desc": "accuracy ties in paired relevant filler minus irrelevant filler comparison",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 12
+      "value": 13
     },
     "qualityTwoRelevantWins": {
       "desc": "accuracy gains in paired relevant filler minus irrelevant filler comparison",
@@ -1446,7 +1446,7 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 40.0
+      "value": 43.333333333333336
     },
     "tierFourCount": {
       "desc": "probe count for normalized full-context accuracy in the t4k tier",
@@ -1472,7 +1472,7 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 33.333333333333336
+      "value": 36.111111111111114
     },
     "tierTwoCount": {
       "desc": "probe count for normalized full-context accuracy in the t2k tier",

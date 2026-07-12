@@ -1,0 +1,9 @@
+<|im_start|>system
+You are a careful assistant. Answer with the requested code only, nothing else.<|im_end|>
+<|im_start|>user
+Document:
+Halvern filed its quarterly procurement summary under reference XT-178. The service annex for Ashcombe lists billing schedule FQ-135. An internal audit note for Rydegate cites compliance tag KS-223. Warehouse deliveries for Corvess are logged against docket BZ-622. The onboarding packet for Quillon references training module CJ-894. Legal archived the Quillon correspondence file under label TC-765. The renewal code required to extend the contract with Kestrane is GF-180. Tessary's master supply agreement carries the renewal identifier KH-749.
+
+Question: What is the renewal code required to extend the contract with Tessary?
+Answer with the code only.<|im_end|>
+<|im_start|>assistant
