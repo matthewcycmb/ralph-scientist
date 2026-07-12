@@ -36,12 +36,14 @@ def run(
 
 class HarnessRegressionTests(unittest.TestCase):
     def test_launch_memory_matches_submission_and_review_form(self) -> None:
-        todo = (ROOT / "TODO.md").read_text()
+        todo = (ROOT / "harness/seed/TODO.md").read_text()
+        live_todo = (ROOT / "TODO.md").read_text()
         reviewer = (ROOT / "harness/REVIEWER.md").read_text()
         humanizer = (ROOT / "harness/HUMANIZER.md").read_text()
         self.assertIn("anonymous ICML submission", todo)
         self.assertIn("concrete title and self-contained abstract first", todo)
         self.assertIn("eight-gate pass", todo)
+        self.assertLessEqual(len(live_todo.splitlines()), 40)
         self.assertIn("6 strong accept", reviewer)
         self.assertIn("1 strong reject", reviewer)
         self.assertIn("references/appendices excluded", reviewer)
@@ -54,6 +56,7 @@ class HarnessRegressionTests(unittest.TestCase):
         self.assertIn("set -m", launcher)
         self.assertIn("official-loop-start-20260712-1230", launcher)
         self.assertIn("official Ralph Loop window is 12:30-15:30 KST", launcher)
+        self.assertIn('git merge-base --is-ancestor "$OFFICIAL_TAG^{commit}" HEAD', launcher)
         self.assertIn("Claude worker requested but Claude Code is not logged in", launcher)
 
     def test_submission_gate_rejects_identity_and_placeholder_abstract(self) -> None:
@@ -149,6 +152,8 @@ class HarnessRegressionTests(unittest.TestCase):
             root = Path(tmp)
             log = root / "allowed.jsonl"
             log.write_text(
+                '42\n'
+                '"non-object-json"\n'
                 '{"type":"rate_limit_event","rate_limit_info":'
                 '{"status":"allowed","rateLimitType":"five_hour"}}\n'
                 '{"type":"result","is_error":false,"result":"done"}\n'

@@ -27,6 +27,8 @@ def has_quota_outage(path: Path) -> bool:
             event = json.loads(line)
         except json.JSONDecodeError:
             continue
+        if not isinstance(event, dict):
+            continue
         if event.get("type") == "rate_limit_event":
             status = str(event.get("rate_limit_info", {}).get("status", "")).lower()
             if status and status != "allowed":

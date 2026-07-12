@@ -5,10 +5,11 @@ See DONE.md.
 
 Highest leverage next:
 
-- [ ] Run the harness-side compile verdict. Adjust density only if the main body falls
-  outside the 2-4 page limit or a table is illegible; do not run tectonic in the sandbox.
-- [ ] Redesign the quality contrast to separate topical relevance from code density,
-  candidate count, and semantic domain.
+- [ ] FOCUS LAP: spend your ENTIRE lap on the confounded quality comparison. Do not pick
+  any other task. Finish it completely: either redesign and run a matched control that
+  separates topical relevance from code density, candidate count, and semantic domain,
+  or, if the remaining CPU budget makes that impossible, remove the causal quality claim
+  everywhere and make the confound explicit in Results and Limitations.
 - [ ] Add a pruning control that can distinguish lexical-selection failure from
   answer removal.
 - [ ] Replace or simplify the scaled tables if the harness PDF audit still finds

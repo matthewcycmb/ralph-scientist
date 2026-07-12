@@ -9,6 +9,13 @@ Do this, in order:
 2. Pick exactly ONE task: the highest-leverage item that moves the paper toward passing all
    gates in SPEC.md. Gate failures in VERIFY.log and reviewer criticisms in reviews/ take
    priority over new work.
+   Selection order is strict: (a) a current deterministic gate failure; (b) a `FOCUS LAP`
+   item; (c) the first unchecked TODO item; (d) the oldest persisting soundness,
+   significance, or originality criticism; only then metadata or cosmetic polish. If the
+   first TODO item is demonstrably stale because a later harness verdict already passed it,
+   remove that stale item and continue to the next item in the SAME lap. Never choose an
+   easy bibliography, wording, or layout fix while an actionable validity/confounding item
+   ranks above it, unless the small defect itself blocks a gate or anonymous submission.
 3. Do the task completely. Small and finished beats large and half-done.
 4. Update TODO.md: mark what you did, add anything you discovered needs doing, keep it
    under 40 lines by pruning completed items into DONE.md.

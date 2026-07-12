@@ -94,8 +94,8 @@ if [[ -z "${ALLOW_OUTSIDE_EVENT_WINDOW:-}" ]] && (( 10#$NOW_HHMM < 1230 || 10#$N
 fi
 OFFICIAL_TAG="${OFFICIAL_TAG:-official-loop-start-20260712-1230}"
 if git rev-parse "$OFFICIAL_TAG" >/dev/null 2>&1; then
-  [[ "$(git rev-parse "$OFFICIAL_TAG^{commit}")" == "$(git rev-parse HEAD)" ]] \
-    || fail "$OFFICIAL_TAG already points to a different commit"
+  git merge-base --is-ancestor "$OFFICIAL_TAG^{commit}" HEAD \
+    || fail "$OFFICIAL_TAG is not an ancestor of the restart commit"
 else
   git tag -a "$OFFICIAL_TAG" -m "Official Ralph Loop boundary, 2026-07-12 12:30 KST"
 fi
