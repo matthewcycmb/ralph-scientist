@@ -18,3 +18,4 @@ Highest leverage next:
   reviewer can find in under a minute.
 - [ ] First full eight-gate pass + rubric >= 6 tags paper-v1.
 - [ ] TAMPER DETECTED (iter 5): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
+- [ ] NEW REVIEW (iter 6, "rubric":6/10 rubric): address weaknesses in reviews/iter-6.md

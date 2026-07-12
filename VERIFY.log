@@ -69,3 +69,9 @@ PASS  prose-style
 PASS  submission-ready
 PASS  latex-compiles
 gates failed: 0
+SHADOW: tagged green-v75 (iter=6)
+QUOTA: Claude review limit hit — emergency retry with Codex
+CONFIRM: rubric 6 >= 6 at iter 6 — running confirmation review
+QUOTA: Claude review limit hit — emergency retry with Codex
+RATCHET: tagged paper-v14 (score=6, iter=6)
+HUMANIZER pass at iter 6
