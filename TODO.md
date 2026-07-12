@@ -1,22 +1,32 @@
-# TODO
+# TODO — OWNER-MANDATED FINAL LAP
 
-Highest leverage next:
+All items below are release-critical. Do not prune, reorder, or replace them with
+an easier task. Work on the bundle in one final lap; prefer analysis and writing
+that can be verified before the 16:30 hard cutoff. Preserve paper-v16 as fallback.
 
-1. [ ] FOCUS LAP: spend your ENTIRE lap on the position manipulation's one-sentence competitor shift. Do not pick any other task. Finish it completely: analysis, results, and the prose that uses it.
-   Why: this soundness defect has survived iter 10 and iter 13 (since iter 3), and a position claim is not clean until the competitor stays fixed.
-2. [ ] Test whether a deterministic rule can extract the code from the query-entity-selected sentence, then stress the selector with aliases, pronouns, ambiguous entities, and unseen question forms.
-   Why: iter 13's new objection is that the headline selector encodes the synthetic answer; this analysis decides whether the honest contribution is mitigation or benchmark-shortcut diagnosis.
-3. [ ] Rewrite the title, abstract, Introduction, and Results around lexical and entity cues dominating this synthetic benchmark; merge or remove displays until only readable, argument-changing evidence remains.
-   Why: length is unresolved, quality is unidentified, and the current comparative abstract, crowded tables, repeated answer frames, and grammar obscure the defensible thesis.
+1. [ ] FOCUS LAP — COMPLETE THE ENTIRE BUNDLE:
+   - Verify and report the v5 position control: target position changes while the
+     competitor's final sentence index is invariant; size claims to the observed
+     two-to-six families and keep end placement diagnostic, not deployable.
+   - Add deterministic selector/extraction tests covering exact names, aliases,
+     pronouns, ambiguous/repeated entities, missing entities, and unseen question
+     forms. If the current rule fails, reframe it as a benchmark-shortcut
+     diagnostic rather than a general mitigation.
+   - Increase independent scenario-family evidence only where it can be completed
+     and regenerated before cutoff. Never insert invented or partial results.
+   - Treat filler quality as unidentified unless a genuinely matched factorial
+     control holds domain, entity/code density, candidate count, and templates
+     fixed. State the required design plainly; do not claim a relevance effect
+     from the existing confounded bundles.
+   - Rewrite title, abstract, Introduction, Results, and conclusion around the
+     defensible contribution: controlled position sensitivity plus a benchmark
+     diagnosis showing lexical/entity cues can dominate synthetic retrieval.
+     Distinguish evidence from interpretation and avoid comparative overclaim.
+   - Presentation pass: readable tables at normal type size, no redundant result
+     narration, precise keyword fallback definition, professional non-jargony
+     prose, grammar/agreement copy-edit, and no unsupported adjectives.
 
-Still relevant:
-
-- [x] TERMINAL (unfixable here): context quality changes topic, domain, entity/code density, candidate count, and templates together. Own this in Limitations, omit any relevance-effect claim, and do not restore it as an answered contribution without a matched rerun.
-- [ ] Keep end placement explicitly diagnostic rather than deployable, and size every conclusion to two to six observed scenario families.
-- [ ] Define the keyword filter's fallback threshold precisely and perform a final agreement/copy-edit pass.
-- [ ] First full eight-gate pass + rubric >= 6 tags paper-v1.
-- [ ] TAMPER DETECTED (iter 5): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
-- [ ] NEW REVIEW (iter 6, "rubric":6/10 rubric): address weaknesses in reviews/iter-6.md.
-- [ ] TAMPER DETECTED (iter 10): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
-- [ ] NEW REVIEW (iter 10, "rubric":7/10 rubric): address weaknesses in reviews/iter-10.md.
-- [ ] NEW REVIEW (iter 13, "rubric":6/10 rubric): address weaknesses in reviews/iter-13.md.
+2. [ ] RELEASE GATE — PDF, title, and abstract first. Compile an anonymous ICML
+   2026 PDF with at most four main-body pages (references/appendix excluded), run
+   every provenance/freshness/style/anonymity gate, and retain the last green PDF
+   if any attempted improvement fails.
