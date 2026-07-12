@@ -1,0 +1,11 @@
+Completed the single `FOCUS LAP` task: added a second deployable query-entity selector baseline.
+
+- Ran 30 new probes; manifest is complete at 180/180.
+- Query-entity selector: 100.0% accuracy, +60.0 points versus full context.
+- Versus keyword pruning: +93.3 points, 28 wins, 0 losses, 2 ties.
+- Clean-room estimate remains within budget at 43.8 minutes.
+- Regenerated `results.json` and `paper/values.tex`.
+- Integrated method, results, retention evidence, and limitations into the paper.
+- Updated `TODO.md`.
+- All permitted individual gates and 21 tests pass. LaTeX compilation was left to the harness as required.
+- No commit created.

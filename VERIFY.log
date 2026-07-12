@@ -123,3 +123,13 @@ SHADOW: tagged green-v79 (iter=10)
 CONFIRM: rubric 7 >= 6 at iter 10 — running confirmation review
 RATCHET: tagged paper-v15 (score=6, iter=10)
 HUMANIZER pass at iter 10
+--- gates @ iteration 11 14:33:36 ---
+PASS  frozen-inputs
+PASS  citations-resolve
+PASS  no-number-literals
+PASS  pipeline-fresh
+PASS  results-sane
+PASS  prose-style
+PASS  submission-ready
+PASS  latex-compiles
+gates failed: 0

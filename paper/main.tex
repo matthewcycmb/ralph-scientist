@@ -30,7 +30,7 @@
 \printAffiliationsAndNotice{}
 
 \begin{abstract}
-Does adding context hurt a small language model, and do the location and composition of that context matter? We evaluate the frozen \modelName{} artifact on \sampleSize{} synthetic contract-clause probes. Deterministic runs span mean prompt lengths of \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Moving the same answer-bearing clause from the start to the end raised accuracy by \positionTwoStartEndChange{} percentage points at the shortest tier and \positionFourStartEndChange{} points at the middle tier, while keyword pruning changed matched accuracy by \pruningChange{} points. Removing only the lexical decoy from each pruned prompt then changed accuracy by \pruningNoDecoyChange{} points. The matched comparison across prompt lengths was inconclusive: accuracy rose by \amountSharedTwoFourChange{} points and then changed by \amountSharedFourEightChange{} points, with only \amountSharedEightCount{} shared cases at each tier. Code-heavy business filler reduced accuracy relative to unrelated filler, but the manipulation does not isolate topical relevance from its other differences.
+Does adding context hurt a small language model, and do the location and composition of that context matter? We evaluate the frozen \modelName{} artifact on \sampleSize{} synthetic contract-clause probes. Deterministic runs span mean prompt lengths of \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Moving the answer clause from the start to the end raised accuracy by \positionTwoStartEndChange{} points at the shortest tier and \positionFourStartEndChange{} points at the middle tier. Keyword pruning changed matched accuracy by \pruningChange{} points, whereas selecting sentences that named the question's company reached \entitySelectorAccuracy{}\% accuracy and improved on keyword pruning by \selectorComparisonChange{} points. The matched comparison across prompt lengths was inconclusive, and the filler manipulation does not isolate topical relevance.
 \end{abstract}
 
 \section{Introduction}
@@ -41,17 +41,17 @@ This ordinary lookup becomes less predictable in a long prompt. The model may fa
 
 We study these choices in a synthetic, gradeable version of the contract situation. Each document contains an answer-bearing vendor clause and a look-alike clause for another company. The question uses the wording of the look-alike clause, while the answer clause expresses the same relation with different words. This construction reduces the value of literal matching, following the motivation of NoLiMa \citep{modarressi2025nolima}.
 
-We provide a paired evaluation of a frozen open model at laptop scale. Prior work established position and length failures in larger systems \citep{liu2023lost,levy2024same} and showed that irrelevant statements can disrupt reasoning \citep{shi2023distracted}. Our comparisons match prompt lengths, answer positions, and questions while varying whether the filler is code-heavy business text or unrelated prose. We also apply a deterministic keyword filter to the same cases evaluated with the full prompt.
+We provide a paired evaluation of a frozen open model at laptop scale. Prior work established position and length failures in larger systems \citep{liu2023lost,levy2024same} and showed that irrelevant statements can disrupt reasoning \citep{shi2023distracted}. Our comparisons match prompt lengths, answer positions, and questions while varying whether the filler is code-heavy business text or unrelated prose. We compare a deterministic keyword filter with a query-entity selector that keeps sentences naming the company in the question.
 
 The experiment asks four questions:
 \begin{enumerate}
     \item As mean prompt length grows from \tierTwoTokens{} to \tierEightTokens{} tokens, how much does accuracy change on shared cases?
     \item How does moving the same answer clause among the start, middle, and end change accuracy?
     \item How does accuracy differ between code-heavy business filler and unrelated prose in matched documents?
-    \item Does keyword pruning recover accuracy, and can answer removal explain its failures?
+    \item Which cheap selector better preserves accuracy: keyword overlap or matching the company named in the question?
 \end{enumerate}
 
-The experiment does not identify a general context-length threshold. Within this grid, accuracy was higher when the answer appeared near the end and lower with code-heavy business filler than with unrelated prose. Keyword pruning amplified the lexical trap built into the probes.
+The experiment does not identify a general context-length threshold. Within this grid, accuracy was higher when the answer appeared near the end and lower with code-heavy business filler than with unrelated prose. Keyword pruning amplified the lexical trap, while matching the query entity avoided it.
 
 \section{Related Work}
 
@@ -80,10 +80,10 @@ This manipulation changes several properties together. Compared with unrelated p
 
 The final tier contains fewer families because it is more expensive to run. Prompt-length estimates therefore use only the \amountSharedEightCount{} cases shared by every tier rather than the unequal full-tier totals. Filler-composition estimates use \qualityTwoRelevantDenominator{}, \qualityFourRelevantDenominator{}, and \qualityEightRelevantDenominator{} pairs at the three tiers, respectively.
 
-\paragraph{Pruning and controls.}
-At the middle tier, a keyword filter retains sentences with at least two content words shared with the question, falling back to the highest-overlap sentences if too few qualify. It preserves original order. The comparison is restricted to the \pruningDenominator{} cases with both full and pruned outputs. We also include \closedBookCount{} questions asked without the document (closed-book questions) and \literalControlDenominator{} matched literal-versus-paraphrase controls.
+\paragraph{Selectors and controls.}
+At the middle tier, a keyword filter retains sentences with at least two content words shared with the question, falling back to the highest-overlap sentences if too few qualify. A second selector extracts the company named after ``contract with'' in the question and keeps sentences containing that name. If extraction or matching fails, it falls back to the keyword filter. Both rules use only visible text, preserve original order, and require no answer labels. The comparisons are restricted to the \pruningDenominator{} cases with full context and both selector outputs. We also include \closedBookCount{} closed-book questions and \literalControlDenominator{} matched literal-versus-paraphrase controls.
 
-The filter retained the answer clause in \pruningTargetRetainedCount{} of \pruningPrunedCount{} matched prompts. It retained the lexical decoy in \pruningDistractorRetainedCount{} of them. A paired diagnostic removes only that decoy from each pruned prompt, leaving the answer clause and every other selected sentence fixed. This control uses the known synthetic label to diagnose the filter; it is not a deployable retrieval method.
+The keyword filter retained the answer clause and lexical decoy in all \pruningPrunedCount{} matched prompts. The query-entity selector retained the answer clause in \entitySelectorTargetRetainedCount{} prompts and the decoy in \entitySelectorDistractorRetainedCount{}. A paired diagnostic removes only the decoy from each keyword-pruned prompt, leaving every other selected sentence fixed. This diagnostic uses the known synthetic label; both automatic selectors do not.
 
 \section{Scoring and Comparisons}
 
@@ -162,10 +162,10 @@ Mean tokens & Start & Middle & End \\
 \textbf{Code-heavy business filler produced lower accuracy than unrelated prose.} The matched difference was \qualityTwoRelevantChange{} points [\qualityTwoRelevantChangeLow{}, \qualityTwoRelevantChangeHigh{}] over \qualityTwoRelevantDenominator{} pairs at the shortest tier and \qualityFourRelevantChange{} points [\qualityFourRelevantChangeLow{}, \qualityFourRelevantChangeHigh{}] over \qualityFourRelevantDenominator{} pairs at the middle tier. At the shortest tier, the paired outcomes were \qualityTwoRelevantWins{} win, \qualityTwoRelevantLosses{} losses, and \qualityTwoRelevantTies{} ties. At the middle tier, they were \qualityFourRelevantWins{} win, \qualityFourRelevantLosses{} losses, and \qualityFourRelevantTies{} ties. The longest-tier estimate was \qualityEightRelevantChange{} points, but its \qualityEightRelevantFamilyCount{} families are too sparse to strengthen that conclusion. Because the business filler also adds code-shaped candidates and repeated entity templates, these results do not show that topical relevance caused the difference.
 
 \paragraph{Mitigation.}
-\textbf{Keyword pruning reduced accuracy on the matched cases.} Full-context accuracy was \pruningFullAccuracy{}\%, compared with \pruningPrunedAccuracy{}\% after filtering, a change of \pruningChange{} points [\pruningChangeLow{}, \pruningChangeHigh{}] across \pruningFamilyCount{} families. The paired comparison had \pruningWins{} win, \pruningLosses{} losses, and \pruningTies{} ties (Table~\ref{tab:pruning}). Because every pruned prompt retained the answer clause, answer removal cannot explain this decline.
+\textbf{The query-entity selector reversed the keyword filter's failure.} Full-context accuracy was \pruningFullAccuracy{}\%, compared with \pruningPrunedAccuracy{}\% after keyword filtering and \entitySelectorAccuracy{}\% after query-entity selection. Query-entity selection improved on full context by \entitySelectorChange{} points [\entitySelectorChangeLow{}, \entitySelectorChangeHigh{}], with \entitySelectorWins{} wins and no losses. Compared with keyword pruning, it gained \selectorComparisonChange{} points [\selectorComparisonChangeLow{}, \selectorComparisonChangeHigh{}], with \selectorComparisonWins{} wins, no losses, and \selectorComparisonTies{} ties (Table~\ref{tab:pruning}).
 
 \begin{table}[t]
-\caption{Matched keyword-pruning result and diagnostic controls. Accuracy intervals are \confidenceLevel{}\% family-cluster bootstrap intervals.}
+\caption{Matched selector results and diagnostic controls. Accuracy intervals are \confidenceLevel{}\% family-cluster bootstrap intervals.}
 \label{tab:pruning}
 \centering
 \small
@@ -180,6 +180,9 @@ Full context
 Keyword pruned
 & \pruningPrunedAccuracy{} [\pruningPrunedAccuracyLow{}, \pruningPrunedAccuracyHigh{}]
 & \pruningPrunedCount{} \\
+Query entity
+& \entitySelectorAccuracy{} [\entitySelectorAccuracyLow{}, \entitySelectorAccuracyHigh{}]
+& \entitySelectorCount{} \\
 Decoy removed
 & \pruningNoDecoyAccuracy{} [\pruningNoDecoyAccuracyLow{}, \pruningNoDecoyAccuracyHigh{}]
 & \pruningNoDecoyCount{} \\
@@ -197,11 +200,11 @@ Closed book
 }
 \end{table}
 
-Removing only the retained decoy raised accuracy to \pruningNoDecoyAccuracy{}\%. This change was \pruningNoDecoyChange{} points [\pruningNoDecoyChangeLow{}, \pruningNoDecoyChangeHigh{}], with \pruningNoDecoyWins{} wins and no losses. Literal wording changed matched accuracy by \literalControlChange{} points, with \literalControlWins{} wins and no losses. Across all outputs, distractor capture was \distractorCaptureRate{}\%, exact-output compliance was \exactOutputComplianceRate{}\%, and invalid output was \invalidOutputRate{}\%. These diagnostics identify selection of the retained lexical competitor, rather than answer deletion, as the failure in this grid. They do not establish how another pruning rule would behave.
+Removing only the retained decoy raised keyword-pruned accuracy to \pruningNoDecoyAccuracy{}\%, a change of \pruningNoDecoyChange{} points with \pruningNoDecoyWins{} wins and no losses. Literal wording changed matched accuracy by \literalControlChange{} points, with \literalControlWins{} wins and no losses. Across all outputs, distractor capture was \distractorCaptureRate{}\%, exact-output compliance was \exactOutputComplianceRate{}\%, and invalid output was \invalidOutputRate{}\%. The diagnostic and deployable selector agree that retaining the lexical competitor, rather than deleting the answer, caused the keyword filter's failure in this grid.
 
 \section{Limitations}
 
-The findings concern one small quantized model and may not transfer to larger models or other quantization levels. Synthetic clause lookup is not natural contract analysis, and retrieval accuracy is not a measure of general capability. The \cpuBudgetMinutes{}-minute CPU budget capped the grid, leaving only \tierEightCount{} full-context probes at the longest tier and wide intervals throughout. That sparse tier prevents a conclusion about degradation within the measured range, and the experiment cannot address longer prompts. The filler comparison confounds topical relation with semantic domain, entity and code density, candidate count, and sentence templates. A factorial design that matches those properties would be needed to identify a topical-relevance effect. Greedy decoding removes run-to-run sampling variation but does not show how sampling would change the estimates. The mitigation is a deliberately simple keyword filter, and its decoy-removal control depends on an oracle label unavailable in natural documents.
+The findings concern one small quantized model and may not transfer to larger models or other quantization levels. Synthetic clause lookup is not natural contract analysis, and retrieval accuracy is not a measure of general capability. The \cpuBudgetMinutes{}-minute CPU budget capped the grid, leaving only \tierEightCount{} full-context probes at the longest tier and wide intervals throughout. That sparse tier prevents a conclusion about degradation within the measured range, and the experiment cannot address longer prompts. The filler comparison confounds topical relation with semantic domain, entity and code density, candidate count, and sentence templates. A factorial design that matches those properties would be needed to identify a topical-relevance effect. Greedy decoding removes run-to-run sampling variation but does not show how sampling would change the estimates. Query-entity selection assumes that the question names one company exactly and that the relevant sentence repeats that name. It does not address aliases, pronouns, or queries without a unique named subject. The decoy-removal control also depends on an oracle label unavailable in natural documents.
 
 \section{Reproducibility}
 

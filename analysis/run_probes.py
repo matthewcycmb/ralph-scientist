@@ -59,6 +59,7 @@ PRUNED_TIER = "t4k"          # cheap mitigation variant, small tiers only
 PRUNE_MIN_OVERLAP = 2
 PRUNE_FLOOR = 8              # if the rule keeps < 8 sentences, keep top-8
 CONTROL_EST_SECONDS = 3      # short pruned prompt with one clause removed
+SELECTOR_EST_SECONDS = 3     # short query-entity selector prompt
 CLOSED_BOOK_FAMILIES = 6
 SIZE_TOLERANCE = 0.05        # measured prompt within +-5% of nominal
 
@@ -226,6 +227,22 @@ def prune(doc_sentences, question: str):
     return [s for _, s in kept]
 
 
+def query_entity_select(doc_sentences, question: str):
+    """Keep sentences naming the entity explicitly supplied by the question.
+
+    This task-facing selector uses only visible prompt text, not answer labels.
+    If the question does not match the generated contract-query form, it falls
+    back to the keyword selector so the procedure remains total.
+    """
+    match = re.search(r"contract with ([A-Z][A-Za-z]+)\?", question)
+    if not match:
+        return prune(doc_sentences, question)
+    entity = match.group(1).lower()
+    selected = [sentence for sentence in doc_sentences
+                if entity in sentence.lower()]
+    return selected or prune(doc_sentences, question)
+
+
 _TOKENIZE_CALLS = 0
 
 
@@ -376,6 +393,24 @@ class Grid:
                                 distractor_retained=distractor in cdoc,
                                 target_code=fam.target_code,
                                 distractor_code=fam.distractor_code)
+                            # Deployable comparison: extract the company named
+                            # in the visible question and retain sentences that
+                            # mention it. Unlike the decoy-removal diagnostic,
+                            # this selector never reads the hidden answer label.
+                            edoc = query_entity_select(doc, fam.question)
+                            epid = (f"{tier_label}-f{fi}-{pos}-{kind}-"
+                                    "entitypruned")
+                            self._add(
+                                epid, build_prompt(edoc, fam.question),
+                                SELECTOR_EST_SECONDS, family=fi,
+                                tier=tier_label, nominal_tokens=nominal,
+                                style="para", filler=kind, position=pos,
+                                variant="entitypruned",
+                                target_retained=needle in edoc,
+                                distractor_retained=distractor in edoc,
+                                selected_sentence_count=len(edoc),
+                                target_code=fam.target_code,
+                                distractor_code=fam.distractor_code)
         # Literal control: smallest tier, hardest position, irrelevant
         # filler. Reuses the paraphrase cell's sizing key, so the filler is
         # IDENTICAL to the matching paraphrase scenario; the two probes
@@ -434,7 +469,7 @@ def save_manifest(grid: Grid):
             "model_sha256": model_sha256(),
             "llama_command": "llama-completion -m <model> -f <prompt> "
                              + " ".join(LLAMA_ARGS),
-            "grid_version": "v2-pruning-control",
+            "grid_version": "v3-query-entity-selector",
             "total_probes": len(grid.probes),
             "done_probes": sum(done.values()),
             "manifest_complete": all(done.values()),

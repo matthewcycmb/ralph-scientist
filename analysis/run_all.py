@@ -291,6 +291,33 @@ def main() -> int:
                     "distractor_retained",
                     "matched keyword-pruned prompts retaining the lexical decoy")
 
+    # The query-entity selector is a second deployable baseline. It reads the
+    # company named in the question and keeps sentences mentioning that name;
+    # unlike the decoy-removal diagnostic, it uses no hidden answer label.
+    entity_selected = [r for r in scored if r["tier"] == "t4k" and
+                       r["variant"] == "entitypruned"]
+    em = keyed(entity_selected, pair_fields)
+    entity_keys = sorted(set(fm) & set(em))
+    entity_full = [fm[k] for k in entity_keys]
+    paired_entity = [em[k] for k in entity_keys]
+    add_accuracy("entitySelector", paired_entity,
+                 "normalized accuracy after query-entity selection")
+    add_paired("entitySelector", entity_full, paired_entity, pair_fields,
+               "full context", "query-entity-selected context")
+    add_binary_rate("entitySelectorTargetRetained", paired_entity,
+                    "target_retained",
+                    "query-entity-selected prompts retaining the answer clause")
+    add_binary_rate("entitySelectorDistractorRetained", paired_entity,
+                    "distractor_retained",
+                    "query-entity-selected prompts retaining the lexical decoy")
+
+    selector_keys = sorted(set(pm) & set(em))
+    keyword_for_selector = [pm[k] for k in selector_keys]
+    entity_for_selector = [em[k] for k in selector_keys]
+    add_paired("selectorComparison", keyword_for_selector,
+               entity_for_selector, pair_fields, "keyword-pruned context",
+               "query-entity-selected context")
+
     literal = [r for r in scored if r["style"] == "lit"]
     para_controls = [r for r in full if r["tier"] == "t2k" and
                      r["position"] == "mid" and r["filler"] == "irr"]

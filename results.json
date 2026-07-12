@@ -338,27 +338,171 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 48.0
+      "value": 40.0
     },
     "distractorCaptureRateHigh": {
       "desc": "family-cluster bootstrap upper confidence bound for responses containing the distractor code but not the target code",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 60.317460317460316
+      "value": 50.0
     },
     "distractorCaptureRateLow": {
       "desc": "family-cluster bootstrap lower confidence bound for responses containing the distractor code but not the target code",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 38.46153846153846
+      "value": 32.323232323232325
+    },
+    "entitySelectorAccuracy": {
+      "desc": "normalized accuracy after query-entity selection",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 100.0
+    },
+    "entitySelectorAccuracyHigh": {
+      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy after query-entity selection",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 100.0
+    },
+    "entitySelectorAccuracyLow": {
+      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy after query-entity selection",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 100.0
+    },
+    "entitySelectorChange": {
+      "desc": "accuracy change in percentage points for paired query-entity-selected context minus full context comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 60.0
+    },
+    "entitySelectorChangeHigh": {
+      "desc": "family-cluster bootstrap upper bound for paired query-entity-selected context minus full context comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 86.66666666666667
+    },
+    "entitySelectorChangeLow": {
+      "desc": "family-cluster bootstrap lower bound for paired query-entity-selected context minus full context comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 33.333333333333336
+    },
+    "entitySelectorCount": {
+      "desc": "probe count for normalized accuracy after query-entity selection",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 30
+    },
+    "entitySelectorDenominator": {
+      "desc": "matched pairs in paired query-entity-selected context minus full context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 30
+    },
+    "entitySelectorDistractorRetainedCount": {
+      "desc": "count of query-entity-selected prompts retaining the lexical decoy",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 0
+    },
+    "entitySelectorDistractorRetainedFamilyCount": {
+      "desc": "scenario-family count for query-entity-selected prompts retaining the lexical decoy",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 5
+    },
+    "entitySelectorDistractorRetainedRate": {
+      "desc": "query-entity-selected prompts retaining the lexical decoy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 0.0
+    },
+    "entitySelectorDistractorRetainedRateHigh": {
+      "desc": "family-cluster bootstrap upper confidence bound for query-entity-selected prompts retaining the lexical decoy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 0.0
+    },
+    "entitySelectorDistractorRetainedRateLow": {
+      "desc": "family-cluster bootstrap lower confidence bound for query-entity-selected prompts retaining the lexical decoy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 0.0
+    },
+    "entitySelectorFamilyCount": {
+      "desc": "matched scenario families in paired query-entity-selected context minus full context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 5
+    },
+    "entitySelectorLosses": {
+      "desc": "accuracy losses in paired query-entity-selected context minus full context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 0
+    },
+    "entitySelectorTargetRetainedCount": {
+      "desc": "count of query-entity-selected prompts retaining the answer clause",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 30
+    },
+    "entitySelectorTargetRetainedFamilyCount": {
+      "desc": "scenario-family count for query-entity-selected prompts retaining the answer clause",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 5
+    },
+    "entitySelectorTargetRetainedRate": {
+      "desc": "query-entity-selected prompts retaining the answer clause",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 100.0
+    },
+    "entitySelectorTargetRetainedRateHigh": {
+      "desc": "family-cluster bootstrap upper confidence bound for query-entity-selected prompts retaining the answer clause",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 100.0
+    },
+    "entitySelectorTargetRetainedRateLow": {
+      "desc": "family-cluster bootstrap lower confidence bound for query-entity-selected prompts retaining the answer clause",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 100.0
+    },
+    "entitySelectorTies": {
+      "desc": "accuracy ties in paired query-entity-selected context minus full context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "entitySelectorWins": {
+      "desc": "accuracy gains in paired query-entity-selected context minus full context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 18
     },
     "exactOutputComplianceCount": {
       "desc": "count of responses containing exactly one code and nothing else",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 144
+      "value": 174
     },
     "exactOutputComplianceFamilyCount": {
       "desc": "scenario-family count for responses containing exactly one code and nothing else",
@@ -371,27 +515,27 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 96.0
+      "value": 96.66666666666667
     },
     "exactOutputComplianceRateHigh": {
       "desc": "family-cluster bootstrap upper confidence bound for responses containing exactly one code and nothing else",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 96.66666666666667
+      "value": 97.22222222222223
     },
     "exactOutputComplianceRateLow": {
       "desc": "family-cluster bootstrap lower confidence bound for responses containing exactly one code and nothing else",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 94.44444444444444
+      "value": 95.23809523809524
     },
     "exactTargetCount": {
       "desc": "count of responses containing exactly the target code and nothing else",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 65
+      "value": 95
     },
     "exactTargetFamilyCount": {
       "desc": "scenario-family count for responses containing exactly the target code and nothing else",
@@ -404,21 +548,21 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 43.333333333333336
+      "value": 52.77777777777778
     },
     "exactTargetRateHigh": {
       "desc": "family-cluster bootstrap upper confidence bound for responses containing exactly the target code and nothing else",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 51.78571428571429
+      "value": 59.677419354838705
     },
     "exactTargetRateLow": {
       "desc": "family-cluster bootstrap lower confidence bound for responses containing exactly the target code and nothing else",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 33.333333333333336
+      "value": 44.0
     },
     "extraTokenOutputCount": {
       "desc": "count of responses containing one expected code plus extra output",
@@ -470,21 +614,21 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 8.666666666666666
+      "value": 7.222222222222222
     },
     "invalidOutputRateHigh": {
       "desc": "family-cluster bootstrap upper confidence bound for responses containing both expected codes or neither expected code",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 14.102564102564102
+      "value": 11.827956989247312
     },
     "invalidOutputRateLow": {
       "desc": "family-cluster bootstrap lower confidence bound for responses containing both expected codes or neither expected code",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 4.861111111111111
+      "value": 4.022988505747127
     },
     "literalControlAccuracy": {
       "desc": "normalized literal-control accuracy",
@@ -568,7 +712,7 @@
       "desc": "total probes in the manifest",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 150
+      "value": 180
     },
     "missingProbeCount": {
       "desc": "manifest probes without completed raw outputs",
@@ -581,27 +725,27 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 43.333333333333336
+      "value": 52.77777777777778
     },
     "overallAccuracyHigh": {
       "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy across all completed probes",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 51.78571428571429
+      "value": 59.677419354838705
     },
     "overallAccuracyLow": {
       "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy across all completed probes",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 33.333333333333336
+      "value": 44.0
     },
     "overallCount": {
       "desc": "probe count for normalized accuracy across all completed probes",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 150
+      "value": 180
     },
     "overallFamilyCount": {
       "desc": "scenario-family count for normalized accuracy across all completed probes",
@@ -1996,7 +2140,58 @@
       "desc": "total completed probes scored",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 150
+      "value": 180
+    },
+    "selectorComparisonChange": {
+      "desc": "accuracy change in percentage points for paired query-entity-selected context minus keyword-pruned context comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 93.33333333333333
+    },
+    "selectorComparisonChangeHigh": {
+      "desc": "family-cluster bootstrap upper bound for paired query-entity-selected context minus keyword-pruned context comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 100.0
+    },
+    "selectorComparisonChangeLow": {
+      "desc": "family-cluster bootstrap lower bound for paired query-entity-selected context minus keyword-pruned context comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 80.0
+    },
+    "selectorComparisonDenominator": {
+      "desc": "matched pairs in paired query-entity-selected context minus keyword-pruned context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 30
+    },
+    "selectorComparisonFamilyCount": {
+      "desc": "matched scenario families in paired query-entity-selected context minus keyword-pruned context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 5
+    },
+    "selectorComparisonLosses": {
+      "desc": "accuracy losses in paired query-entity-selected context minus keyword-pruned context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 0
+    },
+    "selectorComparisonTies": {
+      "desc": "accuracy ties in paired query-entity-selected context minus keyword-pruned context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "selectorComparisonWins": {
+      "desc": "accuracy gains in paired query-entity-selected context minus keyword-pruned context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 28
     },
     "tierEightAccuracy": {
       "desc": "normalized full-context accuracy in the t8k tier",

@@ -1,0 +1,9 @@
+<|im_start|>system
+You are a careful assistant. Answer with the requested code only, nothing else.<|im_end|>
+<|im_start|>user
+Document:
+Malbourne's master supply agreement carries the renewal identifier NF-208.
+
+Question: What is the renewal code required to extend the contract with Malbourne?
+Answer with the code only.<|im_end|>
+<|im_start|>assistant
