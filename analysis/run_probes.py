@@ -243,20 +243,48 @@ def prune(doc_sentences, question: str):
     return [s for _, s in kept]
 
 
-def query_entity_select(doc_sentences, question: str):
-    """Keep sentences naming the entity explicitly supplied by the question.
+def extract_query_entity(question: str) -> str | None:
+    """Extract the one-word company in the generator's exact question form.
 
-    This task-facing selector uses only visible prompt text, not answer labels.
-    If the question does not match the generated contract-query form, it falls
-    back to the keyword selector so the procedure remains total.
+    This deliberately narrow parser is part of the benchmark diagnostic. It
+    rejects aliases, pronouns, and unseen question forms instead of pretending
+    to provide general named-entity resolution.
     """
-    match = re.search(r"contract with ([A-Z][A-Za-z]+)\?", question)
-    if not match:
-        return prune(doc_sentences, question)
-    entity = match.group(1).lower()
-    selected = [sentence for sentence in doc_sentences
-                if entity in sentence.lower()]
-    return selected or prune(doc_sentences, question)
+    match = re.fullmatch(
+        r"What is the renewal code required to extend the contract with "
+        r"([A-Z][A-Za-z]+)\?",
+        question,
+    )
+    return match.group(1) if match else None
+
+
+def exact_entity_sentences(doc_sentences, question: str):
+    """Return a unique exact-name sentence, or ``None`` when unresolved."""
+    entity = extract_query_entity(question)
+    if entity is None:
+        return None
+    pattern = re.compile(rf"(?<![A-Za-z]){re.escape(entity)}(?![A-Za-z])")
+    selected = [sentence for sentence in doc_sentences if pattern.search(sentence)]
+    return selected if len(selected) == 1 else None
+
+
+def query_entity_select(doc_sentences, question: str):
+    """Apply the benchmark-specific exact-name rule, else keyword fallback."""
+    selected = exact_entity_sentences(doc_sentences, question)
+    return selected if selected is not None else prune(doc_sentences, question)
+
+
+def deterministic_code_extract(doc_sentences, question: str) -> str | None:
+    """Extract a unique code without a language model after exact-name selection.
+
+    Returning ``None`` for ambiguity makes explicit how much of the synthetic
+    task is solved by its exact-name and one-code-per-sentence construction.
+    """
+    selected = exact_entity_sentences(doc_sentences, question)
+    if selected is None:
+        return None
+    codes = re.findall(r"\b[A-Z]{2}-[0-9]{3}\b", selected[0])
+    return codes[0] if len(codes) == 1 else None
 
 
 _TOKENIZE_CALLS = 0

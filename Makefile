@@ -33,7 +33,7 @@ verify:
 	harness/run_gates.sh manual
 
 test:
-	PYTHONDONTWRITEBYTECODE=1 $(PY) -m unittest -v tests.test_harness
+	PYTHONDONTWRITEBYTECODE=1 $(PY) -m unittest discover -v tests
 
 # Wipe the cheap tier's artifacts; probes stay (they are expensive and frozen).
 clean:

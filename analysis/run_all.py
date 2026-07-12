@@ -30,6 +30,7 @@ RESULTS = ROOT / "results.json"
 SCRIPT = "analysis/run_all.py"
 CODE_RE = re.compile(r"(?<![A-Z0-9])[A-Z]{2}-[0-9]{3}(?![A-Z0-9])")
 EOF_RE = re.compile(r"(?:\r?\n)?\s*> EOF by user[\s\S]*\Z")
+PRUNE_FLOOR = 8
 
 
 def clean_output(raw: str) -> str:
@@ -132,6 +133,8 @@ def main() -> int:
     add("manifestProbeCount", len(records), "count", "total probes in the manifest")
     add("missingProbeCount", len(missing), "count", "manifest probes without completed raw outputs")
     add("cpuBudgetMinutes", 45, "count", "full clean-room probe budget in minutes")
+    add("pruneFloor", PRUNE_FLOOR, "count",
+        "fallback count of highest-overlap sentences retained by keyword pruning")
 
     full = [r for r in scored if r["variant"] == "full" and r["style"] == "para"]
     tier_words = {"t2k": "Two", "t4k": "Four", "t8k": "Eight"}
@@ -223,9 +226,9 @@ def main() -> int:
                     "distractor_retained",
                     "matched keyword-pruned prompts retaining the lexical decoy")
 
-    # The query-entity selector is a second deployable baseline. It reads the
-    # company named in the question and keeps sentences mentioning that name;
-    # unlike the decoy-removal diagnostic, it uses no hidden answer label.
+    # The query-entity condition diagnoses the generator's exact-name shortcut.
+    # It reads the company named in the fixed question template and keeps the
+    # unique sentence mentioning that name, without a hidden answer label.
     entity_selected = [r for r in scored if r["tier"] == "t4k" and
                        r["variant"] == "entitypruned"]
     em = keyed(entity_selected, pair_fields)

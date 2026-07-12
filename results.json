@@ -1002,6 +1002,12 @@
       "unit": "count",
       "value": 1
     },
+    "pruneFloor": {
+      "desc": "fallback count of highest-overlap sentences retained by keyword pruning",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 8
+    },
     "pruningChange": {
       "desc": "accuracy change in percentage points for paired keyword-pruned context minus full context comparison",
       "fmt": ".1f",

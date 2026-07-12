@@ -159,3 +159,35 @@ SHADOW: tagged green-v82 (iter=13)
 CONFIRM: rubric 6 >= 6 at iter 13 — running confirmation review
 RATCHET: tagged paper-v16 (score=6, iter=13)
 HUMANIZER pass at iter 13
+--- gates @ iteration final2 16:10:05 ---
+PASS  frozen-inputs
+PASS  citations-resolve
+PASS  no-number-literals
+PASS  pipeline-fresh
+PASS  results-sane
+PASS  prose-style
+PASS  submission-ready
+FAIL  latex-compiles
+DETAIL latex-compiles: note: Running TeX ... error: main.tex:66: Undefined control sequence error: halted on potentially-recoverable error as specified FAIL: Tectonic did not compile paper/main.tex 
+gates failed: 1
+--- gates @ iteration final3 16:10:43 ---
+PASS  frozen-inputs
+PASS  citations-resolve
+PASS  no-number-literals
+PASS  pipeline-fresh
+PASS  results-sane
+PASS  prose-style
+PASS  submission-ready
+FAIL  latex-compiles
+DETAIL latex-compiles: FAIL: ICML suppressed the running title; preserve the short \smash-wrapped running title 
+gates failed: 1
+--- gates @ iteration final4 16:11:13 ---
+PASS  frozen-inputs
+PASS  citations-resolve
+PASS  no-number-literals
+PASS  pipeline-fresh
+PASS  results-sane
+PASS  prose-style
+PASS  submission-ready
+PASS  latex-compiles
+gates failed: 0
