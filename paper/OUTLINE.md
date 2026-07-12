@@ -47,7 +47,8 @@ through a macro generated in `paper/values.tex`.
 ## Scoring and Comparisons
 
 - Define exact-answer scoring, distractor capture, invalid output, and exact-output compliance.
-- Report per-cell n and Wilson intervals for every accuracy estimate.
+- Report per-cell probe and family counts with family-cluster bootstrap intervals for
+  every accuracy estimate and paired change.
 - Amount: compare adequately populated tokenizer-measured tiers; do not claim a threshold
   unless the grid can locate one.
 - Position: use the matched scenario families and report paired changes.

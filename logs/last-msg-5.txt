@@ -1,0 +1,9 @@
+Implemented one task: family-aware uncertainty.
+
+- Replaced probe-level Wilson intervals with deterministic scenario-family cluster bootstraps.
+- Added family counts and confidence intervals for paired changes.
+- Updated paper methodology and core results reporting.
+- Regenerated `results.json` and [values.tex](/Users/matthewchan/ralphm/Ralphm/paper/values.tex).
+- Updated [TODO.md](/Users/matthewchan/ralphm/Ralphm/TODO.md) and [DONE.md](/Users/matthewchan/ralphm/Ralphm/DONE.md).
+
+Relevant individual gates pass: pipeline freshness, result sanity, numeric provenance, prose style, and submission readiness. The general harness tests retain one unrelated pre-existing TODO wording failure. Tectonic was not run, as required. Changes remain uncommitted.

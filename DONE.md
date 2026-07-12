@@ -57,3 +57,10 @@
   The title now centers the supported position and pruning results; the abstract,
   amount result, and limitations state that the sparse matched amount comparison
   cannot establish either benefit or degradation.
+
+## Lap 6 (2026-07-12)
+
+- Replaced probe-level Wilson intervals with deterministic percentile bootstrap
+  intervals that resample whole scenario families. Added family counts and
+  family-cluster intervals for every paired change, regenerated the result
+  registry and LaTeX macros, and reported the core paired intervals in the paper.

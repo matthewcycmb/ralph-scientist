@@ -84,15 +84,15 @@ At the middle tier, a keyword filter retains sentences with at least two content
 
 Normalized accuracy requires the target code to appear without the competing code. Exact-output compliance requires a response containing one code and no other text. A distractor capture contains the competing code without the target, and an invalid response contains both expected codes or neither. We strip only the runner's fixed transport trailer before applying these rules.
 
-Every accuracy interval is a \confidenceLevel{}\% Wilson score interval. Paired changes are differences in accuracy over an exact intersection of scenario keys. We report wins, losses, and ties for these comparisons because the small denominators make an aggregate difference alone easy to misread. The experiment is descriptive of the frozen model and does not assign sampling uncertainty to decoding, which is deterministic.
+The inferential target is the seeded generator's population of synthetic scenario families. Every \confidenceLevel{}\% interval resamples whole observed families, retaining all positions, filler types, and variants from each selected family; exact enumeration makes this cluster bootstrap deterministic. Paired changes are differences in accuracy over an exact intersection of scenario keys, with the same family resampling used for their intervals. These intervals describe sensitivity to the small family sample, while wins, losses, and ties expose the underlying paired outcomes. They do not assign sampling uncertainty to greedy decoding, which is deterministic.
 
 \section{Results}
 
 \paragraph{Amount.}
-\textbf{The amount effect remains unresolved.} Accuracy was \amountSharedTwoAccuracy{}\% at \tierTwoTokens{} mean tokens and \amountSharedFourAccuracy{}\% at \tierFourTokens{}, a paired change of \amountSharedTwoFourChange{} points over \amountSharedTwoFourDenominator{} cases. It was \amountSharedEightAccuracy{}\% at \tierEightTokens{}, with \amountSharedFourEightWins{} wins, \amountSharedFourEightLosses{} losses, and \amountSharedFourEightTies{} ties relative to the middle tier (Table~\ref{tab:amount-quality}). Because the longest-tier intersection represents only \amountSharedEightCount{} probes from a small set of scenario families, these observations neither establish a benefit nor rule out degradation within the measured range.
+\textbf{The amount effect remains unresolved.} Accuracy was \amountSharedTwoAccuracy{}\% at \tierTwoTokens{} mean tokens and \amountSharedFourAccuracy{}\% at \tierFourTokens{}, a paired change of \amountSharedTwoFourChange{} points with a family-cluster interval of [\amountSharedTwoFourChangeLow{}, \amountSharedTwoFourChangeHigh{}] over \amountSharedTwoFourDenominator{} cases. It was \amountSharedEightAccuracy{}\% at \tierEightTokens{}, with \amountSharedFourEightWins{} wins, \amountSharedFourEightLosses{} losses, and \amountSharedFourEightTies{} ties relative to the middle tier (Table~\ref{tab:amount-quality}). Because the longest-tier intersection represents only \amountSharedEightCount{} probes from \amountSharedEightFamilyCount{} scenario families, these observations neither establish a benefit nor rule out degradation within the measured range.
 
 \begin{table}[t]
-\caption{Matched amount and filler-quality comparisons. Brackets give \confidenceLevel{}\% Wilson intervals; $n$ is the matched denominator. Changes are later minus earlier for amount and related minus unrelated for quality.}
+\caption{Matched amount and filler-quality comparisons. Brackets give \confidenceLevel{}\% family-cluster bootstrap intervals; $n$ is the matched denominator. Changes are later minus earlier for amount and related minus unrelated for quality.}
 \label{tab:amount-quality}
 \centering
 \small
@@ -124,10 +124,10 @@ Quality at middle tier
 \end{table}
 
 \paragraph{Position.}
-\textbf{Moving the answer clause to the end produced the largest and most consistent gain.} At the shortest tier, accuracy rose from \positionTwoStartAccuracy{}\% at the start to \positionTwoEndAccuracy{}\% at the end, a paired increase of \positionTwoStartEndChange{} points with \positionTwoStartEndWins{} wins and no losses. At the middle tier, the same move raised accuracy by \positionFourStartEndChange{} points with \positionFourStartEndWins{} wins and no losses. The sparse longest tier also favored the end over the start by \positionEightStartEndChange{} points, but it contains only \positionEightStartEndDenominator{} pairs. Middle performance was below end performance at the two populated tiers (Table~\ref{tab:position}).
+\textbf{Moving the answer clause to the end produced the largest and most consistent gain.} At the shortest tier, accuracy rose from \positionTwoStartAccuracy{}\% at the start to \positionTwoEndAccuracy{}\% at the end, a paired increase of \positionTwoStartEndChange{} points with an interval of [\positionTwoStartEndChangeLow{}, \positionTwoStartEndChangeHigh{}], \positionTwoStartEndWins{} wins, and no losses. At the middle tier, the same move raised accuracy by \positionFourStartEndChange{} points [\positionFourStartEndChangeLow{}, \positionFourStartEndChangeHigh{}], with \positionFourStartEndWins{} wins and no losses. The sparse longest tier also favored the end over the start by \positionEightStartEndChange{} points, but it contains only \positionEightStartEndDenominator{} pairs. Middle performance was below end performance at the two populated tiers (Table~\ref{tab:position}).
 
 \begin{table}[t]
-\caption{Accuracy by answer-clause position. Each row compares the same scenario families across positions. Brackets give \confidenceLevel{}\% Wilson intervals.}
+\caption{Accuracy by answer-clause position. Each row compares the same scenario families across positions. Brackets give \confidenceLevel{}\% family-cluster bootstrap intervals.}
 \label{tab:position}
 \centering
 \small
@@ -154,13 +154,13 @@ Mean tokens & Start & Middle & End \\
 \end{table}
 
 \paragraph{Filler quality.}
-\textbf{Topically related filler was more harmful, not safer.} Relative to matched unrelated filler, related business clauses lowered accuracy by \qualityTwoRelevantChange{} points over \qualityTwoRelevantDenominator{} pairs at the shortest tier and by \qualityFourRelevantChange{} points over \qualityFourRelevantDenominator{} pairs at the middle tier. The respective paired outcomes were \qualityTwoRelevantWins{} win, \qualityTwoRelevantLosses{} losses, and \qualityTwoRelevantTies{} ties, then \qualityFourRelevantWins{} win, \qualityFourRelevantLosses{} losses, and \qualityFourRelevantTies{} ties. The longest-tier estimate was \qualityEightRelevantChange{} points, but its \qualityEightRelevantDenominator{} pairs are too sparse to strengthen that conclusion.
+\textbf{Topically related filler was more harmful, not safer.} Relative to matched unrelated filler, related business clauses changed accuracy by \qualityTwoRelevantChange{} points [\qualityTwoRelevantChangeLow{}, \qualityTwoRelevantChangeHigh{}] over \qualityTwoRelevantDenominator{} pairs at the shortest tier and by \qualityFourRelevantChange{} points [\qualityFourRelevantChangeLow{}, \qualityFourRelevantChangeHigh{}] over \qualityFourRelevantDenominator{} pairs at the middle tier. The respective paired outcomes were \qualityTwoRelevantWins{} win, \qualityTwoRelevantLosses{} losses, and \qualityTwoRelevantTies{} ties, then \qualityFourRelevantWins{} win, \qualityFourRelevantLosses{} losses, and \qualityFourRelevantTies{} ties. The longest-tier estimate was \qualityEightRelevantChange{} points, but its \qualityEightRelevantFamilyCount{} families are too sparse to strengthen that conclusion.
 
 \paragraph{Mitigation.}
-\textbf{Keyword pruning backfired on the matched cases.} Full-context accuracy was \pruningFullAccuracy{}\%, compared with \pruningPrunedAccuracy{}\% after filtering, a change of \pruningChange{} points. Only \pruningWins{} case improved; \pruningLosses{} worsened and \pruningTies{} tied (Table~\ref{tab:pruning}). The mechanism follows from the probe design: the filter retains the competing clause because it repeats the question's words, while the paraphrased answer clause has less lexical overlap.
+\textbf{Keyword pruning backfired on the matched cases.} Full-context accuracy was \pruningFullAccuracy{}\%, compared with \pruningPrunedAccuracy{}\% after filtering, a change of \pruningChange{} points [\pruningChangeLow{}, \pruningChangeHigh{}] across \pruningFamilyCount{} families. Only \pruningWins{} case improved; \pruningLosses{} worsened and \pruningTies{} tied (Table~\ref{tab:pruning}). The mechanism follows from the probe design: the filter retains the competing clause because it repeats the question's words, while the paraphrased answer clause has less lexical overlap.
 
 \begin{table}[t]
-\caption{Matched keyword-pruning result and diagnostic controls. Accuracy intervals are \confidenceLevel{}\% Wilson intervals.}
+\caption{Matched keyword-pruning result and diagnostic controls. Accuracy intervals are \confidenceLevel{}\% family-cluster bootstrap intervals.}
 \label{tab:pruning}
 \centering
 \small
