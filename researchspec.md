@@ -4,7 +4,7 @@
 
 Build an unattended agent system that produces a small, defensible research paper within a fixed time budget. The system must design and run experiments, analyze results, write the paper, review its own work, and preserve a verified submission at every successful stage.
 
-The system optimizes for traceability, scientific honesty, reproducibility, and clear professional writing, not merely for completing a paper.
+The system optimizes for soundness, presentation, significance, originality, traceability, and scientific honesty, not merely for completing a paper.
 
 ## Research contract
 
@@ -35,8 +35,8 @@ Each worker performs exactly one highest-leverage task, updates the shared memor
 
 1. **Worker:** Designs experiments, runs analysis, or writes the paper. Creative but untrusted.
 2. **Verifier:** Runs protected deterministic checks outside the worker.
-3. **Reviewer:** Critiques only complete, verified papers; traces claims, citations, and numbers.
-4. **Editor:** Decides the paper's honest thesis and reprioritizes work around reviewer objections.
+3. **Reviewer:** Critiques only complete, verified papers; traces claims, citations, and numbers; scores soundness, presentation, significance, and originality separately.
+4. **Editor:** Decides the paper's honest thesis, significance, and exact distinction from prior work, then reprioritizes work around reviewer objections.
 5. **Prose editor:** Improves clarity and professional register without changing claims, numbers, tables, or citations.
 6. **Orchestrator:** Controls timeouts, commits, tags, retries, monitoring, and recovery.
 
@@ -87,11 +87,24 @@ A checkpoint is verified only when all applicable gates pass:
 
 Deterministic gates establish integrity and reproducibility. They do not prove scientific correctness; the reviewer must inspect experimental design, scoring code, and claim size.
 
+## ICML-style paper evaluation
+
+Every reviewed checkpoint receives separate scores for:
+
+- **Soundness:** Comparisons are paired or matched where required; statistics, denominators, uncertainty, scoring, and limitations support the claims.
+- **Presentation:** The question, method, contribution, and main result are findable quickly; prose is professional; displays are selective and legible.
+- **Significance:** The paper identifies who should care, what practical or scientific decision the evidence informs, and why the result matters beyond one experimental grid without overstating its scope.
+- **Originality:** The paper names a specific difference from the closest prior work, such as a new experimental factor, matched mitigation, new subject scale, or reproducibility contribution.
+
+Reproducibility strengthens soundness but does not substitute for significance or originality. A passing score must survive an independent confirmation review, and the lower score controls promotion.
+
 ## Paper standard
 
 The paper must:
 
 - State a narrow question and answer it directly.
+- State significance as a concrete affected decision or reader, not a generic claim that the topic is important.
+- State originality by comparison with the closest cited work, not by using words such as “novel” or “first.”
 - Report denominators and uncertainty for every main estimate.
 - Separate supported findings, null results, and unresolved questions.
 - Use matched comparisons and avoid causal language for unmatched observations.
@@ -105,7 +118,7 @@ Readable does not mean childish. Write for a technically literate reader outside
 ## Ratchet and termination
 
 - Every green checkpoint receives a fallback tag.
-- A reviewed paper receives a version tag only if all gates pass and its fixed-rubric score meets or exceeds the threshold.
+- A reviewed paper receives a version tag only if all gates pass and its ICML-aligned fixed-rubric score meets or exceeds the threshold.
 - The same review may promote only one checkpoint.
 - Later failures cannot invalidate earlier verified tags.
 - At the deadline, submit the highest reviewed tag; otherwise submit the highest green fallback.
