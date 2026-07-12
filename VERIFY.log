@@ -12,3 +12,14 @@ DETAIL submission-ready: FAIL: abstract is not submission-ready (5 words; requir
 FAIL  latex-compiles
 DETAIL latex-compiles: FAIL: compiled paper must contain at least 2 pages, got 1 
 gates failed: 3
+--- gates @ iteration 2 13:30:06 ---
+PASS  frozen-inputs
+PASS  citations-resolve
+PASS  no-number-literals
+PASS  pipeline-fresh
+PASS  results-sane
+PASS  prose-style
+PASS  submission-ready
+FAIL  latex-compiles
+DETAIL latex-compiles: warning: main.tex:67: Overfull \hbox (73.18251pt too wide) in paragraph at lines 66--67 warning: main.tex:67: Overfull \hbox (73.18251pt too wide) in paragraph at lines 66--67 warning: main.tex:67: Overfull \hbox (73.18251pt too wide) in paragraph at lines 66--67 FAIL: paper has overfull horizontal boxes; shorten prose or tables 
+gates failed: 1

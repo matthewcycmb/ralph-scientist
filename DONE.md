@@ -33,3 +33,14 @@
   amount tiers, and a 33.3-point loss from keyword pruning.
 - Individual sanity and numeric-literal gates pass. Cheap regeneration is
   deterministic and completes in well under one minute.
+
+## Lap 3 (2026-07-12)
+
+- Drafted the complete anonymous ICML short paper from the computed registry:
+  five-sentence abstract, visible four-question list, paired design and scoring,
+  three result tables, required limitations, and reproducibility statement.
+- Centered the thesis on the paired end-position advantage and matched pruning
+  backfire. Reported the amount result as inconclusive and the longest-tier
+  position and quality cells as sparse.
+- Activated only citations already present in the resolver cache. Individual
+  number, style, submission, and citation gates pass.

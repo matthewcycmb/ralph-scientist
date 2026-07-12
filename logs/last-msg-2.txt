@@ -1,0 +1,7 @@
+Completed one task: drafted the full anonymous ICML paper in [paper/main.tex](/Users/matthewchan/ralphm/Ralphm/paper/main.tex).
+
+- Added four-question structure, paired methodology, three result tables, limitations, and reproducibility.
+- Centered the thesis on position effects and pruning failure; treated length findings as inconclusive.
+- Updated [TODO.md](/Users/matthewchan/ralphm/Ralphm/TODO.md) and [DONE.md](/Users/matthewchan/ralphm/Ralphm/DONE.md).
+- Number, style, submission, citation, frozen-input, sanity, pipeline-fresh, and whitespace checks pass.
+- Did not run tectonic or commit. The harness-side compilation verdict remains next.

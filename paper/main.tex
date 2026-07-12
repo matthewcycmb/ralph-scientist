@@ -5,83 +5,200 @@
 \usepackage{booktabs}
 \usepackage{hyperref}
 
-% Attempt to make hyperref and algorithmic work together better:
 \newcommand{\theHalgorithm}{\arabic{algorithm}}
-
-% Submission mode: never add the `accepted` option before the double-blind deadline.
 \usepackage{icml2026}
 
-% Macros generated from results.json — the ONLY legal source of numbers.
 \InputIfFileExists{values.tex}{}{}
 \input{model.tex}
 
-% Keep \smash: the ICML 2026 class's height check suppresses even short capitalized titles.
-% The PDF gate rejects "Title Suppressed Due to Excessive Size" if this regresses.
-\icmltitlerunning{\smash{Context Position}}
+\icmltitlerunning{\smash{Context Position and Pruning in a Small Language Model}}
 
 \begin{document}
 
 \twocolumn[
-\icmltitle{Does More Context Degrade Model Performance? \\
-           Measuring When It Starts and How Much It Costs}
+\icmltitle{More Context Did Not Hurt, but Its Placement Did:\
+           A Paired Study of a Small Language Model}
 \icmlsetsymbol{equal}{*}
 \begin{icmlauthorlist}
 \icmlauthor{Anonymous Authors}{anon}
 \end{icmlauthorlist}
 \icmlaffiliation{anon}{Anonymous Institution}
-\icmlkeywords{autonomous research, long context, lost in the middle, small language models}
+\icmlkeywords{long context, retrieval, position effects, small language models}
 \vskip 0.3in
 ]
 \printAffiliationsAndNotice{}
 
-% ============================================================================
-% AGENT INSTRUCTIONS (delete these comments as sections are written):
-% - Write the OUTLINE first (as comments below), then prose from the outline.
-% - Every number: a macro from values.tex. Never type digits (gate-enforced).
-% - Claims are PREDICTIVE, never causal. Honest limitations. See SPEC.md rubric.
-% - Citations: add to refs.bib, then uncomment the bibliography lines below.
-% ============================================================================
-
 \begin{abstract}
-% TODO(agent): 4-6 sentences — question, data, method, headline result
-% (via macros), one-sentence limitation. Written LAST, from real results.
-TODO: abstract pending first results.
+Does adding context hurt a small language model, and do the location and topicality of that context matter? We test the frozen \modelName{} artifact on \sampleSize{} deterministic synthetic contract-clause probes spanning mean prompt lengths of \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Moving the same answer-bearing clause from the start to the end raised accuracy by \positionTwoStartEndChange{} percentage points at the shortest tier and \positionFourStartEndChange{} points at the middle tier, while keyword pruning lowered matched accuracy by \pruningChange{} points. The matched amount comparison was inconclusive: accuracy rose by \amountSharedTwoFourChange{} points and then changed by \amountSharedFourEightChange{} points, with only \amountSharedEightCount{} shared cases at each tier. For this model and task, clause placement and misleading lexical overlap mattered more than context amount, and a simple retriever made the problem worse.
 \end{abstract}
 
 \section{Introduction}
-% TODO(agent): the question, why it matters, what we do, contributions list.
+
+You paste a long contract into a chatbot and ask, ``What code renews the vendor agreement?'' The answer sits in one clause, but a similar buyer clause repeats the words in your question and gives a different code.
+
+Long prompts make this ordinary lookup less predictable. A model may fail because the document is longer, because the answer appears in a weak position, or because nearby text resembles the question. Those explanations imply different choices: shorten the prompt, move the key clause, or filter the document. A useful evaluation must vary each property while holding the others fixed.
+
+We study these choices in a synthetic, gradeable version of the contract situation. Each document contains an answer-bearing vendor clause and a look-alike clause for another company. The question uses the wording of the look-alike clause, while the answer clause expresses the same relation with different words. This construction reduces the value of literal matching, following the motivation of NoLiMa \citep{modarressi2025nolima}.
+
+Our contribution is a fully paired, laptop-scale evaluation of a frozen open model. Prior work established position and length failures in larger systems \citep{liu2023lost,levy2024same}, and showed that irrelevant statements can disrupt reasoning \citep{shi2023distracted}. We instead compare topically related and unrelated filler at matched prompt lengths, positions, and questions. We also test whether a deterministic keyword filter helps the exact cases on which the unfiltered model was evaluated.
+
+The experiment asks four questions:
+\begin{enumerate}
+    \item As the document grows from \tierTwoTokens{} to \tierEightTokens{} mean tokens, how much does accuracy change on shared cases?
+    \item How does moving the same answer clause among the start, middle, and end change accuracy?
+    \item Does topically related filler hurt less than unrelated filler in matched documents?
+    \item Does keyword pruning recover accuracy on matched full-context cases?
+\end{enumerate}
+
+The answer is not a general context-length threshold. In this grid, the model improved when the answer appeared near the end, related filler was no safer than unrelated filler, and keyword pruning amplified the lexical trap built into the probes.
 
 \section{Related Work}
-% TODO(agent): long-context position effects, input-length degradation,
-% irrelevant-context distraction, non-literal retrieval, and Qwen model family.
-% Cite only verified entries in refs.bib.
+
+\citet{liu2023lost} found a U-shaped position curve in multi-document question answering and key-value retrieval, with stronger use of information near context boundaries. Our design performs a smaller clause-reordering test: the question, filler, competing clause, and answer code remain fixed while only the answer clause moves. The observed pattern is primarily recency rather than a full U-shape because the start condition is also weak.
+
+Input amount can matter even when the underlying problem is fixed. \citet{levy2024same} padded matched reasoning problems and observed degradation well before model context limits, while RULER found that usable context lengths can be shorter than advertised windows \citep{hsieh2024ruler}. Our amount comparison uses the intersection of cases present at every tier, avoiding a change in scenario mix as prompts grow.
+
+\citet{shi2023distracted} added irrelevant statements to arithmetic problems and found lower reasoning accuracy. We ask a different quality question: whether filler from the same business domain is less harmful than unrelated prose when amount and question wording match. NoLiMa shows why literal needle tests can overstate retrieval ability \citep{modarressi2025nolima}; our answer clause therefore paraphrases the question while a competing clause shares its surface form. The tested model belongs to the instruction-tuned Qwen family \citep{qwen2024qwen25}.
 
 \section{Probe Design}
-% TODO(agent): exact frozen model artifact; tokenizer-measured tiers; synthetic
-% contract clauses; paired scenario families; independent distractor placement;
-% literal/paraphrase questions; relevant/irrelevant filler; deterministic scoring.
 
-\section{Method}
-% TODO(agent): answer all four questions in SPEC. Amount tiers need their own n;
-% position must compare the same scenario family with only clause location moved;
-% quality and pruning contrasts must use matched cases; report exact-output compliance.
+\paragraph{Model and execution.}
+The subject is the frozen \modelFile{} artifact with SHA checksum \modelSha{}. We run it through \texttt{llama-completion} with greedy decoding, zero temperature, and a fixed seed. The complete manifest contains \manifestProbeCount{} probes, each stored as one prompt and one raw output. Existing outputs are skipped on rerun, so interrupted inference resumes by stable probe identifier.
+
+\paragraph{Scenario families.}
+Seeded code generates a company, target code, competing company and code, question, and filler for each family. The question asks for the renewal code needed to extend the target company's contract. Its wording exactly matches the competing clause, whereas the answer-bearing clause calls the same value a renewal identifier. A matched literal control reverses these phrasings while retaining the same filler.
+
+For each full-context family, we insert the answer clause near the start, middle, or end. Family generation does not use target position in any random seed. The competing clause is independently assigned to an earlier or later fractional depth and remains there across all three renders. Thus a paired position contrast changes only where the answer clause appears.
+
+\paragraph{Amount and quality.}
+The tokenizer, rather than a character estimate, determines prompt length. The three full-context tiers average \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Each tier balances topically related filler with unrelated sentences. Related filler consists of other companies, business records, and unrelated codes; unrelated filler describes places and events outside the contract domain. Quality pairs share the family, target position, question, and measured tier.
+
+The expensive final tier contains fewer families. Amount estimates therefore use only the \amountSharedEightCount{} cases shared by every tier, not the unequal full-tier totals. Quality estimates use \qualityTwoRelevantDenominator{}, \qualityFourRelevantDenominator{}, and \qualityEightRelevantDenominator{} pairs at the three tiers, respectively.
+
+\paragraph{Pruning and controls.}
+At the middle tier, a keyword filter retains sentences with at least two content words shared with the question, falling back to the highest-overlap sentences if too few qualify. It preserves original order. The comparison is restricted to the \pruningDenominator{} cases with both full and pruned outputs. We also include \closedBookCount{} closed-book questions and \literalControlDenominator{} matched literal-versus-paraphrase controls.
+
+\section{Scoring and Comparisons}
+
+Normalized accuracy requires the target code to appear without the competing code. Exact-output compliance requires a response containing one code and no other text. A distractor capture contains the competing code without the target, and an invalid response contains both expected codes or neither. We strip only the runner's fixed transport trailer before applying these rules.
+
+Every accuracy interval is a \confidenceLevel{}\% Wilson score interval. Paired changes are differences in accuracy over an exact intersection of scenario keys. We report wins, losses, and ties for these comparisons because the small denominators make an aggregate difference alone easy to misread. The experiment is descriptive of the frozen model and does not assign sampling uncertainty to decoding, which is deterministic.
 
 \section{Results}
-% TODO(agent): >= 2 figures or tables, all values via macros.
+
+\paragraph{Amount.}
+\textbf{The matched grid does not show accuracy degradation as context grows.} Accuracy was \amountSharedTwoAccuracy{}\% at \tierTwoTokens{} mean tokens and \amountSharedFourAccuracy{}\% at \tierFourTokens{}, a paired change of \amountSharedTwoFourChange{} points over \amountSharedTwoFourDenominator{} cases. It remained \amountSharedEightAccuracy{}\% at \tierEightTokens{}, with \amountSharedFourEightWins{} wins, \amountSharedFourEightLosses{} losses, and \amountSharedFourEightTies{} ties relative to the middle tier (Table~\ref{tab:amount-quality}). The wide intervals and small shared set do not locate a degradation threshold.
+
+\begin{table}[t]
+\caption{Matched amount and filler-quality comparisons. Brackets give \confidenceLevel{}\% Wilson intervals; $n$ is the matched denominator. Changes are later minus earlier for amount and related minus unrelated for quality.}
+\label{tab:amount-quality}
+\centering
+\small
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Comparison & Accuracy A & Accuracy B & Change ($n$) \\
+\midrule
+Amount: short to middle
+& \amountSharedTwoAccuracy{} [\amountSharedTwoAccuracyLow{}, \amountSharedTwoAccuracyHigh{}]
+& \amountSharedFourAccuracy{} [\amountSharedFourAccuracyLow{}, \amountSharedFourAccuracyHigh{}]
+& \amountSharedTwoFourChange{} (\amountSharedTwoFourDenominator{}) \\
+Amount: middle to long
+& \amountSharedFourAccuracy{} [\amountSharedFourAccuracyLow{}, \amountSharedFourAccuracyHigh{}]
+& \amountSharedEightAccuracy{} [\amountSharedEightAccuracyLow{}, \amountSharedEightAccuracyHigh{}]
+& \amountSharedFourEightChange{} (\amountSharedFourEightDenominator{}) \\
+\midrule
+Quality at short tier
+& \qualityTwoIrrelevantAccuracy{} [\qualityTwoIrrelevantAccuracyLow{}, \qualityTwoIrrelevantAccuracyHigh{}]
+& \qualityTwoRelevantAccuracy{} [\qualityTwoRelevantAccuracyLow{}, \qualityTwoRelevantAccuracyHigh{}]
+& \qualityTwoRelevantChange{} (\qualityTwoRelevantDenominator{}) \\
+Quality at middle tier
+& \qualityFourIrrelevantAccuracy{} [\qualityFourIrrelevantAccuracyLow{}, \qualityFourIrrelevantAccuracyHigh{}]
+& \qualityFourRelevantAccuracy{} [\qualityFourRelevantAccuracyLow{}, \qualityFourRelevantAccuracyHigh{}]
+& \qualityFourRelevantChange{} (\qualityFourRelevantDenominator{}) \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\paragraph{Position.}
+\textbf{Moving the answer clause to the end produced the largest and most consistent gain.} At the shortest tier, accuracy rose from \positionTwoStartAccuracy{}\% at the start to \positionTwoEndAccuracy{}\% at the end, a paired increase of \positionTwoStartEndChange{} points with \positionTwoStartEndWins{} wins and no losses. At the middle tier, the same move raised accuracy by \positionFourStartEndChange{} points with \positionFourStartEndWins{} wins and no losses. The sparse longest tier also favored the end over the start by \positionEightStartEndChange{} points, but it contains only \positionEightStartEndDenominator{} pairs. Middle performance was below end performance at the two populated tiers (Table~\ref{tab:position}).
+
+\begin{table}[t]
+\caption{Accuracy by answer-clause position. Each row compares the same scenario families across positions. Brackets give \confidenceLevel{}\% Wilson intervals.}
+\label{tab:position}
+\centering
+\small
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Mean tokens & Start & Middle & End \\
+\midrule
+\tierTwoTokens{}
+& \positionTwoStartAccuracy{} [\positionTwoStartAccuracyLow{}, \positionTwoStartAccuracyHigh{}]
+& \positionTwoMiddleAccuracy{} [\positionTwoMiddleAccuracyLow{}, \positionTwoMiddleAccuracyHigh{}]
+& \positionTwoEndAccuracy{} [\positionTwoEndAccuracyLow{}, \positionTwoEndAccuracyHigh{}] \\
+\tierFourTokens{}
+& \positionFourStartAccuracy{} [\positionFourStartAccuracyLow{}, \positionFourStartAccuracyHigh{}]
+& \positionFourMiddleAccuracy{} [\positionFourMiddleAccuracyLow{}, \positionFourMiddleAccuracyHigh{}]
+& \positionFourEndAccuracy{} [\positionFourEndAccuracyLow{}, \positionFourEndAccuracyHigh{}] \\
+\tierEightTokens{}
+& \positionEightStartAccuracy{} [\positionEightStartAccuracyLow{}, \positionEightStartAccuracyHigh{}]
+& \positionEightMiddleAccuracy{} [\positionEightMiddleAccuracyLow{}, \positionEightMiddleAccuracyHigh{}]
+& \positionEightEndAccuracy{} [\positionEightEndAccuracyLow{}, \positionEightEndAccuracyHigh{}] \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\paragraph{Filler quality.}
+\textbf{Topically related filler was more harmful, not safer.} Relative to matched unrelated filler, related business clauses lowered accuracy by \qualityTwoRelevantChange{} points over \qualityTwoRelevantDenominator{} pairs at the shortest tier and by \qualityFourRelevantChange{} points over \qualityFourRelevantDenominator{} pairs at the middle tier. The respective paired outcomes were \qualityTwoRelevantWins{} win, \qualityTwoRelevantLosses{} losses, and \qualityTwoRelevantTies{} ties, then \qualityFourRelevantWins{} win, \qualityFourRelevantLosses{} losses, and \qualityFourRelevantTies{} ties. The longest-tier estimate was \qualityEightRelevantChange{} points, but its \qualityEightRelevantDenominator{} pairs are too sparse to strengthen that conclusion.
+
+\paragraph{Mitigation.}
+\textbf{Keyword pruning backfired on the matched cases.} Full-context accuracy was \pruningFullAccuracy{}\%, compared with \pruningPrunedAccuracy{}\% after filtering, a change of \pruningChange{} points. Only \pruningWins{} case improved; \pruningLosses{} worsened and \pruningTies{} tied (Table~\ref{tab:pruning}). The mechanism follows from the probe design: the filter retains the competing clause because it repeats the question's words, while the paraphrased answer clause has less lexical overlap.
+
+\begin{table}[t]
+\caption{Matched keyword-pruning result and diagnostic controls. Accuracy intervals are \confidenceLevel{}\% Wilson intervals.}
+\label{tab:pruning}
+\centering
+\small
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Condition & Accuracy & Count \\
+\midrule
+Full context
+& \pruningFullAccuracy{} [\pruningFullAccuracyLow{}, \pruningFullAccuracyHigh{}]
+& \pruningFullCount{} \\
+Keyword pruned
+& \pruningPrunedAccuracy{} [\pruningPrunedAccuracyLow{}, \pruningPrunedAccuracyHigh{}]
+& \pruningPrunedCount{} \\
+Literal wording
+& \literalControlAccuracy{} [\literalControlAccuracyLow{}, \literalControlAccuracyHigh{}]
+& \literalControlCount{} \\
+Paraphrase wording
+& \paraphraseControlAccuracy{} [\paraphraseControlAccuracyLow{}, \paraphraseControlAccuracyHigh{}]
+& \paraphraseControlCount{} \\
+Closed book
+& \closedBookAccuracy{} [\closedBookAccuracyLow{}, \closedBookAccuracyHigh{}]
+& \closedBookCount{} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+The controls support this explanation without proving it for other tasks. Literal wording improved matched accuracy by \literalControlChange{} points, with \literalControlWins{} wins and no losses. Across all outputs, distractor capture was \distractorCaptureRate{}\%, exact-output compliance was \exactOutputComplianceRate{}\%, and invalid output was \invalidOutputRate{}\%. The failures therefore arose mainly from selecting the competing code, not from ignoring the requested format.
 
 \section{Limitations}
-% TODO(agent): one small quantized model; synthetic probes, not natural documents;
-% retrieval is not general capability; CPU-limited grid; greedy decoding only;
-% identify every sparse or unmatched comparison explicitly.
 
-\section{Reproducibility Statement}
-% TODO(agent): exact model filename + checksum; raw probe manifest; make all
-% regenerates scored results from cached outputs; make clean-deep && make all
-% repeats inference; gates enforce frozen inputs, citations, and number provenance.
+The findings concern one small quantized model and may not transfer to larger models or other quantization levels. Synthetic clause lookup is not natural contract analysis, and retrieval accuracy is not a measure of general capability. The \cpuBudgetMinutes{}-minute CPU budget capped the grid, leaving only \tierEightCount{} full-context probes at the longest tier and wide intervals throughout. Greedy decoding removes run-to-run sampling variation but does not show how sampling would change the estimates. The mitigation is a deliberately simple keyword filter rather than a learned retrieval system. Finally, the experiment varies prompts only up to \tierEightTokens{} mean tokens, so it cannot rule out degradation beyond the measured range.
 
-% Uncomment when refs.bib has verified entries:
+\section{Reproducibility}
+
+Every reported quantity is generated by analysis scripts from the committed probe manifest and raw model outputs, following the reporting principle that computational evidence should expose its budget and variation \citep{dodge2019show}. The model and cached data are frozen and checksummed, and each raw output retains its stable probe identifier. Running \texttt{make all} regenerates \texttt{results.json}, the LaTeX value macros, and the paper from cached outputs; running \texttt{make clean-deep \&\& make all} repeats deterministic model inference. Repository gates check frozen inputs, citation resolution, number provenance, pipeline freshness, result sanity, prose style, anonymity, and compilation.
+
 \label{main-body-end}
-% \bibliography{refs}
-% \bibliographystyle{icml2026}
+\bibliography{refs}
+\bibliographystyle{icml2026}
 
 \end{document}
