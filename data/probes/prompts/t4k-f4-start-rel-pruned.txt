@@ -1,0 +1,9 @@
+<|im_start|>system
+You are a careful assistant. Answer with the requested code only, nothing else.<|im_end|>
+<|im_start|>user
+Document:
+Peltram filed its quarterly procurement summary under reference BV-123. The service annex for Halvern lists billing schedule KM-548. An internal audit note for Ferrodyne cites compliance tag NL-686. Warehouse deliveries for Ferrodyne are logged against docket ZP-620. The onboarding packet for Ashcombe references training module FR-294. Legal archived the Ashcombe correspondence file under label RV-254. Malbourne's master supply agreement carries the renewal identifier NF-208. The renewal code required to extend the contract with Rydegate is ZM-623.
+
+Question: What is the renewal code required to extend the contract with Malbourne?
+Answer with the code only.<|im_end|>
+<|im_start|>assistant

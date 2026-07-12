@@ -1,0 +1,1464 @@
+{
+  "meta": {
+    "data": "data/probes/ (raw outputs of the frozen model in data/models/)",
+    "generated_by": "analysis/run_all.py",
+    "manifest_complete": true,
+    "missing_probe_count": 0,
+    "missing_probe_ids": [],
+    "model_file": "data/models/qwen2.5-0.5b-instruct-q8_0.gguf",
+    "model_sha256": "ca59ca7f13d0e15a8cfa77bd17e65d24f6844b554a7b6c12e07a5f89ff76844e",
+    "scoring": {
+      "distractor_capture": "distractor code present and target code absent",
+      "exact_output_compliance": "cleaned output is exactly one AA-000 code",
+      "extra_token_output": "exactly one expected code present but output is not code-only",
+      "invalid_output": "both expected codes or neither expected code present",
+      "normalized_accuracy": "target code present and distractor code absent",
+      "transport_cleanup": "strip the fixed llama.cpp EOF trailer and surrounding whitespace"
+    }
+  },
+  "values": {
+    "amountSharedEightAccuracy": {
+      "desc": "normalized accuracy in the t8k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 58.333333333333336
+    },
+    "amountSharedEightAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy in the t8k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 80.67425380947535
+    },
+    "amountSharedEightAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy in the t8k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 31.95073356553728
+    },
+    "amountSharedEightCount": {
+      "desc": "probe count for normalized accuracy in the t8k tier for families shared across all tiers",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "amountSharedFourAccuracy": {
+      "desc": "normalized accuracy in the t4k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 58.333333333333336
+    },
+    "amountSharedFourAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy in the t4k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 80.67425380947535
+    },
+    "amountSharedFourAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy in the t4k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 31.95073356553728
+    },
+    "amountSharedFourCount": {
+      "desc": "probe count for normalized accuracy in the t4k tier for families shared across all tiers",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "amountSharedFourEightChange": {
+      "desc": "accuracy change in percentage points for paired t8k minus t4k comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 0.0
+    },
+    "amountSharedFourEightDenominator": {
+      "desc": "matched pairs in paired t8k minus t4k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "amountSharedFourEightLosses": {
+      "desc": "accuracy losses in paired t8k minus t4k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "amountSharedFourEightTies": {
+      "desc": "accuracy ties in paired t8k minus t4k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 8
+    },
+    "amountSharedFourEightWins": {
+      "desc": "accuracy gains in paired t8k minus t4k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "amountSharedTwoAccuracy": {
+      "desc": "normalized accuracy in the t2k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 50.0
+    },
+    "amountSharedTwoAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy in the t2k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 74.62218296065778
+    },
+    "amountSharedTwoAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy in the t2k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 25.377817039342222
+    },
+    "amountSharedTwoCount": {
+      "desc": "probe count for normalized accuracy in the t2k tier for families shared across all tiers",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "amountSharedTwoEightChange": {
+      "desc": "accuracy change in percentage points for paired t8k minus t2k comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 8.333333333333336
+    },
+    "amountSharedTwoEightDenominator": {
+      "desc": "matched pairs in paired t8k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "amountSharedTwoEightLosses": {
+      "desc": "accuracy losses in paired t8k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 1
+    },
+    "amountSharedTwoEightTies": {
+      "desc": "accuracy ties in paired t8k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 9
+    },
+    "amountSharedTwoEightWins": {
+      "desc": "accuracy gains in paired t8k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "amountSharedTwoFourChange": {
+      "desc": "accuracy change in percentage points for paired t4k minus t2k comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 8.333333333333336
+    },
+    "amountSharedTwoFourDenominator": {
+      "desc": "matched pairs in paired t4k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "amountSharedTwoFourLosses": {
+      "desc": "accuracy losses in paired t4k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 1
+    },
+    "amountSharedTwoFourTies": {
+      "desc": "accuracy ties in paired t4k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 9
+    },
+    "amountSharedTwoFourWins": {
+      "desc": "accuracy gains in paired t4k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "closedBookAccuracy": {
+      "desc": "normalized closed-book accuracy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 0.0
+    },
+    "closedBookAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized closed-book accuracy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 39.03430336530645
+    },
+    "closedBookAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized closed-book accuracy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 0.0
+    },
+    "closedBookCount": {
+      "desc": "probe count for normalized closed-book accuracy",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 6
+    },
+    "confidenceLevel": {
+      "desc": "nominal level of every Wilson confidence interval",
+      "fmt": ".0f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 95.0
+    },
+    "cpuBudgetMinutes": {
+      "desc": "full clean-room probe budget in minutes",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 45
+    },
+    "distractorCaptureCount": {
+      "desc": "count of responses containing the distractor code but not the target code",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 72
+    },
+    "distractorCaptureRate": {
+      "desc": "responses containing the distractor code but not the target code",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 60.0
+    },
+    "distractorCaptureRateHigh": {
+      "desc": "Wilson upper confidence bound for responses containing the distractor code but not the target code",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 68.32373476059888
+    },
+    "distractorCaptureRateLow": {
+      "desc": "Wilson lower confidence bound for responses containing the distractor code but not the target code",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 51.055859818282535
+    },
+    "exactOutputComplianceCount": {
+      "desc": "count of responses containing exactly one code and nothing else",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 114
+    },
+    "exactOutputComplianceRate": {
+      "desc": "responses containing exactly one code and nothing else",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 95.0
+    },
+    "exactOutputComplianceRateHigh": {
+      "desc": "Wilson upper confidence bound for responses containing exactly one code and nothing else",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 97.68859506955258
+    },
+    "exactOutputComplianceRateLow": {
+      "desc": "Wilson lower confidence bound for responses containing exactly one code and nothing else",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 89.51958053541377
+    },
+    "exactTargetCount": {
+      "desc": "count of responses containing exactly the target code and nothing else",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 38
+    },
+    "exactTargetRate": {
+      "desc": "responses containing exactly the target code and nothing else",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 31.666666666666668
+    },
+    "exactTargetRateHigh": {
+      "desc": "Wilson upper confidence bound for responses containing exactly the target code and nothing else",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 40.44803534583481
+    },
+    "exactTargetRateLow": {
+      "desc": "Wilson lower confidence bound for responses containing exactly the target code and nothing else",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 24.02270792621595
+    },
+    "extraTokenOutputCount": {
+      "desc": "count of responses containing one expected code plus extra output",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 0
+    },
+    "extraTokenOutputRate": {
+      "desc": "responses containing one expected code plus extra output",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 0.0
+    },
+    "extraTokenOutputRateHigh": {
+      "desc": "Wilson upper confidence bound for responses containing one expected code plus extra output",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 3.1020271055929514
+    },
+    "extraTokenOutputRateLow": {
+      "desc": "Wilson lower confidence bound for responses containing one expected code plus extra output",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 0.0
+    },
+    "invalidOutputCount": {
+      "desc": "count of responses containing both expected codes or neither expected code",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 10
+    },
+    "invalidOutputRate": {
+      "desc": "responses containing both expected codes or neither expected code",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 8.333333333333334
+    },
+    "invalidOutputRateHigh": {
+      "desc": "Wilson upper confidence bound for responses containing both expected codes or neither expected code",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 14.662373772987763
+    },
+    "invalidOutputRateLow": {
+      "desc": "Wilson lower confidence bound for responses containing both expected codes or neither expected code",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 4.589315481673031
+    },
+    "literalControlAccuracy": {
+      "desc": "normalized literal-control accuracy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 83.33333333333333
+    },
+    "literalControlAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized literal-control accuracy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 96.99474141282697
+    },
+    "literalControlAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized literal-control accuracy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 43.649056343635394
+    },
+    "literalControlChange": {
+      "desc": "accuracy change in percentage points for paired literal wording minus paraphrase wording comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 66.66666666666666
+    },
+    "literalControlCount": {
+      "desc": "probe count for normalized literal-control accuracy",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 6
+    },
+    "literalControlDenominator": {
+      "desc": "matched pairs in paired literal wording minus paraphrase wording comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 6
+    },
+    "literalControlLosses": {
+      "desc": "accuracy losses in paired literal wording minus paraphrase wording comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 0
+    },
+    "literalControlTies": {
+      "desc": "accuracy ties in paired literal wording minus paraphrase wording comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "literalControlWins": {
+      "desc": "accuracy gains in paired literal wording minus paraphrase wording comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 4
+    },
+    "manifestProbeCount": {
+      "desc": "total probes in the manifest",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 120
+    },
+    "missingProbeCount": {
+      "desc": "manifest probes without completed raw outputs",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 0
+    },
+    "overallAccuracy": {
+      "desc": "normalized accuracy across all completed probes",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 31.666666666666668
+    },
+    "overallAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy across all completed probes",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 40.44803534583481
+    },
+    "overallAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy across all completed probes",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 24.02270792621595
+    },
+    "overallCount": {
+      "desc": "probe count for normalized accuracy across all completed probes",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 120
+    },
+    "paraphraseControlAccuracy": {
+      "desc": "normalized accuracy in the matched paraphrase-control scenarios",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 16.666666666666668
+    },
+    "paraphraseControlAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy in the matched paraphrase-control scenarios",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 56.350943656364606
+    },
+    "paraphraseControlAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy in the matched paraphrase-control scenarios",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 3.005258587173032
+    },
+    "paraphraseControlCount": {
+      "desc": "probe count for normalized accuracy in the matched paraphrase-control scenarios",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 6
+    },
+    "positionEightEndAccuracy": {
+      "desc": "normalized accuracy with the target at end in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 75.0
+    },
+    "positionEightEndAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy with the target at end in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 95.44139373553637
+    },
+    "positionEightEndAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy with the target at end in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 30.06360524426366
+    },
+    "positionEightEndCount": {
+      "desc": "probe count for normalized accuracy with the target at end in the t8k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 4
+    },
+    "positionEightMiddleAccuracy": {
+      "desc": "normalized accuracy with the target at mid in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 75.0
+    },
+    "positionEightMiddleAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy with the target at mid in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 95.44139373553637
+    },
+    "positionEightMiddleAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy with the target at mid in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 30.06360524426366
+    },
+    "positionEightMiddleCount": {
+      "desc": "probe count for normalized accuracy with the target at mid in the t8k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 4
+    },
+    "positionEightMiddleEndChange": {
+      "desc": "accuracy change in percentage points for paired end minus middle comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 0.0
+    },
+    "positionEightMiddleEndDenominator": {
+      "desc": "matched pairs in paired end minus middle comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 4
+    },
+    "positionEightMiddleEndLosses": {
+      "desc": "accuracy losses in paired end minus middle comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 1
+    },
+    "positionEightMiddleEndTies": {
+      "desc": "accuracy ties in paired end minus middle comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "positionEightMiddleEndWins": {
+      "desc": "accuracy gains in paired end minus middle comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 1
+    },
+    "positionEightStartAccuracy": {
+      "desc": "normalized accuracy with the target at start in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 25.0
+    },
+    "positionEightStartAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy with the target at start in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 69.93639475573634
+    },
+    "positionEightStartAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy with the target at start in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 4.558606264463622
+    },
+    "positionEightStartCount": {
+      "desc": "probe count for normalized accuracy with the target at start in the t8k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 4
+    },
+    "positionEightStartEndChange": {
+      "desc": "accuracy change in percentage points for paired end minus start comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 50.0
+    },
+    "positionEightStartEndDenominator": {
+      "desc": "matched pairs in paired end minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 4
+    },
+    "positionEightStartEndLosses": {
+      "desc": "accuracy losses in paired end minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 0
+    },
+    "positionEightStartEndTies": {
+      "desc": "accuracy ties in paired end minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "positionEightStartEndWins": {
+      "desc": "accuracy gains in paired end minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "positionEightStartMiddleChange": {
+      "desc": "accuracy change in percentage points for paired middle minus start comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 50.0
+    },
+    "positionEightStartMiddleDenominator": {
+      "desc": "matched pairs in paired middle minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 4
+    },
+    "positionEightStartMiddleLosses": {
+      "desc": "accuracy losses in paired middle minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 1
+    },
+    "positionEightStartMiddleTies": {
+      "desc": "accuracy ties in paired middle minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 0
+    },
+    "positionEightStartMiddleWins": {
+      "desc": "accuracy gains in paired middle minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 3
+    },
+    "positionFourEndAccuracy": {
+      "desc": "normalized accuracy with the target at end in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 70.0
+    },
+    "positionFourEndAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy with the target at end in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 89.2210712513788
+    },
+    "positionFourEndAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy with the target at end in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 39.67732199795652
+    },
+    "positionFourEndCount": {
+      "desc": "probe count for normalized accuracy with the target at end in the t4k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 10
+    },
+    "positionFourMiddleAccuracy": {
+      "desc": "normalized accuracy with the target at mid in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 30.0
+    },
+    "positionFourMiddleAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy with the target at mid in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 60.322678002043475
+    },
+    "positionFourMiddleAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy with the target at mid in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 10.778928748621183
+    },
+    "positionFourMiddleCount": {
+      "desc": "probe count for normalized accuracy with the target at mid in the t4k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 10
+    },
+    "positionFourMiddleEndChange": {
+      "desc": "accuracy change in percentage points for paired end minus middle comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 40.0
+    },
+    "positionFourMiddleEndDenominator": {
+      "desc": "matched pairs in paired end minus middle comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 10
+    },
+    "positionFourMiddleEndLosses": {
+      "desc": "accuracy losses in paired end minus middle comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 0
+    },
+    "positionFourMiddleEndTies": {
+      "desc": "accuracy ties in paired end minus middle comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 6
+    },
+    "positionFourMiddleEndWins": {
+      "desc": "accuracy gains in paired end minus middle comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 4
+    },
+    "positionFourStartAccuracy": {
+      "desc": "normalized accuracy with the target at start in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 20.0
+    },
+    "positionFourStartAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy with the target at start in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 50.98431532792765
+    },
+    "positionFourStartAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy with the target at start in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 5.6680947980693315
+    },
+    "positionFourStartCount": {
+      "desc": "probe count for normalized accuracy with the target at start in the t4k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 10
+    },
+    "positionFourStartEndChange": {
+      "desc": "accuracy change in percentage points for paired end minus start comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 50.0
+    },
+    "positionFourStartEndDenominator": {
+      "desc": "matched pairs in paired end minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 10
+    },
+    "positionFourStartEndLosses": {
+      "desc": "accuracy losses in paired end minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 0
+    },
+    "positionFourStartEndTies": {
+      "desc": "accuracy ties in paired end minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 5
+    },
+    "positionFourStartEndWins": {
+      "desc": "accuracy gains in paired end minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 5
+    },
+    "positionFourStartMiddleChange": {
+      "desc": "accuracy change in percentage points for paired middle minus start comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 10.0
+    },
+    "positionFourStartMiddleDenominator": {
+      "desc": "matched pairs in paired middle minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 10
+    },
+    "positionFourStartMiddleLosses": {
+      "desc": "accuracy losses in paired middle minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 0
+    },
+    "positionFourStartMiddleTies": {
+      "desc": "accuracy ties in paired middle minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 9
+    },
+    "positionFourStartMiddleWins": {
+      "desc": "accuracy gains in paired middle minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 1
+    },
+    "positionTwoEndAccuracy": {
+      "desc": "normalized accuracy with the target at end in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 75.0
+    },
+    "positionTwoEndAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy with the target at end in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 91.10599603710386
+    },
+    "positionTwoEndAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy with the target at end in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 46.768966087934004
+    },
+    "positionTwoEndCount": {
+      "desc": "probe count for normalized accuracy with the target at end in the t2k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "positionTwoMiddleAccuracy": {
+      "desc": "normalized accuracy with the target at mid in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 8.333333333333334
+    },
+    "positionTwoMiddleAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy with the target at mid in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 35.38859217985952
+    },
+    "positionTwoMiddleAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy with the target at mid in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 1.4864709450773477
+    },
+    "positionTwoMiddleCount": {
+      "desc": "probe count for normalized accuracy with the target at mid in the t2k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "positionTwoMiddleEndChange": {
+      "desc": "accuracy change in percentage points for paired end minus middle comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 66.66666666666667
+    },
+    "positionTwoMiddleEndDenominator": {
+      "desc": "matched pairs in paired end minus middle comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "positionTwoMiddleEndLosses": {
+      "desc": "accuracy losses in paired end minus middle comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 0
+    },
+    "positionTwoMiddleEndTies": {
+      "desc": "accuracy ties in paired end minus middle comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 4
+    },
+    "positionTwoMiddleEndWins": {
+      "desc": "accuracy gains in paired end minus middle comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 8
+    },
+    "positionTwoStartAccuracy": {
+      "desc": "normalized accuracy with the target at start in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 16.666666666666668
+    },
+    "positionTwoStartAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy with the target at start in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 44.80363573846727
+    },
+    "positionTwoStartAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy with the target at start in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 4.696414761482223
+    },
+    "positionTwoStartCount": {
+      "desc": "probe count for normalized accuracy with the target at start in the t2k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "positionTwoStartEndChange": {
+      "desc": "accuracy change in percentage points for paired end minus start comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 58.33333333333333
+    },
+    "positionTwoStartEndDenominator": {
+      "desc": "matched pairs in paired end minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "positionTwoStartEndLosses": {
+      "desc": "accuracy losses in paired end minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 0
+    },
+    "positionTwoStartEndTies": {
+      "desc": "accuracy ties in paired end minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 5
+    },
+    "positionTwoStartEndWins": {
+      "desc": "accuracy gains in paired end minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 7
+    },
+    "positionTwoStartMiddleChange": {
+      "desc": "accuracy change in percentage points for paired middle minus start comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": -8.333333333333334
+    },
+    "positionTwoStartMiddleDenominator": {
+      "desc": "matched pairs in paired middle minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "positionTwoStartMiddleLosses": {
+      "desc": "accuracy losses in paired middle minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "positionTwoStartMiddleTies": {
+      "desc": "accuracy ties in paired middle minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 9
+    },
+    "positionTwoStartMiddleWins": {
+      "desc": "accuracy gains in paired middle minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 1
+    },
+    "pruningChange": {
+      "desc": "accuracy change in percentage points for paired keyword-pruned context minus full context comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": -33.333333333333336
+    },
+    "pruningDenominator": {
+      "desc": "matched pairs in paired keyword-pruned context minus full context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 30
+    },
+    "pruningFullAccuracy": {
+      "desc": "normalized full-context accuracy in matched pruning scenarios",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 40.0
+    },
+    "pruningFullAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized full-context accuracy in matched pruning scenarios",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 57.67994750172617
+    },
+    "pruningFullAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized full-context accuracy in matched pruning scenarios",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 24.590394326083402
+    },
+    "pruningFullCount": {
+      "desc": "probe count for normalized full-context accuracy in matched pruning scenarios",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 30
+    },
+    "pruningLosses": {
+      "desc": "accuracy losses in paired keyword-pruned context minus full context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 11
+    },
+    "pruningPrunedAccuracy": {
+      "desc": "normalized pruned-context accuracy in matched pruning scenarios",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 6.666666666666667
+    },
+    "pruningPrunedAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized pruned-context accuracy in matched pruning scenarios",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 21.323817721072093
+    },
+    "pruningPrunedAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized pruned-context accuracy in matched pruning scenarios",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 1.847663532769335
+    },
+    "pruningPrunedCount": {
+      "desc": "probe count for normalized pruned-context accuracy in matched pruning scenarios",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 30
+    },
+    "pruningTies": {
+      "desc": "accuracy ties in paired keyword-pruned context minus full context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 18
+    },
+    "pruningWins": {
+      "desc": "accuracy gains in paired keyword-pruned context minus full context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 1
+    },
+    "qualityEightIrrelevantAccuracy": {
+      "desc": "normalized accuracy with irrelevant filler in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 66.66666666666667
+    },
+    "qualityEightIrrelevantAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy with irrelevant filler in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 90.3230667440783
+    },
+    "qualityEightIrrelevantAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy with irrelevant filler in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 29.998832134152863
+    },
+    "qualityEightIrrelevantCount": {
+      "desc": "probe count for normalized accuracy with irrelevant filler in the t8k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 6
+    },
+    "qualityEightRelevantAccuracy": {
+      "desc": "normalized accuracy with relevant filler in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 50.0
+    },
+    "qualityEightRelevantAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy with relevant filler in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 81.23871931005912
+    },
+    "qualityEightRelevantAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy with relevant filler in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 18.761280689940875
+    },
+    "qualityEightRelevantChange": {
+      "desc": "accuracy change in percentage points for paired relevant filler minus irrelevant filler comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": -16.66666666666667
+    },
+    "qualityEightRelevantCount": {
+      "desc": "probe count for normalized accuracy with relevant filler in the t8k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 6
+    },
+    "qualityEightRelevantDenominator": {
+      "desc": "matched pairs in paired relevant filler minus irrelevant filler comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 6
+    },
+    "qualityEightRelevantLosses": {
+      "desc": "accuracy losses in paired relevant filler minus irrelevant filler comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "qualityEightRelevantTies": {
+      "desc": "accuracy ties in paired relevant filler minus irrelevant filler comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 3
+    },
+    "qualityEightRelevantWins": {
+      "desc": "accuracy gains in paired relevant filler minus irrelevant filler comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 1
+    },
+    "qualityFourIrrelevantAccuracy": {
+      "desc": "normalized accuracy with irrelevant filler in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 46.666666666666664
+    },
+    "qualityFourIrrelevantAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy with irrelevant filler in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 69.8833698489492
+    },
+    "qualityFourIrrelevantAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy with irrelevant filler in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 24.80922525974644
+    },
+    "qualityFourIrrelevantCount": {
+      "desc": "probe count for normalized accuracy with irrelevant filler in the t4k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 15
+    },
+    "qualityFourRelevantAccuracy": {
+      "desc": "normalized accuracy with relevant filler in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 33.333333333333336
+    },
+    "qualityFourRelevantAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy with relevant filler in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 58.286874848787015
+    },
+    "qualityFourRelevantAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy with relevant filler in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 15.176100694691232
+    },
+    "qualityFourRelevantChange": {
+      "desc": "accuracy change in percentage points for paired relevant filler minus irrelevant filler comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": -13.333333333333329
+    },
+    "qualityFourRelevantCount": {
+      "desc": "probe count for normalized accuracy with relevant filler in the t4k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 15
+    },
+    "qualityFourRelevantDenominator": {
+      "desc": "matched pairs in paired relevant filler minus irrelevant filler comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 15
+    },
+    "qualityFourRelevantLosses": {
+      "desc": "accuracy losses in paired relevant filler minus irrelevant filler comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 3
+    },
+    "qualityFourRelevantTies": {
+      "desc": "accuracy ties in paired relevant filler minus irrelevant filler comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 11
+    },
+    "qualityFourRelevantWins": {
+      "desc": "accuracy gains in paired relevant filler minus irrelevant filler comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 1
+    },
+    "qualityTwoIrrelevantAccuracy": {
+      "desc": "normalized accuracy with irrelevant filler in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 44.44444444444444
+    },
+    "qualityTwoIrrelevantAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy with irrelevant filler in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 66.28393057174837
+    },
+    "qualityTwoIrrelevantAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy with irrelevant filler in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 24.559231101389127
+    },
+    "qualityTwoIrrelevantCount": {
+      "desc": "probe count for normalized accuracy with irrelevant filler in the t2k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 18
+    },
+    "qualityTwoRelevantAccuracy": {
+      "desc": "normalized accuracy with relevant filler in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 22.22222222222222
+    },
+    "qualityTwoRelevantAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized accuracy with relevant filler in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 45.21502645230549
+    },
+    "qualityTwoRelevantAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized accuracy with relevant filler in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 9.000781913382
+    },
+    "qualityTwoRelevantChange": {
+      "desc": "accuracy change in percentage points for paired relevant filler minus irrelevant filler comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": -22.22222222222222
+    },
+    "qualityTwoRelevantCount": {
+      "desc": "probe count for normalized accuracy with relevant filler in the t2k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 18
+    },
+    "qualityTwoRelevantDenominator": {
+      "desc": "matched pairs in paired relevant filler minus irrelevant filler comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 18
+    },
+    "qualityTwoRelevantLosses": {
+      "desc": "accuracy losses in paired relevant filler minus irrelevant filler comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 5
+    },
+    "qualityTwoRelevantTies": {
+      "desc": "accuracy ties in paired relevant filler minus irrelevant filler comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "qualityTwoRelevantWins": {
+      "desc": "accuracy gains in paired relevant filler minus irrelevant filler comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 1
+    },
+    "sampleSize": {
+      "desc": "total completed probes scored",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 120
+    },
+    "tierEightAccuracy": {
+      "desc": "normalized full-context accuracy in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 58.333333333333336
+    },
+    "tierEightAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized full-context accuracy in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 80.67425380947535
+    },
+    "tierEightAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized full-context accuracy in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 31.95073356553728
+    },
+    "tierEightCount": {
+      "desc": "probe count for normalized full-context accuracy in the t8k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "tierEightTokens": {
+      "desc": "mean tokenizer-measured prompt length in the t8k full-context tier",
+      "fmt": ".0f",
+      "script": "analysis/run_all.py",
+      "unit": "tokens",
+      "value": 7992.5
+    },
+    "tierFourAccuracy": {
+      "desc": "normalized full-context accuracy in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 40.0
+    },
+    "tierFourAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized full-context accuracy in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 57.67994750172617
+    },
+    "tierFourAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized full-context accuracy in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 24.590394326083402
+    },
+    "tierFourCount": {
+      "desc": "probe count for normalized full-context accuracy in the t4k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 30
+    },
+    "tierFourTokens": {
+      "desc": "mean tokenizer-measured prompt length in the t4k full-context tier",
+      "fmt": ".0f",
+      "script": "analysis/run_all.py",
+      "unit": "tokens",
+      "value": 3986.3
+    },
+    "tierTwoAccuracy": {
+      "desc": "normalized full-context accuracy in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 33.333333333333336
+    },
+    "tierTwoAccuracyHigh": {
+      "desc": "Wilson upper confidence bound for normalized full-context accuracy in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 49.666302907033156
+    },
+    "tierTwoAccuracyLow": {
+      "desc": "Wilson lower confidence bound for normalized full-context accuracy in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 20.214424774586046
+    },
+    "tierTwoCount": {
+      "desc": "probe count for normalized full-context accuracy in the t2k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 36
+    },
+    "tierTwoTokens": {
+      "desc": "mean tokenizer-measured prompt length in the t2k full-context tier",
+      "fmt": ".0f",
+      "script": "analysis/run_all.py",
+      "unit": "tokens",
+      "value": 1989.0833333333333
+    }
+  }
+}

@@ -1,0 +1,9 @@
+<|im_start|>system
+You are a careful assistant. Answer with the requested code only, nothing else.<|im_end|>
+<|im_start|>user
+Document:
+The ancient river near Millbrae floods every spring when the snow melts. Local bakers in Windmere still prepare misty rye loaves in wood ovens. A restored footpath climbs from Cloverfield toward the old granite quarry. Astronomers observed a ancient meteor shower above Larkfell last winter. The Larkfell museum restored a shaded tapestry loom from the 1800s. Migrating cranes rest in the wide wetlands south of Millbrae. Ambrell's master supply agreement carries the renewal identifier XK-134. The renewal code required to extend the contract with Halvern is KM-506.
+
+Question: What is the renewal code required to extend the contract with Ambrell?
+Answer with the code only.<|im_end|>
+<|im_start|>assistant

@@ -1,0 +1,9 @@
+<|im_start|>system
+You are a careful assistant. Answer with the requested code only, nothing else.<|im_end|>
+<|im_start|>user
+Document:
+The restored river near Cloverfield floods every spring when the snow melts. Local bakers in Larkfell still prepare quiet rye loaves in wood ovens. A shaded footpath climbs from Tarnholm toward the old granite quarry. Astronomers observed a remote meteor shower above Windmere last winter. The Cloverfield museum restored a misty tapestry loom from the 1800s. Migrating cranes rest in the shaded wetlands south of Applecross. The renewal code required to extend the contract with Ostrander is SK-644. Winmark's master supply agreement carries the renewal identifier LS-318.
+
+Question: What is the renewal code required to extend the contract with Winmark?
+Answer with the code only.<|im_end|>
+<|im_start|>assistant

@@ -1,32 +1,24 @@
 # TODO
 
-Seed state — the loop has not started. Highest leverage first.
+Laps 1-2 complete the full probe grid and cheap scoring pipeline. See DONE.md.
+Highest leverage next:
 
-- [ ] Build analysis/run_probes.py around MATCHED scenario families. Generate answer,
-  distractor, filler, and question once per family; move only the target clause across
-  start/middle/end. Keep distractor placement independent. This is required for a valid
-  paired position result.
-- [ ] Size the tokenizer-verified grid before inference. Fully populate the shortest and
-  middle tiers; reserve about 12 balanced probes for the largest tier as SPEC requires.
-  Never repeat rehearsal v13's 3-probe middle/largest tiers. Stay within the measured
-  45-minute CPU budget and make every probe resumable by stable id.
-- [ ] Balance relevant/irrelevant filler inside every tier used for RQ3. Include literal and
-  paraphrased questions with near-match distractors. Record exact model filename, SHA-256,
-  seed, command, measured token counts, and manifest completeness.
-- [ ] Build analysis/run_all.py from data/probes/ only. Score exact-code compliance,
-  accuracy, invalid outputs, and distractor captures. Aggregate amount with per-tier n;
-  position from matched families; quality from matched cells; pruning gain from the same
-  scenarios under full and pruned context. Never subtract unmatched populations.
-- [ ] Generate results.json per analysis/RESULTS_SCHEMA.md, then `make values`. Report all
-  per-cell counts, uncertainty intervals, paired wins/losses, missing probes, and exact-output
-  compliance. A partial manifest is valid work-in-progress but cannot be presented as final.
-- [ ] Draft from paper/OUTLINE.md. Name the exact Qwen artifact. Make the honest thesis
-  follow the strongest supported comparison; call sparse or null axes inconclusive.
-- [ ] Produce an anonymous ICML submission with a 2–4 page main body, at least 2 useful
-  tables/figures, all four questions answered, required limitations, and Reproducibility.
-  Finish the concrete title and self-contained abstract first; references/appendices do not
-  count toward the four-page main-body limit. Use the contract example only where it clarifies.
-- [ ] Cite only verified context-wing exemplars. Read their frozen full text before writing
-  Related Work. New citations must be resolved by the harness citation gate.
-- [ ] First full eight-gate pass plus reviewer rubric >= 6 produces paper-v1. Confirm that
-  the tag targets the verified checkpoint, not the preceding lap.
+- [ ] Draft paper/main.tex from paper/OUTLINE.md (NEXT). Name the exact GGUF and checksum.
+  Lead with the paired end-position recency effect and the matched pruning backfire.
+  Amount is inconclusive: among the 12 scenarios shared across all tiers, accuracy rises
+  8.3 points from 2k to 4k and is flat from 4k to 8k. Do not use the confounded full-tier
+  33.3/40.0/58.3 pattern as an amount effect.
+- [ ] Report the matched quality result: relevant filler is 22.2 points worse at 2k and
+  13.3 points worse at 4k. Treat 8k quality cells as sparse (six probes per filler type).
+- [ ] Explain why keyword pruning backfires: it keeps the literal-form distractor while
+  the answer-bearing clause is paraphrased. Matched accuracy falls 33.3 points over 30
+  pairs (one win, eleven losses, eighteen ties).
+- [ ] Anonymous ICML submission: 2-4 page body, >=2 tables/figures, four questions
+  answered by number, required limitations (state the 45-min CPU budget), Reproducibility
+  paragraph, \label{main-body-end} before references.
+- [ ] Related Work from data/exemplars/ full texts only; citations must resolve via the
+  harness gate (cache: data/cache/citations/).
+- [ ] First full eight-gate pass + rubric >= 6 tags paper-v1.
+- [ ] GATE FAIL (prose-style, iter 1): FAIL: abstract has 1 sentences; use 4-7 for question, design, principal estimate, qualification, and takeaway FAIL: paper has 0 result displays; a 2-4 page paper should use 2-4 selective displays 2 style failure(s) in paper/main.tex 
+- [ ] GATE FAIL (submission-ready, iter 1): FAIL: abstract is not submission-ready (5 words; require at least 50) 
+- [ ] GATE FAIL (latex-compiles, iter 1): FAIL: compiled paper must contain at least 2 pages, got 1 

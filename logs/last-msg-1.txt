@@ -1,0 +1,8 @@
+Implemented the highest-priority aggregation task.
+
+- Added [analysis/run_all.py](/Users/matthewchan/ralphm/Ralphm/analysis/run_all.py), scoring all 120 probes with matched and paired comparisons.
+- Generated [results.json](/Users/matthewchan/ralphm/Ralphm/results.json) and [paper/values.tex](/Users/matthewchan/ralphm/Ralphm/paper/values.tex).
+- Updated [TODO.md](/Users/matthewchan/ralphm/Ralphm/TODO.md) and [DONE.md](/Users/matthewchan/ralphm/Ralphm/DONE.md).
+- Confirmed deterministic regeneration and Python syntax.
+- Individual sanity and numeric-literal gates pass.
+- No commit created.

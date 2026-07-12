@@ -1,0 +1,9 @@
+<|im_start|>system
+You are a careful assistant. Answer with the requested code only, nothing else.<|im_end|>
+<|im_start|>user
+Document:
+November filed its quarterly procurement summary under reference FW-587. The service annex for Lucastra lists billing schedule XF-197. An internal audit note for Ostrander cites compliance tag PD-342. Warehouse deliveries for November are logged against docket NR-622. The onboarding packet for Farrowby references training module XK-293. Legal archived the Rydegate correspondence file under label DH-786. Ambrell's master supply agreement carries the renewal identifier XK-134. The renewal code required to extend the contract with Halvern is KM-506.
+
+Question: What is the renewal code required to extend the contract with Ambrell?
+Answer with the code only.<|im_end|>
+<|im_start|>assistant

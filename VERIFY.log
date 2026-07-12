@@ -1,0 +1,14 @@
+QUOTA: Claude limit hit at iter 1 — retrying this lap with Codex
+--- gates @ iteration 1 13:25:54 ---
+PASS  frozen-inputs
+PASS  citations-resolve
+PASS  no-number-literals
+PASS  pipeline-fresh
+PASS  results-sane
+FAIL  prose-style
+DETAIL prose-style: FAIL: abstract has 1 sentences; use 4-7 for question, design, principal estimate, qualification, and takeaway FAIL: paper has 0 result displays; a 2-4 page paper should use 2-4 selective displays 2 style failure(s) in paper/main.tex 
+FAIL  submission-ready
+DETAIL submission-ready: FAIL: abstract is not submission-ready (5 words; require at least 50) 
+FAIL  latex-compiles
+DETAIL latex-compiles: FAIL: compiled paper must contain at least 2 pages, got 1 
+gates failed: 3

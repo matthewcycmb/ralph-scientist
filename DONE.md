@@ -1,0 +1,35 @@
+# DONE
+
+## Lap 1 (2026-07-12)
+
+- Built analysis/run_probes.py: matched scenario families (target clause,
+  distractor, filler, question generated per family with zlib.crc32 seeds and
+  no position in any seed; only the target clause moves across start/mid/end).
+  Distractor depth fixed per family at 0.25 or 0.75, independent of target.
+  Relevant/irrelevant filler balanced in every tier. Paraphrase design:
+  question phrasing literally matches the DISTRACTOR clause, target clause
+  states the answer in different words (NoLiMa-style). Literal-control probes
+  at 2k reuse the identical filler as their paraphrase twins.
+- Tokenizer-verified sizing: measured tier means 1989 / 3986 / 7992 tokens
+  (nominal 2k/4k/8k), every probe's measured count in the manifest. Sizing
+  counts and measured tokens cached in the manifest so resumes cost zero
+  tokenize calls.
+- Ran the FULL 120-probe grid to completion (~25 min wall, under the 45-min
+  clean-room budget): 36 t2k full + 6 t2k literal + 30 t4k full + 30 t4k
+  pruned + 12 t8k full + 6 closed-book. manifest_complete=true, raw outputs
+  one file per probe in data/probes/out/, atomic writes, resumable by id.
+
+## Lap 2 (2026-07-12)
+
+- Built stdlib-only analysis/run_all.py. It reads only the manifest and raw
+  outputs, strips the fixed runner trailer, and defines code-only compliance,
+  normalized correctness, distractor capture, invalid output, and extra output.
+- Generated results.json and paper/values.tex with Wilson intervals and counts.
+  Amount uses the 12 families/filler/position cells shared across every tier;
+  position uses paired clause moves; quality uses matched filler pairs; pruning
+  uses the exact 30 full/pruned intersections with wins, losses, and ties.
+- Confirmed the main signals: a strong end-position recency effect, worse results
+  with relevant filler at the populated tiers, no degradation across the matched
+  amount tiers, and a 33.3-point loss from keyword pruning.
+- Individual sanity and numeric-literal gates pass. Cheap regeneration is
+  deterministic and completes in well under one minute.
