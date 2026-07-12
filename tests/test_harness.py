@@ -115,6 +115,38 @@ class HarnessRegressionTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertEqual(output.read_text(), "Finished the selected task.\n")
 
+    def test_claude_allowed_rate_event_is_not_a_quota_outage(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            log = root / "allowed.jsonl"
+            log.write_text(
+                '{"type":"rate_limit_event","rate_limit_info":'
+                '{"status":"allowed","rateLimitType":"five_hour"}}\n'
+                '{"type":"result","is_error":false,"result":"done"}\n'
+            )
+            result = run(
+                sys.executable,
+                str(ROOT / "harness/check_quota.py"),
+                str(log),
+                cwd=root,
+            )
+            self.assertNotEqual(result.returncode, 0)
+
+    def test_claude_blocked_rate_event_is_a_quota_outage(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            log = root / "blocked.jsonl"
+            log.write_text(
+                '{"type":"rate_limit_event","rate_limit_info":{"status":"rate_limited"}}\n'
+            )
+            result = run(
+                sys.executable,
+                str(ROOT / "harness/check_quota.py"),
+                str(log),
+                cwd=root,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_review_waits_for_green_paper_then_fires_immediately(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo = Path(tmp)

@@ -53,7 +53,7 @@ echo "AGENTS: worker=$WORKER_BACKEND codex=$CODEX_MODEL/$CODEX_REASONING_EFFORT 
 START_SHA=$(git rev-parse HEAD)
 harness_fingerprint() {
   cat harness/loop.sh harness/checkpoint.sh harness/review_due.sh harness/run_gates.sh harness/ratchet.sh harness/REVIEWER.md harness/ASSIGNMENT_REVIEW.md \
-      harness/extract_claude_result.py \
+      harness/extract_claude_result.py harness/check_quota.py \
       harness/EDITOR.md harness/HUMANIZER.md harness/gates/* Makefile PROMPT.md SPEC.md \
       analysis/make_values.py analysis/RESULTS_SCHEMA.md data/models/CHECKSUMS.txt \
       data/models/FETCH.sh data/cache/nlsy97/CHECKSUMS.txt requirements.txt \
@@ -66,7 +66,7 @@ restore_protected_files() {
     echo "TAMPER: protected harness inputs modified at iter $ITER — restoring from $START_SHA" | tee -a VERIFY.log
     git checkout "$START_SHA" -- harness/loop.sh harness/checkpoint.sh harness/review_due.sh harness/run_gates.sh \
       harness/ratchet.sh harness/REVIEWER.md harness/ASSIGNMENT_REVIEW.md harness/EDITOR.md harness/HUMANIZER.md \
-      harness/extract_claude_result.py \
+      harness/extract_claude_result.py harness/check_quota.py \
       harness/gates Makefile PROMPT.md SPEC.md analysis/make_values.py \
       analysis/RESULTS_SCHEMA.md data/models/CHECKSUMS.txt data/models/FETCH.sh \
       data/cache/nlsy97/CHECKSUMS.txt requirements.txt paper/*.sty paper/*.bst
@@ -153,7 +153,7 @@ while true; do
 
   # Quota-outage backoff (found in endurance run 2026-07-02): a lap that dies on
   # usage limits must not spin no-op laps — sleep and let the quota window recover.
-  if grep -Eqi "hit your usage limit|usage limit|rate[_ -]?limit" "logs/iter-$ITER.log" 2>/dev/null; then
+  if .venv/bin/python harness/check_quota.py "logs/iter-$ITER.log"; then
     if [[ "$ACTIVE_WORKER_BACKEND" == "claude" ]]; then
       echo "QUOTA: Claude limit hit at iter $ITER — retrying this lap with Codex" | tee -a VERIFY.log
       WORKER_BACKEND=codex
