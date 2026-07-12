@@ -35,6 +35,7 @@ run_gate "no-number-literals"  .venv/bin/python harness/gates/check_numbers.py  
 run_gate "pipeline-fresh"      bash harness/gates/check_fresh.sh                  # regen from raw data must reproduce the lap's exact results.json + values.tex (tamper/stale/non-determinism)
 run_gate "results-sane"        .venv/bin/python harness/gates/check_sanity.py     # schema + sanity bounds
 run_gate "prose-style"         .venv/bin/python harness/gates/check_style.py      # no em dashes, no AI-slop vocabulary (Matthew's editorial bar)
+run_gate "submission-ready"    .venv/bin/python harness/gates/check_submission.py # anonymous source + concrete title and abstract
 run_gate "latex-compiles"      bash harness/gates/check_pdf.sh                   # compile + page/layout/running-title checks
 
 echo "gates failed: $FAILS"

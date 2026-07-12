@@ -84,6 +84,8 @@ A checkpoint is verified only when all applicable gates pass:
 - Results satisfy schema, provenance, bounds, completeness, and sample-size requirements.
 - Writing passes professional-style checks.
 - The paper compiles, meets the page limit, and has no broken headers or overflowing displays.
+- Submission mode is anonymous, the title and abstract are complete, and identifying PDF text or metadata is absent.
+- The main-body page boundary is checked separately so references and appendices do not consume the main-body allowance.
 
 Deterministic gates establish integrity and reproducibility. They do not prove scientific correctness; the reviewer must inspect experimental design, scoring code, and claim size.
 
@@ -105,6 +107,8 @@ and the lower score controls promotion.
 
 The paper must:
 
+- Treat the compiled PDF, title, and abstract as the primary submission artifacts.
+- Remain fully anonymous in both rendered text and PDF metadata.
 - State a narrow question and answer it directly.
 - State significance as a concrete affected decision or reader, not a generic claim that the topic is important.
 - State originality by comparison with the closest cited work, not by using words such as “novel” or “first.”
@@ -129,4 +133,4 @@ Readable does not mean childish. Write for a technically literate reader outside
 
 ## Operations
 
-Provide one launcher that performs preflight checks, starts the loop, launches a local dashboard, starts external telemetry, records process IDs, and verifies service health. The loop must refuse to start from a dirty working tree and must support restart from Git without losing research state.
+Provide one launcher that performs preflight checks, starts the loop, launches a local dashboard, optionally starts external telemetry, records process groups, and verifies service health. Optional telemetry must never block paper production. Shutdown must terminate each complete process group so workers and experiment subprocesses cannot survive as orphans. The loop must refuse to start from a dirty working tree, create an immutable official-start provenance marker, and support restart from Git without losing research state.

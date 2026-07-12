@@ -35,6 +35,52 @@ def run(
 
 
 class HarnessRegressionTests(unittest.TestCase):
+    def test_event_launcher_kills_complete_process_groups(self) -> None:
+        launcher = (ROOT / "harness/start_event.sh").read_text()
+        self.assertIn('kill -TERM -- "-$leader"', launcher)
+        self.assertIn("set -m", launcher)
+        self.assertIn("official-loop-start-20260712-1230", launcher)
+        self.assertIn("official Ralph Loop window is 12:30-15:30 KST", launcher)
+
+    def test_submission_gate_rejects_identity_and_placeholder_abstract(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            (repo / "paper").mkdir()
+            (repo / "paper/main.tex").write_text(
+                "\\usepackage[accepted]{icml2026}\n"
+                "\\icmltitle{A Placeholder Study of Context Position}\\icmlsetsymbol{x}{x}\n"
+                "\\begin{abstract}TODO pending.\\end{abstract}\n"
+                "\\label{main-body-end}\n"
+                "\\icmlauthor{Matthew Chan}{author}\n"
+            )
+            gate = ROOT / "harness/gates/check_submission.py"
+            result = run(sys.executable, str(gate), cwd=repo)
+            self.assertNotEqual(result.returncode, 0)
+
+    def test_submission_gate_accepts_anonymous_title_and_abstract(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            (repo / "paper").mkdir()
+            abstract = " ".join(
+                [
+                    "We study target retrieval under controlled changes in document position and distractor relevance.",
+                    "A frozen local language model answers matched questions with deterministic decoding.",
+                    "The design separates document length, clause position, distractor quality, and context pruning.",
+                    "Paired comparisons support narrow claims about the tested model and synthetic task.",
+                    "The resulting artifacts provide a reproducible basis for evaluating context construction choices.",
+                ]
+            )
+            (repo / "paper/main.tex").write_text(
+                "\\usepackage{icml2026}\n"
+                "\\icmltitle{Where Context Sits Changes Small Model Retrieval}\\icmlsetsymbol{x}{x}\n"
+                f"\\begin{{abstract}}{abstract}\\end{{abstract}}\n"
+                "\\label{main-body-end}\n"
+                "\\icmlauthor{Anonymous Authors}{anon}\n"
+            )
+            gate = ROOT / "harness/gates/check_submission.py"
+            result = run(sys.executable, str(gate), cwd=repo)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_every_agent_role_uses_event_model_and_high_reasoning(self) -> None:
         loop = (ROOT / "harness/loop.sh").read_text()
         self.assertIn('CODEX_MODEL="${CODEX_MODEL:-gpt-5.6-sol}"', loop)

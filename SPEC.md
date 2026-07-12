@@ -143,8 +143,12 @@ papers produced; exemplar wing in data/exemplars/). Battle-tested but not ML-top
 
 ## Paper requirements
 
-- ICML LaTeX template, 2–4 pages (HOST RULE, confirmed 2026-07-10 — short papers are
-  the format; density is not the goal, selection is): Abstract, Introduction, Related
+- ICML 2026 LaTeX template in anonymous submission mode. The main body is 2–4 pages
+  with a hard four-page maximum; references and appendices are excluded from that count.
+  Keep `\label{main-body-end}` immediately before them so the gate measures the correct
+  boundary. The PDF, a concrete title, and a self-contained abstract are the primary
+  submission artifacts; code, logs, and W&B are optional and must never delay the paper.
+  The short-paper format (density is not the goal, selection is) contains: Abstract, Introduction, Related
   Work (brief), Method, Results
   (≥2 figures or tables), Limitations, Reproducibility Statement.
 - Honest framing: this is a small-scale replication (lost-in-the-middle, input-length

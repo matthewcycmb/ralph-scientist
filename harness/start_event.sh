@@ -25,17 +25,18 @@ codex --version
 make test
 bash harness/gates/check_frozen.sh
 
+WANDB_ENABLED=0
+WANDB_PYTHON="${WANDB_PYTHON:-}"
 if [[ -z "${SKIP_WANDB:-}" ]]; then
-  WANDB_PYTHON="${WANDB_PYTHON:-}"
   if [[ -z "$WANDB_PYTHON" ]] && command -v wandb >/dev/null 2>&1; then
     WANDB_PYTHON=$(head -1 "$(command -v wandb)" | sed 's/^#!//')
   fi
-  [[ -n "$WANDB_PYTHON" && -x "$WANDB_PYTHON" ]] \
-    || fail "could not locate the Python runtime used by the wandb executable"
-  "$WANDB_PYTHON" -c 'import wandb' >/dev/null 2>&1 \
-    || fail "$WANDB_PYTHON cannot import wandb"
-  if [[ -z "${WANDB_API_KEY:-}" ]] && ! grep -q 'api.wandb.ai' "$HOME/.netrc" 2>/dev/null; then
-    fail "W&B login missing (set WANDB_API_KEY or run python3 -m wandb login); use SKIP_WANDB=1 only intentionally"
+  if [[ -n "$WANDB_PYTHON" && -x "$WANDB_PYTHON" ]] \
+    && "$WANDB_PYTHON" -c 'import wandb' >/dev/null 2>&1 \
+    && { [[ -n "${WANDB_API_KEY:-}" ]] || grep -q 'api.wandb.ai' "$HOME/.netrc" 2>/dev/null; }; then
+    WANDB_ENABLED=1
+  else
+    echo "WARN: W&B unavailable; continuing because it is an optional event artifact" >&2
   fi
 fi
 
@@ -53,23 +54,55 @@ WANDB_LOG=/tmp/ralph-wandb.log
 PIDS=/tmp/ralph-event.pids
 LOOP_PID="" DASH_PID="" WANDB_PID=""
 
+terminate_group() {
+  local leader="${1:-}"
+  [[ -n "$leader" ]] || return 0
+  # Background jobs are launched in their own process groups below. Signalling
+  # the group, rather than only its leader, also stops Codex, make, Python, and
+  # llama-completion descendants before they can become orphaned.
+  kill -TERM -- "-$leader" 2>/dev/null || kill -TERM "$leader" 2>/dev/null || true
+  for _ in {1..20}; do
+    kill -0 -- "-$leader" 2>/dev/null || return 0
+    sleep 0.1
+  done
+  kill -KILL -- "-$leader" 2>/dev/null || true
+}
+
 cleanup() {
   trap - EXIT INT TERM
-  [[ -n "$DASH_PID" ]] && kill "$DASH_PID" 2>/dev/null || true
-  [[ -n "$WANDB_PID" ]] && kill "$WANDB_PID" 2>/dev/null || true
-  [[ -n "$LOOP_PID" ]] && kill "$LOOP_PID" 2>/dev/null || true
+  terminate_group "$LOOP_PID"
+  terminate_group "$DASH_PID"
+  terminate_group "$WANDB_PID"
+  [[ -n "$LOOP_PID" ]] && wait "$LOOP_PID" 2>/dev/null || true
+  [[ -n "$DASH_PID" ]] && wait "$DASH_PID" 2>/dev/null || true
+  [[ -n "$WANDB_PID" ]] && wait "$WANDB_PID" 2>/dev/null || true
   rm -f "$PIDS"
 }
 trap cleanup EXIT INT TERM
 
+NOW_HHMM=$(date +%H%M)
+if [[ -z "${ALLOW_OUTSIDE_EVENT_WINDOW:-}" ]] && (( 10#$NOW_HHMM < 1230 || 10#$NOW_HHMM >= 1530 )); then
+  fail "official Ralph Loop window is 12:30-15:30 KST (now $(date +%H:%M))"
+fi
+OFFICIAL_TAG="${OFFICIAL_TAG:-official-loop-start-20260712-1230}"
+if git rev-parse "$OFFICIAL_TAG" >/dev/null 2>&1; then
+  [[ "$(git rev-parse "$OFFICIAL_TAG^{commit}")" == "$(git rev-parse HEAD)" ]] \
+    || fail "$OFFICIAL_TAG already points to a different commit"
+else
+  git tag -a "$OFFICIAL_TAG" -m "Official Ralph Loop boundary, 2026-07-12 12:30 KST"
+fi
+
 echo "STARTING research loop (PUSH=${PUSH:-1})"
+# Monitor mode gives every background job a distinct process group whose ID is
+# its leader PID, which makes terminate_group reliable on macOS.
+set -m
 caffeinate -is env PUSH="${PUSH:-1}" harness/loop.sh &
 LOOP_PID=$!
 
 harness/dashboard.sh >"$DASH_LOG" 2>&1 &
 DASH_PID=$!
 
-if [[ -z "${SKIP_WANDB:-}" ]]; then
+if (( WANDB_ENABLED )); then
   "$WANDB_PYTHON" harness/dashboard/wandb_mirror.py >"$WANDB_LOG" 2>&1 &
   WANDB_PID=$!
 fi
@@ -84,8 +117,9 @@ for _ in {1..20}; do
 done
 curl -fsS http://127.0.0.1:8788/harness/dashboard/ >/dev/null \
   || fail "dashboard did not become healthy; inspect $DASH_LOG"
-if [[ -n "$WANDB_PID" ]]; then
-  kill -0 "$WANDB_PID" 2>/dev/null || fail "W&B mirror exited; inspect $WANDB_LOG"
+if [[ -n "$WANDB_PID" ]] && ! kill -0 "$WANDB_PID" 2>/dev/null; then
+  echo "WARN: W&B mirror exited; paper loop continues (inspect $WANDB_LOG)" >&2
+  WANDB_PID=""
 fi
 
 echo "EVENT RUNNING"
