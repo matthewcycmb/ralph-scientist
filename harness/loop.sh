@@ -32,6 +32,13 @@ mkdir -p logs reviews drafts
 TIMEOUT=$(command -v timeout || command -v gtimeout) || {
   echo "FATAL: need GNU timeout (brew install coreutils)"; exit 1; }
 
+# Pin the event agent configuration independently of the operator's global Codex
+# defaults. All five roles use the same model and reasoning effort so a machine-
+# local xhigh setting cannot silently make laps slower during the event.
+CODEX_MODEL="${CODEX_MODEL:-gpt-5.6-sol}"
+CODEX_REASONING_EFFORT="${CODEX_REASONING_EFFORT:-high}"
+echo "CODEX: model=$CODEX_MODEL reasoning_effort=$CODEX_REASONING_EFFORT"
+
 # --- Anti-reward-hacking guard (risk A) --------------------------------------
 # Fingerprint the harness in memory at loop start. Agents can write anywhere in
 # the workspace, but this loop process (and the baseline) live outside their
@@ -96,7 +103,9 @@ while true; do
   # itself so the watchdog's kill reaches the agent, not a log pipe. Live view:
   # tail -f the iter log. GNU timeout forwards TERM to its child.
   echo "agent streaming to logs/iter-$ITER.log"
-  "$TIMEOUT" "${AGENT_CAP_MIN}m" codex exec -s workspace-write --skip-git-repo-check \
+  "$TIMEOUT" "${AGENT_CAP_MIN}m" codex exec -m "$CODEX_MODEL" \
+    -c "model_reasoning_effort=\"$CODEX_REASONING_EFFORT\"" \
+    -s workspace-write --skip-git-repo-check \
     -o "logs/last-msg-$ITER.txt" "$(cat PROMPT.md)" > "logs/iter-$ITER.log" 2>&1 &
   AGENT_JOB=$!
   LAST_SIG=""
@@ -170,7 +179,9 @@ while true; do
 Previous review for the ledger: ${PREV_REVIEW:-none — first review, every ledger item is new}"
 
     # -o captures ONLY the reviewer's final message (the review); full stream -> logs/.
-    "$TIMEOUT" "${REVIEW_CAP_MIN}m" codex exec -s read-only --skip-git-repo-check \
+    "$TIMEOUT" "${REVIEW_CAP_MIN}m" codex exec -m "$CODEX_MODEL" \
+      -c "model_reasoning_effort=\"$CODEX_REASONING_EFFORT\"" \
+      -s read-only --skip-git-repo-check \
       -o "reviews/iter-$ITER.md" "$REVIEWER_PROMPT" > "logs/review-$ITER.log" 2>&1 || true
     # Guarantee the review reaches the logbook — agents can't miss what's in TODO.
     if [[ -s "reviews/iter-$ITER.md" ]]; then
@@ -182,7 +193,9 @@ Previous review for the ledger: ${PREV_REVIEW:-none — first review, every ledg
       RSCORE=$(grep -o '"rubric": *[0-9]*' "reviews/iter-$ITER.md" | tail -1 | grep -o '[0-9]*$' || true)
       if [[ -n "${RSCORE:-}" && "$RSCORE" -ge 6 ]]; then
         echo "CONFIRM: rubric $RSCORE >= 6 at iter $ITER — running confirmation review" | tee -a VERIFY.log
-        "$TIMEOUT" "${REVIEW_CAP_MIN}m" codex exec -s read-only --skip-git-repo-check \
+        "$TIMEOUT" "${REVIEW_CAP_MIN}m" codex exec -m "$CODEX_MODEL" \
+          -c "model_reasoning_effort=\"$CODEX_REASONING_EFFORT\"" \
+          -s read-only --skip-git-repo-check \
           -o "reviews/confirm-$ITER.md" "$REVIEWER_PROMPT" > "logs/confirm-$ITER.log" 2>&1 || true
       fi
       # Promote the already-committed checkpoint using the fresh review. Do not create
@@ -197,10 +210,14 @@ Previous review for the ledger: ${PREV_REVIEW:-none — first review, every ledg
   # 6. Strategy/prose roles run only after the verified checkpoint. Their changes are
   #    intentionally not included in this lap's tag; the next lap's gates inspect them.
   if [[ "$REVIEW_COMPLETED" -eq 1 ]]; then
-    "$TIMEOUT" "${ROLE_CAP_MIN}m" codex exec -s workspace-write --skip-git-repo-check \
+    "$TIMEOUT" "${ROLE_CAP_MIN}m" codex exec -m "$CODEX_MODEL" \
+      -c "model_reasoning_effort=\"$CODEX_REASONING_EFFORT\"" \
+      -s workspace-write --skip-git-repo-check \
       -o "logs/editor-msg-$ITER.txt" "$(cat harness/EDITOR.md)" > "logs/editor-$ITER.log" 2>&1 || true
     echo "HUMANIZER pass at iter $ITER" | tee -a VERIFY.log
-    "$TIMEOUT" "${ROLE_CAP_MIN}m" codex exec -s workspace-write --skip-git-repo-check \
+    "$TIMEOUT" "${ROLE_CAP_MIN}m" codex exec -m "$CODEX_MODEL" \
+      -c "model_reasoning_effort=\"$CODEX_REASONING_EFFORT\"" \
+      -s workspace-write --skip-git-repo-check \
       -o "logs/humanizer-msg-$ITER.txt" "$(cat harness/HUMANIZER.md)" > "logs/humanizer-$ITER.log" 2>&1 || true
     restore_protected_files
     if [[ -n "$(git status --porcelain -- data/cache/citations)" ]]; then

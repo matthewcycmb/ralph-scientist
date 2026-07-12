@@ -35,6 +35,13 @@ def run(
 
 
 class HarnessRegressionTests(unittest.TestCase):
+    def test_every_agent_role_uses_event_model_and_high_reasoning(self) -> None:
+        loop = (ROOT / "harness/loop.sh").read_text()
+        self.assertIn('CODEX_MODEL="${CODEX_MODEL:-gpt-5.6-sol}"', loop)
+        self.assertIn('CODEX_REASONING_EFFORT="${CODEX_REASONING_EFFORT:-high}"', loop)
+        effort_override = '-c "model_reasoning_effort=\\"$CODEX_REASONING_EFFORT\\""'
+        self.assertEqual(loop.count(effort_override), 5)
+
     def test_review_waits_for_green_paper_then_fires_immediately(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo = Path(tmp)
