@@ -1,0 +1,2066 @@
+Reading additional input from stdin...
+OpenAI Codex v0.144.1
+--------
+workdir: /Users/matthewchan/ralphm/Ralphm
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 019f54c3-6e1a-7e72-8777-f7ce47af2359
+--------
+user
+You are the EDITOR-IN-CHIEF of an autonomous research loop. You are not a writer
+and not a reviewer — you are the strategy layer. Writers execute one task per lap;
+you decide what the paper IS.
+
+Read, in order: SPEC.md (the constitution), the CURRENT paper (paper/main.tex),
+the LATEST review in reviews/ (highest iter number) and skim earlier ones,
+results.json, TODO.md, and EDITORIAL.md (your predecessors' directions) if it exists.
+
+Then do exactly three things:
+
+1. **Decide the thesis.** One sentence: what is this paper's honest story, given
+   everything the analysis has actually shown? Follow the evidence, not the
+   original hope — if results are weak, fragile, or contradictory, the honest
+   diagnosis of that IS the story (a well-diagnosed fragile result beats a
+   spun positive one; the reviewer punishes spin hardest). Be decisive.
+   Then state the paper's significance and originality in one sentence each. Significance
+   names the decision or reader affected by the result. Originality names the exact difference
+   from the closest cited work. If either sentence is vague, repairing it is strategic work.
+
+2. **Guard readability.** The paper must be followable by a smart non-specialist
+   (SPEC's readability bar). Where the current draft uses undefined jargon or
+   uninterpreted tables, that is a strategic defect — direct the writers to fix it. Readability
+   is not simplification at any cost: remove tautologies, definitions of ordinary words,
+   repetitive "Table X shows" commentary, and canned returns to the contract example. Treat
+   six tiny tables in a four-page paper as table bloat; keep only displays that change the
+   argument. A polished ICML register should sound direct, adult, and selective.
+
+3. **Restructure TODO.md around that thesis.** Rewrite the top of TODO.md so the
+   first 3 items are the highest-leverage STRATEGIC moves toward the thesis —
+   section rewrites, reframings, new analyses that serve the story — each with a
+   one-line "why" tied to the thesis or a reviewer objection.
+
+   FOCUS-STREAK RULE: compare the latest review against the previous one. Any
+   criticism that survives BOTH reviews has proven too big for incremental
+   fixes — make it TODO's #1 item, formatted exactly:
+   "FOCUS LAP: spend your ENTIRE lap on <the criticism>. Do not pick any other
+   task. Finish it completely: analysis, results, and the prose that uses it."
+   One focus item at a time; the most damaging surviving criticism wins.
+
+   FOCUS PERSISTENCE: a FOCUS LAP item is only DONE when a later review's LEDGER
+   marks that complaint `resolved`. Until then it stays TODO's #1 item, review
+   after review — "a lap attempted it" is not done (measured: one lap was not
+   enough for the grade-nine predictor complaint). Only replace a live focus
+   item if a NEW criticism is an outright gate/validity emergency.
+
+   TERMINAL-STATE RULE: any ledger complaint persisting across 3+ reviews must
+   reach one of exactly two terminal states — (a) fixed, or (b) you declare it
+   unfixable in this environment (no network, one laptop, locked topic) in
+   EDITORIAL.md and direct the writers to OWN it in the Limitations section,
+   narrowing the paper's claims to match. The reviewer rewards honestly-sized
+   claims; an owned limitation converts permanent debt into score. No complaint
+   stays open forever.
+
+   PLATEAU RULE (overrides focus-streak's pick when both apply): if the last two
+   fresh reviews (iter-*.md, not confirm-*.md) carry the SAME rubric score, the
+   incremental work has stopped registering — the FOCUS LAP must instead target
+   the OLDEST `persisting` item in the latest review's LEDGER (smallest since=)
+   that a writer can actually fix in one lap. Skip structural items the SPEC
+   accepts as given (e.g. no ML novelty on the locked topic). Old cheap defects
+   — a broken running title, thin BibTeX fields — rot the paper's credibility
+   while big-ticket work monopolizes laps; clear the oldest fixable debt first.
+
+   Keep (below your top items) any unresolved GATE FAIL / NEW REVIEW lines and
+   still-relevant tasks; prune stale ones. Keep TODO.md under 40 lines.
+
+Then append to EDITORIAL.md (create if missing) a short dated entry: the thesis,
+what you changed in TODO and why, and what "done" looks like from here.
+
+Rules:
+- You may ONLY edit TODO.md and EDITORIAL.md. Never touch the paper, analysis,
+  results, or harness — writers execute, you direct.
+- No git commands (sandbox cannot write .git; the harness commits).
+- No tectonic, no run_gates.sh, no REPLs; your shell is non-interactive.
+- Do not ask questions — decide and act. Your final message: the thesis sentence
+  plus your top-3 TODO items.
+codex
+I’ll audit the constitution, paper, review trajectory, evidence, and prior editorial direction in the requested order, then edit only `TODO.md` and `EDITORIAL.md`.
+exec
+/bin/zsh -lc "sed -n '1,240p' SPEC.md" in /Users/matthewchan/ralphm/Ralphm
+ succeeded in 0ms:
+# SPEC — AI Scientist (Ralphthon Track 1)
+
+You are an autonomous research agent. Your mission: produce a small, real, fully verifiable
+empirical research paper. Every claim traceable, every citation real, every number computed
+by code in this repository. You are re-invoked in a loop; this file is your constitution and
+does not change during the run.
+
+## Topic (locked 2026-07-04, Matthew's own question; feasibility spike passed — determinism,
+## speed, and capability verified on the event laptop)
+
+**Does more context degrade model performance? If so, when does it start, and by how much?**
+Measuring how the AMOUNT, POSITION, and QUALITY
+of context change a small language model's accuracy — on experiments anyone can re-run on
+a laptop. The subject under test: Qwen2.5-0.5B-Instruct (frozen, checksummed weights in
+data/models/), run fully offline and deterministically via llama-completion.
+
+Research questions:
+- RQ1 (amount): How does retrieval accuracy change as context grows (~2k → 8k tokens)?
+- RQ2 (position): Does WHERE the key fact sits (start / middle / end) change accuracy —
+  does the known "lost in the middle" effect of large API models appear in a small
+  open model?
+- RQ3 (quality — the novel axis): Does RELEVANT-but-redundant extra context hurt less
+  than IRRELEVANT filler, or does even "good" context eventually degrade accuracy?
+- RQ4 (mitigation): Of the cheap deterministic fixes — placing the key fact first/last,
+  pruning context by simple keyword overlap — which recovers the most accuracy?
+
+Claims are DESCRIPTIVE of the tested model — never generalize to "all LLMs". Known caveats
+to handle honestly: one small quantized model; synthetic haystack tasks (literal and
+paraphrase probes, not natural documents); accuracy on retrieval-style questions is not
+general capability; CPU probe budget caps the grid size.
+
+**Experiment design constraints (measured 2026-07-04, 8GB arm64 laptop):**
+- Probe costs MEASURED at TRUE tokenizer-verified sizes (2026-07-07, this laptop):
+  ~14s at 2k, ~25s at 4k, ~76s at 8k. The FULL probe set must regenerate in ≤ 45
+  minutes — do this arithmetic BEFORE running any grid. The pattern that fits: full
+  resolution at 2k/4k, a SPARSE top tier (~12 probes at 8k), cheap variants
+  (closed-book, pruned) at small tiers only. Do not buy an expensive tier the smaller
+  tiers have already answered: if accuracy has floored by 4k, an 8k tier confirms it
+  at premium prices.
+- SIZE BY THE REAL TOKENIZER from the FIRST lap: never size or label context tiers
+  by a chars-per-token estimate — rehearsal lost two inference batches to tiers
+  labeled 2k/8k that measured 565/2073 real tokens. Verify prompt sizes with
+  llama-tokenize (instant, no model inference) BEFORE running a grid; measured token
+  means become the tier labels and the macros. Estimates may seed the generator;
+  measurements decide the labels.
+- Determinism is a hard rule: --temp 0, fixed --seed, greedy decoding, no sampling.
+  Same probes, same model, same numbers — this is what makes the paper verifiable.
+- Haystacks/probes are generated by seeded code in analysis/ (synthetic, reproducible).
+  Design probes so literal keyword match is NOT always enough (see NoLiMa exemplar) —
+  include paraphrase probes, and distractor facts that nearly match. Pilot-verified
+  (2026-07-04): literal probes saturate; paraphrase probes with literal-form distractors
+  produce the measurable effect (errors are distractor captures — report that rate).
+- The probe runner MUST be resumable: key every probe by a stable id, write raw
+  outputs one file per probe, SKIP probes whose output file already exists, and print
+  progress (done/total) as it runs. Laps have a hard time cap; a killed probe run may
+  only cost the unfinished probes — never a restart from zero.
+- Seed ONLY with stable values (explicit integers, zlib.crc32) — NEVER Python hash(),
+  which is salted per process and will fail the clean-room re-run as non-determinism.
+- NEVER delete raw model outputs to pass a gate. A partial grid is legitimate
+  work-in-progress: mark it incomplete in the manifest, have run_all.py aggregate
+  only finished cells, and let the next lap resume it. Deleting paid-for inference to
+  look finished is the expensive kind of tidy — rehearsal burned two batches
+  (40+ minutes) this way in one run.
+- Place distractors at positions independent of the needle position, or the position
+  effect (RQ2) is confounded with distractor placement.
+- POSITION MUST BE PAIRED: generate a scenario family (answer code, distractor code,
+  filler, and question) without using target position in its seed, then render that same
+  family with the target at start, middle, and end. Report paired changes. Rehearsal v13
+  used position-specific scenarios, so its strong position gradient was descriptive but
+  not a valid clause-reordering test. Do not repeat that design.
+- QUALITY MUST BE MATCHED: compare relevant and irrelevant filler only within cases matched
+  on measured tier, target position, and question wording. Keep the two filler groups
+  balanced inside every tier used for RQ3; never pool extra high-tier relevant probes into
+  only one side of the contrast.
+- MITIGATION MUST BE MATCHED: compute every pruning gain over the exact scenarios having
+  both full-context and pruned outputs. Report paired wins, paired losses, and the matched
+  denominator. Never subtract accuracies with different denominators, as rehearsal v13 did.
+- Report exact-output compliance and invalid/extra-token output rates alongside accuracy.
+  The paper must name the exact GGUF filename and its SHA-256, not just the model family.
+
+**Stretch — agent-generated idea (ONLY after paper-v2 or later is tagged):** EITHER propose
+and test ONE additional hypothesis on the same frozen model, OR generate SKILL.md — a short
+practical guide ("how much context, where to put it, when to prune"), every rule cited to a
+results.json value. State the choice in TODO.md first; add to the paper only if every gate
+passes and the reviewer keeps or raises the score.
+
+**Data acquisition:** model weights are frozen during prep week (data/models/, sha256 in
+CHECKSUMS.txt, re-fetchable via FETCH.sh). The agent never downloads anything; it starts
+from the frozen weights and writes seeded generators for all probe data.
+
+**Fallback (switch ONLY if TODO.md contains a harness-written directive to switch):**
+"Do your high school grades predict your net worth at 30, beyond where your family
+started?" — NLSY97 frozen extract in data/cache/nlsy97/ (fully prepped, three rehearsal
+papers produced; exemplar wing in data/exemplars/). Battle-tested but not ML-topical.
+
+## Data rules (apply to any topic)
+
+- Public, keyless sources only. Cache every downloaded response to `data/cache/` — the loop
+  must never re-fetch what it already has.
+- Semantic Scholar Graph API / Crossref for citation verification (both keyless).
+- NEVER fabricate, extrapolate, or hand-copy data values. If data cannot be fetched, record the blocker in TODO.md.
+
+## Toolchain (you are OFFLINE — the harness handles all network)
+
+- Python: `.venv/bin/python` — pandas, scipy, statsmodels, requests preinstalled (pinned
+  in requirements.txt). Never pip install; there is no network in your sandbox.
+- The model runner: `llama-completion -m data/models/qwen2.5-0.5b-instruct-q8_0.gguf
+  -f <promptfile> -n <max_tokens> --temp 0 --seed 42 -c 9216 --no-display-prompt
+  --simple-io` (llama.cpp; NOTE: llama-cli is interactive-only in this build — never
+  use it in scripts). Call it via subprocess from analysis scripts.
+- TWO-TIER PIPELINE (inference is expensive; aggregation is cheap):
+  `make probes` runs `analysis/run_probes.py` (you create it) — generates all prompt
+  files from seeded code, runs the model on each, writes raw outputs to `data/probes/`.
+  Run it whenever you change the experiment grid. `make results` runs
+  `analysis/run_all.py` — reads `data/probes/`, scores and aggregates into results.json
+  (contract: analysis/RESULTS_SCHEMA.md). It must be FAST (< 1 min) and deterministic:
+  the pipeline-fresh gate re-runs it every lap. `make values` regenerates
+  paper/values.tex. `make paper` compiles the ICML PDF via tectonic.
+  `make clean-deep && make all` is the full clean-room proof (re-runs all inference,
+  ≤ 45 min) — the harness runs it before final submission; hand-edited probe outputs
+  will be exposed there and in the public git history.
+- Citations: you propose entries in paper/refs.bib; the HARNESS verifies them against
+  Crossref/Semantic Scholar after you exit. Already-verified entries are cached in
+  data/cache/citations/. Do not invent papers — unresolvable entries fail the gate.
+- The frozen model: data/models/ (CHECKSUMS.txt). The literature library:
+  data/exemplars/ — metadata JSON + full texts; the context-degradation wing is your
+  Related Work seed. READ the full texts before writing Related Work.
+
+## Hard rules (gates will enforce these — violations waste an iteration)
+
+1. Every number, percentage, table cell, and figure in the paper comes from `results.json`,
+   written only by scripts in `analysis/`. Prose uses macros from `paper/values.tex`
+   (generated by `analysis/make_values.py`). Never type a numeric literal in `paper/*.tex`
+   except a publication year. Use protected `paper/model.tex` macros for the model identity;
+   put other fixed configuration numbers in results.json too.
+2. Every entry in `paper/refs.bib` must be a real paper that resolves via Crossref or
+   Semantic Scholar (title + first author match). No citation without having a resolvable record.
+3. The paper must compile via `make paper` (tectonic, ICML 2026 template in `paper/`).
+4. The full pipeline must re-run clean: `make clean && make all` regenerates results.json
+   and the PDF from raw cached data.
+5. The frozen model and fallback dataset must pass their committed SHA-256 manifests.
+6. All work is committed; the repo will be public.
+
+## Paper requirements
+
+- ICML 2026 LaTeX template in anonymous submission mode. The main body is 2–4 pages
+  with a hard four-page maximum; references and appendices are excluded from that count.
+  Keep `\label{main-body-end}` immediately before them so the gate measures the correct
+  boundary. The PDF, a concrete title, and a self-contained abstract are the primary
+  submission artifacts; code, logs, and W&B are optional and must never delay the paper.
+  The short-paper format (density is not the goal, selection is) contains: Abstract, Introduction, Related
+  Work (brief), Method, Results
+  (≥2 figures or tables), Limitations, Reproducibility Statement.
+- Honest framing: this is a small-scale replication (lost-in-the-middle, input-length
+  degradation — see exemplars) + extension (the context-QUALITY axis, RQ3, and the
+  mitigation comparison, RQ4, on a laptop-scale open model). Say so. Overclaiming will
+  be rejected by the adversarial reviewer.
+- MOTIVATING EXAMPLE: frame the paper with ONE restrained plain-language example —
+  asking a question about a single clause buried in a long contract. Introduce it in
+  the introduction, use it later only when it clarifies a result, and state explicitly that
+  the probes are a synthetic, gradeable version of that situation — never imply real
+  contracts were tested. One example used consistently; do not scatter new analogies.
+- THE OPENING IS A SCENE, NOT A SUMMARY: the introduction's first paragraph must
+  describe a moment the reader has lived, in second person if that helps ("You paste
+  a 50-page contract into a chatbot and ask..."), with concrete specifics (a page
+  number, a question in quotes) and ZERO terminology. Every actor (the look-alike
+  decoy sentence, the model's habit of word-matching) is SHOWN in the scene before
+  any section names or defines it. Test: a reader who has only used a chatbot once
+  should recognize the situation by sentence two. This standard applies to the
+  opening. End the scene after at most two sentences; methods and results use a conventional
+  professional research register.
+- PROSE STYLE (gate-enforced by harness/gates/check_style.py — violations fail the
+  lap): NO em dashes of any kind (no ---, no U+2014/U+2013; rewrite with a comma,
+  period, or parentheses; ASCII -- only inside numeric ranges like 1980--84), and
+  NONE of the banned filler vocabulary (delve, leverage, crucial, pivotal, moreover,
+  furthermore, comprehensive, landscape, showcase, foster, tapestry, paradigm,
+  "it is important to note", and similar — the gate prints the full list on failure).
+  Plain words beat impressive ones. Professional tone comes from precision, not
+  vocabulary.
+- PROFESSIONAL REGISTER: write for a technically literate reader outside this narrow
+  subfield, not for a child and not for a marketing audience. Use normal research words
+  when they are the exact words: estimate, condition, paired comparison, synthetic probe,
+  confidence interval. Define specialized ideas once; do not define ordinary words such as
+  baseline, mitigation, document, or accuracy. Prefer "synthetic" to "made-up," "estimate"
+  to "readout," and "experimental factor" to "knob." First-person plural is allowed and
+  often cleaner than repeating "this paper." Never narrate the writing process.
+
+  BAD:  "The target clause is the clause with the correct answer. A mitigation is a cheap
+         change meant to reduce errors."
+  GOOD: "Each document contains a vendor clause with the correct code and a buyer clause
+         with a competing code. We evaluate keyword pruning as a retrieval baseline."
+
+  BAD:  "Table 3 shows the strongest pattern in the current grid. In the contract example,
+         the model is most trustworthy when the vendor clause appears first."
+  GOOD: "Accuracy fell from \accStart\% to \accEnd\% when the same clause moved from the
+         start to the end of the document (Table~\ref{tab:position})."
+
+  Paragraphs should lead with the claim, then evidence, then one necessary qualification.
+  Do not alternate every result with a disclaimer; collect secondary caveats in Limitations.
+  Avoid three short declarative sentences in a row. Vary sentence openings naturally rather
+  than replacing one repeated template with another.
+- SENTENCE LAW (the most important paper standard — a paper nobody can follow is a
+  failed paper regardless of its numbers). Every sentence must survive four tests,
+  each shown with a real failure from rehearsal and its fix:
+  1. SIMPLE + EXACT: plain words making a precise claim. If you cannot say exactly
+     what a sentence claims, it is broken no matter how simple it sounds.
+     BAD:  "Putting more text in a prompt changes more than the amount a model must
+           read." (changes more WHAT? the comparison never lands)
+     GOOD: "Increasing document length can also change the answer's relative position and
+           the number of competing clauses, so an unmatched length comparison does not
+           isolate a single cause."
+  2. SUBJECTS DO THEIR VERBS: the subject of each sentence must be able to actually
+     perform its verb; otherwise the sentence is making something up.
+     BAD:  "A longer prompt never changes length alone." (a prompt cannot change
+           length — being longer IS the length change)
+     GOOD: "We move the same target clause across three positions while holding the
+           question, filler, and competing clause fixed."
+  3. NOTHING WALKS ON STAGE UNANNOUNCED: no term, name, or shorthand before the
+     thing it names has been described in plain words.
+     BAD:  "The safe answer should be the clause that governs the vendor." ("safe
+           answer" never defined; vendor appears with no setup)
+     GOOD: introduce the situation first ("The contract also contains a
+           similar-looking clause for the buyer"), then the term may be used.
+  4. EVERY KNOB NAMES ITS MACHINE: never bare "length, position, and filler type" —
+     always length OF WHAT, with real (macro) values.
+     BAD:  "The grid varies length, position, and filler type."
+     GOOD: "We vary three properties of each synthetic document: tokenizer-measured length,
+           target-clause position, and whether surrounding clauses are topically related."
+  Flow: one idea per sentence; a reader meets each concept before it is used; short
+  sentences mixed with medium ones. Read every paragraph as if aloud — a stumble is
+  a defect to fix, not a style choice.
+- THE QUESTIONS ARE VISIBLE: end the Introduction with the paper's questions as a
+  short numbered list, in the paper's own plain voice (no "RQ" labels, no spec
+  wording), scoped to what was actually measured (use measured macros, not nominal
+  sizes) — e.g. "1. As the document grows, how much does accuracy fall?" The Results
+  section answers each question by number, with a measured value in the answering
+  sentence. A reviewer must find any question and its answer in under a minute.
+- READABILITY BAR: a technically literate reader who does not study long-context evaluation
+  must follow the argument on one pass. Define specialized statistical terms at first use
+  in one precise clause, but assume ordinary research vocabulary. Interpret every table in
+
+exec
+/bin/zsh -lc "sed -n '241,520p' SPEC.md && sed -n '1,320p' paper/main.tex" in /Users/matthewchan/ralphm/Ralphm
+ succeeded in 0ms:
+  prose without mechanically starting "Table X shows" or repeating the contract example.
+  The abstract's last sentence states the takeaway directly. Unexplained jargon is a defect;
+  over-explaining ordinary words is also a defect.
+- Limitations section must name at least: one small quantized model (findings may not
+  transfer to larger models); synthetic probe tasks, not natural documents; retrieval
+  accuracy is not general capability; grid size capped by the CPU probe budget (state
+  the budget); greedy decoding only (no sampling variance studied).
+- Final section before References: a short **Reproducibility** paragraph (3–5 sentences)
+  stating that every number in the paper is compiled from analysis scripts in this
+  repository, that the data is frozen and checksummed in data/cache/, and that running
+  `make all` regenerates every result from the raw data. Reviewers may never see a live
+  demo — the paper itself must carry the proof that nothing in it can be faked.
+
+## Exemplar papers (anchors for tone/structure — full texts cached in data/exemplars/;
+## read them, cite them, do not trust memory)
+
+Topic-adjacent (also the seed of Related Work — all with cached full text):
+
+1. Liu et al., 2023 — "Lost in the Middle: How Language Models Use Long Contexts"
+   ← the core prior work: position effects in large API models. Our extension: does it
+   hold in a laptop-scale open model, and how does context QUALITY interact?
+2. Levy et al., 2024 — "Same Task, More Tokens" ← length alone degrades reasoning.
+3. Shi et al., 2023 — "Large Language Models Can Be Easily Distracted by Irrelevant
+   Context" (ICML) ← the quality axis's closest prior; ours varies relevant vs
+   irrelevant filler systematically at small scale.
+4. Hsieh et al., 2024 — "RULER" ← usable context is shorter than the advertised window.
+5. Modarressi et al., 2025 — "NoLiMa" ← why literal-match needles overestimate ability;
+   design probes accordingly.
+6. Qwen Team, 2024 — "Qwen2.5 Technical Report" ← the subject model; cite for specs.
+
+Style/structure models (short, clean empirical papers in ICML format conventions):
+
+7. Schaeffer et al., 2023 — "Are Emergent Abilities of Large Language Models a Mirage?"
+   ← the shape to imitate: skeptical question → simple measurements → honest answer.
+8. Dodge et al., 2019 — "Show Your Work" ← reporting norms; cite in Reproducibility.
+
+## Rubric (the adversarial reviewer's RUBRIC score /10 follows the competition's
+## ICML-style form; the ratchet requires rubric ≥ 6, confirmed by a second read)
+
+- Soundness: method faithfully replicates the cited approach; statistics appropriate;
+  paired/matched comparisons are valid; probe counts and uncertainty accompany estimates;
+  limitations are real and claims are sized to evidence.
+- Presentation: a reviewer can find the question, method, contribution, and headline result
+  in 60 seconds; prose is professional; displays are selective and legible.
+- Significance: the paper explains who should care, what decision the evidence informs, and
+  why the result matters beyond this one synthetic grid without overstating generality.
+- Originality: the quality axis, matched mitigation comparison, laptop-scale open-model
+  evidence, or an agent-generated finding adds a clear distinction from the cited work.
+- Reproducibility supports soundness: a stranger can trace and rerun every reported result.
+\documentclass{article}
+
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+\usepackage{icml2026}
+
+\InputIfFileExists{values.tex}{}{}
+\input{model.tex}
+
+\icmltitlerunning{\smash{Context Position and Pruning in a Small Language Model}}
+
+\begin{document}
+
+\twocolumn[
+\icmltitle{Answer Position and Lexical Pruning Shape Synthetic Clause Retrieval\
+           in a Small Language Model}
+\icmlsetsymbol{equal}{*}
+\begin{icmlauthorlist}
+\icmlauthor{Anonymous Authors}{anon}
+\end{icmlauthorlist}
+\icmlaffiliation{anon}{Anonymous Institution}
+\icmlcorrespondingauthor{Anonymous Author}{anon.email@domain.com}
+\icmlkeywords{long context, retrieval, position effects, small language models}
+\vskip 0.3in
+]
+\printAffiliationsAndNotice{}
+
+\begin{abstract}
+Does adding context hurt a small language model, and do the location and composition of that context matter? We test the frozen \modelName{} artifact on \sampleSize{} deterministic synthetic contract-clause probes spanning mean prompt lengths of \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Moving the same answer-bearing clause from the start to the end raised accuracy by \positionTwoStartEndChange{} percentage points at the shortest tier and \positionFourStartEndChange{} points at the middle tier, while keyword pruning changed matched accuracy by \pruningChange{} points. Removing only the lexical decoy from each pruned prompt then changed accuracy by \pruningNoDecoyChange{} points. The matched amount comparison was inconclusive: accuracy rose by \amountSharedTwoFourChange{} points and then changed by \amountSharedFourEightChange{} points, with only \amountSharedEightCount{} shared cases at each tier. Code-heavy business filler reduced accuracy relative to unrelated filler, but the manipulation does not isolate topical relevance from its other differences.
+\end{abstract}
+
+\section{Introduction}
+
+You paste a long contract into a chatbot and ask, ``What code renews the vendor agreement?'' The answer sits in one clause, but a similar buyer clause repeats the words in your question and gives a different code.
+
+Long prompts make this ordinary lookup less predictable. A model may fail because the document is longer, because the answer appears in a weak position, or because nearby text resembles the question. Those explanations imply different choices: shorten the prompt, move the key clause, or filter the document. A useful evaluation must vary each property while holding the others fixed.
+
+We study these choices in a synthetic, gradeable version of the contract situation. Each document contains an answer-bearing vendor clause and a look-alike clause for another company. The question uses the wording of the look-alike clause, while the answer clause expresses the same relation with different words. This construction reduces the value of literal matching, following the motivation of NoLiMa \citep{modarressi2025nolima}.
+
+Our contribution is a fully paired, laptop-scale evaluation of a frozen open model. Prior work established position and length failures in larger systems \citep{liu2023lost,levy2024same}, and showed that irrelevant statements can disrupt reasoning \citep{shi2023distracted}. We compare code-heavy business filler with unrelated prose at matched prompt lengths, positions, and questions. We also test whether a deterministic keyword filter helps the exact cases on which the unfiltered model was evaluated.
+
+The experiment asks four questions:
+\begin{enumerate}
+    \item As the document grows from \tierTwoTokens{} to \tierEightTokens{} mean tokens, how much does accuracy change on shared cases?
+    \item How does moving the same answer clause among the start, middle, and end change accuracy?
+    \item How does accuracy differ between code-heavy business filler and unrelated prose in matched documents?
+    \item Does keyword pruning recover accuracy, and can answer removal explain its failures?
+\end{enumerate}
+
+The answer is not a general context-length threshold. In this grid, the model improved when the answer appeared near the end, code-heavy business filler produced lower accuracy than unrelated prose, and keyword pruning amplified the lexical trap built into the probes.
+
+\section{Related Work}
+
+\citet{liu2023lost} found a U-shaped position curve in multi-document question answering and key-value retrieval, with stronger use of information near context boundaries. Our design performs a smaller clause-reordering test: the question, filler sequence, clauses, and codes remain fixed while the answer clause is inserted at a different depth. Inserting it before the competing clause shifts that clause's final sentence index by one. The observed pattern is primarily recency rather than a full U-shape because the start condition is also weak.
+
+Input amount can matter even when the underlying problem is fixed. \citet{levy2024same} padded matched reasoning problems and observed degradation well before model context limits, while RULER found that usable context lengths can be shorter than advertised windows \citep{hsieh2024ruler}. Our amount comparison uses the intersection of cases present at every tier, avoiding a change in scenario mix as prompts grow.
+
+\citet{shi2023distracted} added irrelevant statements to arithmetic problems and found lower reasoning accuracy. We compare filler from the same business domain with unrelated prose while matching amount and question wording. The business condition also contains more entities and code-shaped candidates, so the comparison measures that bundle rather than topical relevance alone. NoLiMa shows why literal needle tests can overstate retrieval ability \citep{modarressi2025nolima}; our answer clause therefore paraphrases the question while a competing clause shares its surface form. The tested model belongs to the instruction-tuned Qwen family \citep{qwen2024qwen25}.
+
+\section{Probe Design}
+
+\paragraph{Model and execution.}
+The subject is the frozen \modelFile{} artifact, with its SHA checksum shown below:
+\par\noindent\resizebox{\linewidth}{!}{\modelSha}\par
+We run it through \texttt{llama-completion} with greedy decoding, zero temperature, and a fixed seed. The complete manifest contains \manifestProbeCount{} probes, each stored as one prompt and one raw output. Existing outputs are skipped on rerun, so interrupted inference resumes by stable probe identifier.
+
+\paragraph{Scenario families.}
+Seeded code generates a company, target code, competing company and code, question, and filler for each family. The question asks for the renewal code needed to extend the target company's contract. Its wording exactly matches the competing clause, whereas the answer-bearing clause calls the same value a renewal identifier. A matched literal control reverses these phrasings while retaining the same filler.
+
+For each full-context family, we insert the answer clause near the start, middle, or end. Family generation does not use target position in any random seed. The competing clause receives an earlier or later fractional insertion index that is independent of answer position and fixed across the three renders. Its final sentence index shifts by one when the answer is inserted before it. Thus a paired position contrast changes answer placement and this mechanical one-sentence shift, while preserving the scenario content and filler order.
+
+\paragraph{Amount and filler composition.}
+The tokenizer, rather than a character estimate, determines prompt length. The three full-context tiers average \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Each tier balances business filler with unrelated sentences. Business filler consists of other companies, records, and unrelated codes; unrelated filler describes places and events outside the contract domain. Filler pairs share the family, target position, question, and measured tier.
+
+This manipulation changes several properties together. Compared with unrelated prose, the related filler contains more business entities, contract-like templates, and code-shaped answer candidates. The paired comparison therefore identifies the effect of these two generated filler conditions, not the effect of topical relevance alone.
+
+The expensive final tier contains fewer families. Amount estimates therefore use only the \amountSharedEightCount{} cases shared by every tier, not the unequal full-tier totals. Filler-composition estimates use \qualityTwoRelevantDenominator{}, \qualityFourRelevantDenominator{}, and \qualityEightRelevantDenominator{} pairs at the three tiers, respectively.
+
+\paragraph{Pruning and controls.}
+At the middle tier, a keyword filter retains sentences with at least two content words shared with the question, falling back to the highest-overlap sentences if too few qualify. It preserves original order. The comparison is restricted to the \pruningDenominator{} cases with both full and pruned outputs. We also include \closedBookCount{} closed-book questions and \literalControlDenominator{} matched literal-versus-paraphrase controls.
+
+The filter retained the answer clause in \pruningTargetRetainedCount{} of \pruningPrunedCount{} matched prompts and retained the lexical decoy in \pruningDistractorRetainedCount{}. A paired diagnostic removes only that decoy from each pruned prompt, leaving the answer clause and every other selected sentence fixed. This control uses the known synthetic label to diagnose the filter; it is not a deployable retrieval method.
+
+\section{Scoring and Comparisons}
+
+Normalized accuracy requires the target code to appear without the competing code. Exact-output compliance requires a response containing one code and no other text. A distractor capture contains the competing code without the target, and an invalid response contains both expected codes or neither. We strip only the runner's fixed transport trailer before applying these rules.
+
+The inferential target is the seeded generator's population of synthetic scenario families. Every \confidenceLevel{}\% interval resamples whole observed families, retaining all positions, filler types, and variants from each selected family; exact enumeration makes this cluster bootstrap deterministic. Paired changes are differences in accuracy over an exact intersection of scenario keys, with the same family resampling used for their intervals. These intervals describe sensitivity to the small family sample, while wins, losses, and ties expose the underlying paired outcomes. They do not assign sampling uncertainty to greedy decoding, which is deterministic.
+
+\section{Results}
+
+\paragraph{Amount.}
+\textbf{The amount effect remains unresolved.} Accuracy was \amountSharedTwoAccuracy{}\% at \tierTwoTokens{} mean tokens and \amountSharedFourAccuracy{}\% at \tierFourTokens{}, a paired change of \amountSharedTwoFourChange{} points with a family-cluster interval of [\amountSharedTwoFourChangeLow{}, \amountSharedTwoFourChangeHigh{}] over \amountSharedTwoFourDenominator{} cases. It was \amountSharedEightAccuracy{}\% at \tierEightTokens{}, with \amountSharedFourEightWins{} wins, \amountSharedFourEightLosses{} losses, and \amountSharedFourEightTies{} ties relative to the middle tier (Table~\ref{tab:amount-quality}). Because the longest-tier intersection represents only \amountSharedEightCount{} probes from \amountSharedEightFamilyCount{} scenario families, these observations neither establish a benefit nor rule out degradation within the measured range.
+
+\begin{table}[t]
+\caption{Matched amount and filler-composition comparisons. Brackets give \confidenceLevel{}\% family-cluster bootstrap intervals; $n$ is the matched denominator. Changes are later minus earlier for amount and business filler minus unrelated prose for composition.}
+\label{tab:amount-quality}
+\centering
+\small
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Comparison & Accuracy A & Accuracy B & Change ($n$) \\
+\midrule
+Amount: short to middle
+& \amountSharedTwoAccuracy{} [\amountSharedTwoAccuracyLow{}, \amountSharedTwoAccuracyHigh{}]
+& \amountSharedFourAccuracy{} [\amountSharedFourAccuracyLow{}, \amountSharedFourAccuracyHigh{}]
+& \amountSharedTwoFourChange{} (\amountSharedTwoFourDenominator{}) \\
+Amount: middle to long
+& \amountSharedFourAccuracy{} [\amountSharedFourAccuracyLow{}, \amountSharedFourAccuracyHigh{}]
+& \amountSharedEightAccuracy{} [\amountSharedEightAccuracyLow{}, \amountSharedEightAccuracyHigh{}]
+& \amountSharedFourEightChange{} (\amountSharedFourEightDenominator{}) \\
+\midrule
+Composition at short tier
+& \qualityTwoIrrelevantAccuracy{} [\qualityTwoIrrelevantAccuracyLow{}, \qualityTwoIrrelevantAccuracyHigh{}]
+& \qualityTwoRelevantAccuracy{} [\qualityTwoRelevantAccuracyLow{}, \qualityTwoRelevantAccuracyHigh{}]
+& \qualityTwoRelevantChange{} (\qualityTwoRelevantDenominator{}) \\
+Composition at middle tier
+& \qualityFourIrrelevantAccuracy{} [\qualityFourIrrelevantAccuracyLow{}, \qualityFourIrrelevantAccuracyHigh{}]
+& \qualityFourRelevantAccuracy{} [\qualityFourRelevantAccuracyLow{}, \qualityFourRelevantAccuracyHigh{}]
+& \qualityFourRelevantChange{} (\qualityFourRelevantDenominator{}) \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\paragraph{Position.}
+\textbf{Moving the answer clause to the end produced the largest and most consistent gain.} At the shortest tier, accuracy rose from \positionTwoStartAccuracy{}\% at the start to \positionTwoEndAccuracy{}\% at the end, a paired increase of \positionTwoStartEndChange{} points with an interval of [\positionTwoStartEndChangeLow{}, \positionTwoStartEndChangeHigh{}], \positionTwoStartEndWins{} wins, and no losses. At the middle tier, the same move raised accuracy by \positionFourStartEndChange{} points [\positionFourStartEndChangeLow{}, \positionFourStartEndChangeHigh{}], with \positionFourStartEndWins{} wins and no losses. The sparse longest tier also favored the end over the start by \positionEightStartEndChange{} points, but it contains only \positionEightStartEndDenominator{} pairs. Middle performance was below end performance at the two populated tiers (Table~\ref{tab:position}).
+
+\begin{table}[t]
+\caption{Accuracy by answer-clause position. Each row compares the same scenario families across positions. Brackets give \confidenceLevel{}\% family-cluster bootstrap intervals.}
+\label{tab:position}
+\centering
+\small
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Mean tokens & Start & Middle & End \\
+\midrule
+\tierTwoTokens{}
+& \positionTwoStartAccuracy{} [\positionTwoStartAccuracyLow{}, \positionTwoStartAccuracyHigh{}]
+& \positionTwoMiddleAccuracy{} [\positionTwoMiddleAccuracyLow{}, \positionTwoMiddleAccuracyHigh{}]
+& \positionTwoEndAccuracy{} [\positionTwoEndAccuracyLow{}, \positionTwoEndAccuracyHigh{}] \\
+\tierFourTokens{}
+& \positionFourStartAccuracy{} [\positionFourStartAccuracyLow{}, \positionFourStartAccuracyHigh{}]
+& \positionFourMiddleAccuracy{} [\positionFourMiddleAccuracyLow{}, \positionFourMiddleAccuracyHigh{}]
+& \positionFourEndAccuracy{} [\positionFourEndAccuracyLow{}, \positionFourEndAccuracyHigh{}] \\
+\tierEightTokens{}
+& \positionEightStartAccuracy{} [\positionEightStartAccuracyLow{}, \positionEightStartAccuracyHigh{}]
+& \positionEightMiddleAccuracy{} [\positionEightMiddleAccuracyLow{}, \positionEightMiddleAccuracyHigh{}]
+& \positionEightEndAccuracy{} [\positionEightEndAccuracyLow{}, \positionEightEndAccuracyHigh{}] \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\paragraph{Filler composition.}
+\textbf{Code-heavy business filler produced lower accuracy than unrelated prose.} The matched difference was \qualityTwoRelevantChange{} points [\qualityTwoRelevantChangeLow{}, \qualityTwoRelevantChangeHigh{}] over \qualityTwoRelevantDenominator{} pairs at the shortest tier and \qualityFourRelevantChange{} points [\qualityFourRelevantChangeLow{}, \qualityFourRelevantChangeHigh{}] over \qualityFourRelevantDenominator{} pairs at the middle tier. The respective paired outcomes were \qualityTwoRelevantWins{} win, \qualityTwoRelevantLosses{} losses, and \qualityTwoRelevantTies{} ties, then \qualityFourRelevantWins{} win, \qualityFourRelevantLosses{} losses, and \qualityFourRelevantTies{} ties. The longest-tier estimate was \qualityEightRelevantChange{} points, but its \qualityEightRelevantFamilyCount{} families are too sparse to strengthen that conclusion. Because the business filler also adds code-shaped candidates and repeated entity templates, these results do not show that topical relevance caused the difference.
+
+\paragraph{Mitigation.}
+\textbf{Keyword pruning backfired on the matched cases.} Full-context accuracy was \pruningFullAccuracy{}\%, compared with \pruningPrunedAccuracy{}\% after filtering, a change of \pruningChange{} points [\pruningChangeLow{}, \pruningChangeHigh{}] across \pruningFamilyCount{} families. Only \pruningWins{} case improved; \pruningLosses{} worsened and \pruningTies{} tied (Table~\ref{tab:pruning}). Because every pruned prompt retained the answer clause, answer removal cannot explain this decline.
+
+\begin{table}[t]
+\caption{Matched keyword-pruning result and diagnostic controls. Accuracy intervals are \confidenceLevel{}\% family-cluster bootstrap intervals.}
+\label{tab:pruning}
+\centering
+\small
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Condition & Accuracy & Count \\
+\midrule
+Full context
+& \pruningFullAccuracy{} [\pruningFullAccuracyLow{}, \pruningFullAccuracyHigh{}]
+& \pruningFullCount{} \\
+Keyword pruned
+& \pruningPrunedAccuracy{} [\pruningPrunedAccuracyLow{}, \pruningPrunedAccuracyHigh{}]
+& \pruningPrunedCount{} \\
+Decoy removed
+& \pruningNoDecoyAccuracy{} [\pruningNoDecoyAccuracyLow{}, \pruningNoDecoyAccuracyHigh{}]
+& \pruningNoDecoyCount{} \\
+Literal wording
+& \literalControlAccuracy{} [\literalControlAccuracyLow{}, \literalControlAccuracyHigh{}]
+& \literalControlCount{} \\
+Paraphrase wording
+& \paraphraseControlAccuracy{} [\paraphraseControlAccuracyLow{}, \paraphraseControlAccuracyHigh{}]
+& \paraphraseControlCount{} \\
+Closed book
+& \closedBookAccuracy{} [\closedBookAccuracyLow{}, \closedBookAccuracyHigh{}]
+& \closedBookCount{} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+Removing only the retained decoy raised accuracy to \pruningNoDecoyAccuracy{}\%, a change of \pruningNoDecoyChange{} points [\pruningNoDecoyChangeLow{}, \pruningNoDecoyChangeHigh{}], with \pruningNoDecoyWins{} wins and no losses. Literal wording changed matched accuracy by \literalControlChange{} points, with \literalControlWins{} wins and no losses. Across all outputs, distractor capture was \distractorCaptureRate{}\%, exact-output compliance was \exactOutputComplianceRate{}\%, and invalid output was \invalidOutputRate{}\%. These diagnostics identify selection of the retained lexical competitor, rather than answer deletion, as the failure in this grid; they do not establish how another pruning rule would behave.
+
+\section{Limitations}
+
+The findings concern one small quantized model and may not transfer to larger models or other quantization levels. Synthetic clause lookup is not natural contract analysis, and retrieval accuracy is not a measure of general capability. The \cpuBudgetMinutes{}-minute CPU budget capped the grid, leaving only \tierEightCount{} full-context probes at the longest tier and wide intervals throughout. That sparse tier prevents a conclusion about degradation within the measured range, and the experiment cannot address longer prompts. The filler comparison confounds topical relation with semantic domain, entity and code density, candidate count, and sentence templates. A factorial design that matches those properties would be needed to identify a topical-relevance effect. Greedy decoding removes run-to-run sampling variation but does not show how sampling would change the estimates. The mitigation is a deliberately simple keyword filter, and its decoy-removal control depends on an oracle label unavailable in natural documents.
+
+\section{Reproducibility}
+
+Every reported quantity is generated by analysis scripts from the committed probe manifest and raw model outputs, following the reporting principle that computational evidence should expose its budget and variation \citep{dodge2019show}. The model and cached data are frozen and checksummed, and each raw output retains its stable probe identifier. Running \texttt{make all} regenerates \texttt{results.json}, the LaTeX value macros, and the paper from cached outputs; running \texttt{make clean-deep \&\& make all} repeats deterministic model inference. Repository gates check frozen inputs, citation resolution, number provenance, pipeline freshness, result sanity, prose style, anonymity, and compilation.
+
+\label{main-body-end}
+\bibliography{refs}
+\bibliographystyle{icml2026}
+
+\end{document}
+
+exec
+/bin/zsh -lc 'find reviews -maxdepth 1 -type f -print | sort -V' in /Users/matthewchan/ralphm/Ralphm
+ succeeded in 0ms:
+reviews/confirm-6.md
+reviews/confirm-10.md
+reviews/iter-3.md
+reviews/iter-6.md
+reviews/iter-10.md
+
+exec
+/bin/zsh -lc "sed -n '1,320p' reviews/iter-10.md && sed -n '1,240p' reviews/iter-6.md && sed -n '1,180p' reviews/iter-3.md && sed -n '1,200p' reviews/confirm-10.md && sed -n '1,160p' reviews/confirm-6.md" in /Users/matthewchan/ralphm/Ralphm
+ succeeded in 0ms:
+## 1. Summary
+
+The paper evaluates frozen Qwen2.5-0.5B-Instruct Q8 on 150 deterministic synthetic clause-retrieval probes. It varies tokenizer-measured prompt length, answer-clause position, filler composition, and lexical pruning. The clearest finding is a strong recency effect: moving the same answer clause from the start to the end substantially improves accuracy. The length comparison is correctly reported as inconclusive. Keyword pruning performs worse because it retains both the paraphrased answer and a more lexically attractive decoy; an oracle diagnostic shows that removing the decoy restores accuracy. Code-heavy business filler also performs worse than unrelated prose, although the paper now acknowledges that this manipulation bundles several factors and does not isolate topical relevance.
+
+## 2. Strengths
+
+- Numeric provenance is unusually strong. Paper values are generated from `results.json`, which identifies the producing script, and raw outputs use stable probe identifiers.
+- The model artifact, exact filename, checksum, deterministic decoding settings, and clean-room regeneration procedure are reported.
+- Amount, position, composition, pruning, and diagnostic comparisons use matched scenario keys.
+- The paper responsibly treats the amount result as inconclusive rather than converting a tiny null comparison into evidence of robustness.
+- The filler-composition claim is now sized to the actual manipulation. Both Method and Limitations acknowledge its confounds.
+- The pruning analysis has materially improved: answer-retention and decoy-retention counts are reported, followed by a paired oracle diagnostic.
+- Paired results report changes, intervals, and outcome counts rather than accuracy alone.
+- Required sections, four visible research questions, three tables, and a four-page main body are present.
+- The corresponding-author error from the previous PDF has been fixed.
+
+## 3. Weaknesses
+
+- The proposed quality contribution remains experimentally unresolved. Business filler differs from unrelated filler in topical relation, semantic domain, entity density, code density, candidate count, and sentence template. The revised wording is honest, but the experiment still cannot answer the locked quality question about relevant versus irrelevant context. This matters because that axis is presented as the paper’s main distinction from prior work.
+
+- The nominal 95% bootstrap intervals remain unjustified with only two to six observed family clusters. Exact enumeration of resamples does not create information absent from the sample. The short-tier amount estimate even has a `[50.0, 50.0]` interval because its two observed families happen to share the same rate. Calling this a population-level family-cluster interval risks false precision despite the manuscript’s sensitivity caveat.
+
+- The mitigation comparison is still too narrow. The tested lexical filter is structurally predisposed to retain the verbatim decoy, and the new decoy-removal condition requires an oracle label. The experiment lacks a random-retention control, BM25-style selector, embedding-free alternative, or other deployable cheap baseline. It therefore diagnoses one filter’s failure but does not establish which cheap mitigation works best.
+
+- The practical implication remains weak. Moving the answer-bearing clause to the end presupposes that the system already knows which clause contains the answer. The only automatic method tested makes performance worse, while the successful decoy-removal diagnostic is explicitly non-deployable. Consequently, the paper offers no operational recommendation corresponding to its strongest effect.
+
+- The position manipulation is not completely isolated. Inserting the answer before the distractor shifts the distractor’s final sentence index by one. The revision now discloses this accurately, which fixes the earlier reporting problem, but the experimental contrast still combines answer relocation with a small competitor relocation.
+
+- Table 2 omits denominators even though the tiers contain sharply different numbers of matched pairs. The prose gives 4 pairs for the longest start-to-end contrast and enough information to reconstruct some other counts, but readers should not have to infer the middle-tier denominator. This omission is particularly consequential given the sparse grid.
+
+- PDF audit: running titles are present on pages 2–4 and therefore are not suppressed. No table crosses a column boundary or visibly clips. However, all three tables are scaled down, and the two side-by-side tables at the top of page 3 are especially small and crowded. The full SHA line is also microscopic. Page 3 has poor visual hierarchy because three tables and most of Results compete for limited space. The previous corresponding-author error is gone.
+
+- Language audit: the prose is readable but not consistently conference-polished. “changed matched accuracy by -33.3 points” combines a directional construction with a signed negative number; editorial direction: choose either signed change or verbal direction consistently. Results repeatedly open with bold miniature headlines such as “The amount effect remains unresolved” and “Keyword pruning backfired on the matched cases,” producing a mechanically templated cadence; editorial direction: integrate claims and evidence into fewer, more naturally varied paragraphs. Several qualifications recur immediately after already cautious findings; consolidate secondary scope protection in Limitations where possible. I found no casual “made-up” wording, unnecessary definitions of ordinary terms, repeated “This paper” openings, or excessive reuse of the contract example.
+
+## 4. Criticism ledger (machine-readable)
+
+LEDGER: persisting | quality-code-density-confound | since=iter-3 | filler composition still bundles topicality with code density and candidate count  
+LEDGER: persisting | weak-pruning-baselines | since=iter-3 | mitigation still lacks a second deployable selector baseline  
+LEDGER: persisting | weak-practical-implication | since=iter-3 | end placement still assumes the answer-bearing clause is already known  
+LEDGER: persisting | distractor-position-shift | since=iter-3 | position rendering still shifts the competing clause by one sentence  
+LEDGER: resolved | pdf-author-error | the compiled affiliation block now includes the corresponding author without an error message  
+LEDGER: persisting | crowded-tables | since=iter-3 | scaled tables remain unusually small and crowded on page three  
+LEDGER: persisting | language-polish | since=iter-3 | signed-direction phrasing and repeated bold result frames remain  
+LEDGER: persisting | bootstrap-too-few-clusters | since=iter-6 | nominal bootstrap intervals still rely on only two to six families  
+LEDGER: new | position-table-missing-n | position table omits tier-specific matched denominators  
+
+## 5. Spot checks
+
+### Citations
+
+- **Liu et al., “Lost in the Middle.”** Real and resolved in `data/cache/citations/23391aad...json` through Crossref, DOI `10.1162/tacl_a_00638`. The cached full text reports multi-document QA and key-value retrieval experiments with stronger performance near the beginning or end and weaker performance in the middle. The citing sentence is supported.
+
+- **Levy et al., “Same Task, More Tokens.”** Real and resolved in `data/cache/citations/90d356bd...json`. The cached paper constructs length variants by padding matched reasoning instances and reports degradation well below nominal context limits. The paper’s description is supported.
+
+- **Shi et al., “Large Language Models Can Be Easily Distracted by Irrelevant Context.”** Real and resolved in `data/cache/citations/07c9c350...json`. The cached paper adds irrelevant statements to grade-school arithmetic problems and reports reduced problem-solving accuracy. The citing sentence is supported.
+
+### Numbers
+
+- **150 completed probes:** `analysis/run_probes.py::Grid.generate()` constructs full, pruned, decoy-removed, literal, and closed-book probes and records them in the manifest. `analysis/run_all.py` scores completed manifest records and writes `sampleSize = len(scored)`. `results.json` contains `sampleSize = 150`; `analysis/make_values.py` emits the corresponding LaTeX macro. Chain complete.
+
+- **58.3-point shortest-tier start-to-end gain:** `run_probes.py` generates start and end documents from the same family and filler, using fixed family content and target depths. `run_all.py::add_paired()` intersects records on `(family, filler)`, computes end minus start accuracy, and records 7 wins, 0 losses, and 5 ties over 12 pairs. `results.json` stores `positionTwoStartEndChange = 58.333...`; `make_values.py` formats it as `58.3`. Chain complete, subject to the disclosed one-sentence distractor shift.
+
+- **83.3-point decoy-removal gain:** `run_probes.py` first applies `prune()`, verifies that both target and distractor were retained, and generates `prunednodecoy` by removing only the distractor. `run_all.py` matches pruned and decoy-removed records on `(family, filler, position, style)`, obtaining 25 wins, 0 losses, and 5 ties across 30 cases. `results.json` stores `pruningNoDecoyChange = 83.333...`; `make_values.py` renders `83.3`. Chain complete.
+
+## 6. Questions for the authors
+
+1. What experiment would let readers distinguish the effect of topical relevance from code density, candidate count, business-domain wording, and repeated templates, and why was that factorial control not prioritized over the current bundled comparison?
+
+2. What inferential meaning should a nominal 95% interval have when it resamples only two observed families and can collapse to zero width despite extreme uncertainty about the generator population?
+
+3. What deployable procedure follows from the position and pruning results when relocating the answer clause requires finding it first, keyword pruning fails, and successful decoy removal uses an oracle label?
+
+## 7. Scores
+
+### Official ICML-style competition scores
+
+- **Soundness: 2/4.** Pairing, provenance, diagnostics, and claim qualification are strong, but the quality axis remains confounded, the position manipulation is not perfectly isolated, and inference from two to six clusters is unreliable.
+- **Presentation: 2/4.** The paper is well organized and readable, but the tiny tables, crowded third page, missing position denominators, signed-direction phrasing, and templated Results cadence remain below conference polish.
+- **Significance: 1/4.** The evidence concerns one tiny model and six or fewer synthetic families, and it produces no successful deployable mitigation or strong practical recommendation.
+- **Originality: 2/4.** Deterministic laptop-scale evaluation and the filler-composition comparison are modest distinctions, but the intended quality contribution is not experimentally isolated.
+- **Overall: 3/6.** Weak reject. This is an unusually verifiable and increasingly honest artifact, but the central quality question, inferential basis, and practical mitigation story still require substantive work before others can build on the conclusions.
+- **Confidence: 5/5.** I inspected the specification, manuscript source, rendered four-page PDF, prior ledger, bibliography caches, cached paper text, probe generator, aggregation code, value generator, and result registry.
+
+### Rubric score
+
+**7/10.** The paper meets the structural, provenance, reproducibility, limitation, page-count, visual-count, and basic readability requirements. It now diagnoses weak or confounded results with commendable honesty, which the fixed rubric explicitly rewards. It falls short of a higher score because the intended quality distinction remains unidentified, the uncertainty presentation overstates what a handful of families supports, the mitigation comparison lacks a credible deployable alternative, the practical implication is weak, and the compiled tables are not comfortably readable.
+
+{"overall":3,"rubric":7,"soundness":2,"presentation":2,"significance":1,"originality":2,"confidence":5,"recommendation":"weak reject"}## 1. Summary
+
+The paper evaluates Qwen2.5-0.5B-Instruct on 120 deterministic synthetic clause-retrieval probes. It varies prompt length, answer position, filler type, and lexical pruning. The strongest result is a large recency effect: placing the answer clause at the end substantially improves retrieval. Keyword pruning performs poorly because it preferentially retains a lexically matched decoy. The amount experiment is explicitly inconclusive. The paper also claims that topically related filler is more harmful than unrelated filler, but that comparison changes several properties besides topical relevance.
+
+## 2. Strengths
+
+- Excellent result provenance: the frozen model is named and checksummed, raw outputs have stable identifiers, and paper values are generated from `results.json`.
+- Amount, position, quality, and pruning comparisons use matched scenario keys.
+- The revised paper no longer presents the amount experiment as evidence that longer context is harmless.
+- Uncertainty now resamples scenario families rather than treating every correlated probe as independent.
+- Paired changes now include intervals, wins, losses, and ties.
+- Limitations clearly disclose the single quantized model, synthetic task, retrieval-only outcome, greedy decoding, CPU budget, and sparse longest tier.
+- The paper satisfies the structural requirements: four main-body pages including the short spill onto page 4, all required sections, and three tables.
+- The negative lexical-pruning result is reproducible and has a plausible failure mechanism supported by the literal-wording control.
+- The NoLiMa author list has been corrected.
+
+## 3. Weaknesses
+
+- The quality result remains causally uninterpretable. Relevant filler contains business entities and a fresh code in every sentence, while irrelevant filler contains neither codes nor contract-like entities. This jointly changes topicality, candidate count, code density, lexical character, and semantic domain. The paper therefore cannot identify relevance as the cause of the accuracy difference. This is especially damaging because filler quality is presented as the main extension over prior work.
+
+- The cluster bootstrap does not repair the extremely small number of clusters. The amount comparison has only two scenario families. Its short-tier accuracy interval collapses to `[50.0, 50.0]` merely because both observed families have the same accuracy, falsely suggesting certainty about the generator population. Percentile resampling from two to six fixed families is not credible population-level inference, and the manuscript provides no coverage argument or sensitivity analysis.
+
+- The mitigation study remains a test of one deliberately disadvantaged filter, not a useful comparison of cheap mitigations. Its lexical rule is structurally likely to preserve the verbatim decoy and reject the paraphrased answer. Without an oracle-retention diagnostic, random-pruning control, BM25-like baseline, or another cheap selector, the result establishes only that this particular mismatched heuristic fails.
+
+- The practical implication is weak. Putting an answer-bearing clause last requires knowing which clause contains the answer, while the retrieval problem exists precisely because that fact is unknown. The paper gives no operational method for obtaining the reported end-position benefit. Its remaining mitigation performs worse, leaving no credible deployment recommendation.
+
+- The claimed position control is still false in implementation. `assemble()` inserts clauses by reverse-sorted indices. When the answer is inserted before the distractor, it shifts the distractor’s final index; when inserted after it, it does not. Thus the distractor does not remain at exactly the same final position, contrary to the claim that only the answer clause moves. The shift is small, but the methodological description is inaccurate.
+
+- The Limitations section is incomplete in consequential ways. It calls the filter simple but does not admit that it is predisposed to select the decoy, and it never acknowledges that the filler-quality manipulation is confounded. These omissions protect the two most affirmative conclusions rather than sizing them to the design.
+
+- PDF audit: running titles are present on pages 2–4, so they are not suppressed. No table visibly crosses a column boundary. However, all three tables are reduced with `\resizebox`, producing small, crowded text; page 3 is especially dense. A negative number also breaks awkwardly after the minus sign in the quality paragraph. Most seriously, page 1 still prints `AUTHORERR: Missing \icmlcorrespondingauthor` in the affiliation block. The compiled artifact is not submission-ready.
+
+- Language audit: the prose is readable but still mechanically patterned. Results repeatedly use bold claim, effect size, qualification, then table reference, producing a templated cadence. The phrase “lowered matched accuracy by -33.3 points” combines a directional verb with a signed negative value; standardize direction and sign. “The controls support this explanation without proving it for other tasks” is a defensive caveat that delays the concrete diagnostic; move secondary scope protection to Limitations. “Thus a paired position contrast changes only where the answer clause appears” is polished-sounding but factually too absolute; align the description with the actual insertion behavior. I found no casual “made-up” language, tautological definitions of ordinary words, repeated “This paper” openings, or excessive reuse of the contract example.
+
+## 4. Criticism ledger (machine-readable)
+
+LEDGER: resolved | underpowered-null-overclaim | title and abstract now state that the amount comparison is inconclusive  
+LEDGER: persisting | quality-code-density-confound | since=iter-3 | filler quality remains confounded with code density and candidate count  
+LEDGER: resolved | clustered-probes-ignored | intervals now resample whole scenario families  
+LEDGER: resolved | paired-uncertainty-missing | paired changes now receive family-cluster intervals  
+LEDGER: persisting | weak-pruning-baselines | since=iter-3 | mitigation still tests only a filter predisposed to select the decoy  
+LEDGER: persisting | weak-practical-implication | since=iter-3 | end placement still assumes knowledge of the answer-bearing clause  
+LEDGER: persisting | distractor-position-shift | since=iter-3 | clause insertion still shifts the distractor in some renders  
+LEDGER: resolved | inaccurate-bib-authors | NoLiMa authors now match the cached metadata  
+LEDGER: persisting | pdf-author-error | since=iter-3 | compiled page one still exposes the corresponding-author error  
+LEDGER: persisting | crowded-tables | since=iter-3 | scaled tables remain small and page three is crowded  
+LEDGER: persisting | language-polish | since=iter-3 | signed-direction phrasing and templated result frames remain  
+LEDGER: new | bootstrap-too-few-clusters | family bootstrap intervals are not credible with only two to six clusters  
+
+## 5. Spot checks
+
+### Citations
+
+- Liu et al., *Lost in the Middle*: real, resolved through Crossref in `data/cache/citations/23391...json`, DOI `10.1162/tacl_a_00638`. The cited claim about U-shaped performance across answer positions in multi-document QA and key-value retrieval is supported by the cached full text.
+
+- Levy et al., *Same Task, More Tokens*: real, resolved through Crossref in `data/cache/citations/90d356...json`, DOI `10.18653/v1/2024.acl-long.818`. The paper constructs length variants of matched reasoning instances using padding and reports degradation below technical context limits, so the citing sentence is supported.
+
+- Modarressi et al., *NoLiMa*: real, resolved through Semantic Scholar in `data/cache/citations/3a6879...json`. Its cached abstract and full text explicitly argue that literal question–needle overlap makes retrieval artificially easy and introduce low-overlap needles. Both uses in this paper are supported, and the revised author metadata is correct.
+
+### Numbers
+
+- **120 probes:** `analysis/run_probes.py` defines the tiered grid and writes one prompt/output record per probe to `data/probes/manifest.json`, whose metadata reports 120 completed probes. `analysis/run_all.py` reads every completed record and stores `len(scored)` as `sampleSize`; `results.json` records `120`, and `analysis/make_values.py` emits `\sampleSize`. Chain complete.
+
+- **58.3-point shortest-tier start-to-end increase:** `run_probes.py` renders start and end variants from the same family and filler. In `run_all.py`, `add_paired()` intersects keys `(family, filler)`, computes end accuracy minus start accuracy, and obtains 7 wins, 0 losses, and 5 ties across 12 pairs. `results.json` records `positionTwoStartEndChange = 58.333...`; the generated macro prints `58.3`. Chain complete.
+
+- **−33.3-point pruning change:** `run_probes.py::prune()` selects sentences by question-word overlap and produces middle-tier pruned variants. `run_all.py` intersects full and pruned cases on `(family, filler, position, style)`, yielding 30 pairs; full accuracy is 40.0% and pruned accuracy is 6.667%. `add_paired()` stores `pruningChange = -33.333...` in `results.json`, rendered as `-33.3`. Chain complete.
+
+## 6. Questions for the authors
+
+1. How can the quality effect be attributed to topical relevance when the relevant condition also adds hundreds of code-shaped candidates and the irrelevant condition adds none?
+
+2. What inferential meaning should readers assign to a 95% interval generated by resampling only two observed families, especially when identical family rates collapse the interval to zero width?
+
+3. What practical action follows from the position result when identifying and relocating the answer-bearing clause already requires solving the retrieval problem, and the only tested automatic mitigation makes performance worse?
+
+## 7. Scores
+
+### Official ICML-style competition scores
+
+- **Soundness: 2/4.** Pairing, provenance, and dependence handling improved, but the quality axis remains confounded, the position-control description is inaccurate, and inference from two to six clusters is unreliable.
+- **Presentation: 2/4.** Organization and readability are generally good, but the visible author error, crowded tables, awkward line break, signed-direction phrasing, and templated Results cadence are below conference polish.
+- **Significance: 1/4.** The study covers one tiny model and a handful of synthetic families, and it offers no usable successful mitigation or credible deployment implication.
+- **Originality: 2/4.** Laptop-scale deterministic reproduction and matched filler comparisons are modest distinctions, but the proposed quality contribution is not isolated by the experiment.
+- **Overall: 3/6.** Weak reject. The artifact is unusually verifiable and the revised null framing is responsible, but experimental redesign is still needed before others can build on the quality and mitigation conclusions.
+- **Confidence: 5/5.** I inspected the specification, source, compiled PDF text/layout, previous review, bibliography caches, exemplar full texts, manifest, aggregation code, and result registry.
+
+### Rubric score
+
+**6/10.** The paper meets nearly all structural and provenance requirements and now diagnoses the weak amount result honestly. It also defines its statistical machinery, interprets each table, and states an everyday takeaway. It falls short of the fixed bar because its claimed quality distinction is confounded, its cluster intervals overstate what two to six families can establish, its practical implication is weak, the mitigation comparison is narrow, and the compiled PDF retains a visible submission error. The prose is accessible but not consistently conference-grade.
+
+{"overall":3,"rubric":6,"soundness":2,"presentation":2,"significance":1,"originality":2,"confidence":5,"recommendation":"weak reject"}## 1. Summary
+
+The paper reports a deterministic, reproducible evaluation of Qwen2.5-0.5B-Instruct on synthetic contract-clause retrieval. It varies prompt length, answer-clause position, filler type, and keyword pruning. The strongest observed pattern is recency: end-position clauses substantially outperform start and middle positions. Relevant filler and keyword pruning reduce accuracy, apparently because both introduce or favor code-bearing text with high lexical overlap. The length experiment finds no observed decline through 7,992 tokens, but its longest-tier comparison contains only two scenario families and cannot establish absence of degradation.
+
+## 2. Strengths
+
+- Strong provenance: the model artifact is named and checksummed, all 120 outputs are present, and paper values are generated from `results.json`.
+- Position, amount, quality, and pruning contrasts use explicit matched keys rather than subtracting unrelated aggregates.
+- The paper reports denominators, Wilson intervals, and paired wins/losses/ties.
+- Limitations correctly identify the single quantized model, synthetic task, restricted CPU budget, retrieval-only outcome, and greedy decoding.
+- The three-page main body includes all required sections and three tables.
+- The introduction is accessible, restrained, and clear that no natural contracts were tested.
+- The negative pruning result is useful and is tied to a plausible, inspectable failure mechanism.
+
+## 3. Weaknesses
+
+- The principal framing converts low power into a negative finding. The title claims that context amount did not hurt, whereas the abstract and Results concede that the amount comparison is inconclusive. Twelve observations at the longest tier represent only two scenario families crossed with filler and position. This is failure to detect degradation, not evidence that degradation did not occur. The abstract’s claim that placement mattered more than amount is likewise unsupported because those effects were estimated with very different power.
+
+- The quality manipulation does not isolate topicality. Every relevant-filler template introduces business entities and code-shaped candidates, while irrelevant filler contains no codes. Thus code density, candidate-set size, semantic domain, and topicality all change together. The reported harm cannot specifically be attributed to relevant context.
+
+- The uncertainty analysis treats correlated probes as independent Bernoulli observations. For example, the amount denominator of 12 derives from only two families, while position and quality denominators repeatedly reuse six or fewer families. Wilson intervals at the probe level therefore overstate the effective sample size. The paper does not define a population of scenarios, justify fixed-seed families as a sample from it, or provide family-clustered uncertainty. Paired changes receive no intervals or paired tests.
+
+- The mitigation evidence is too narrow for a meaningful retriever conclusion. The sole filter is structurally predisposed to retain the lexical decoy and discard the paraphrased answer. There is no oracle filter, random pruning control, code-density-matched filter, BM25-style baseline, or ablation showing whether pruning fails because of lexical selection rather than simply removing the answer.
+
+- The practical implication remains weak. Moving a known answer clause to the end presupposes knowing which clause answers the question; that is not generally available in retrieval or document-QA settings. The paper distinguishes itself from prior work through matched filler quality and laptop reproducibility, but does not turn that distinction into a credible deployment recommendation.
+
+- The claimed position control is not literally exact. `assemble()` reinserts both clauses by sorted indices, so moving the answer across the distractor can shift the distractor’s final sentence index by one. This is unlikely to explain the large effect, but contradicts the statement that only the answer clause changes position.
+
+- Bibliographic verification is incomplete. NoLiMa resolves as a real title, but `refs.bib` lists Ryan A. Kim and Tong Zhao, whereas the cached exemplar metadata lists Ryan A. Rossi and Seunghyun Yoon. Title-only resolution did not catch inaccurate author metadata.
+
+- PDF audit: the running title is present on pages 2–4, so it is not suppressed. No table visibly crosses a column boundary, but all three are aggressively scaled and crowded; Table 1 is particularly small. More seriously, page 1 visibly prints `AUTHORERR: Missing \icmlcorrespondingauthor` in the affiliation block. The main body occupies three pages and references occupy page 4.
+
+- Language audit: the prose is readable but not fully polished. The title phrase “More Context Did Not Hurt” overstates an underpowered null result. “lowered matched accuracy by -33.3 points” combines a directional verb with a negative quantity and is editorially inconsistent; standardize directional reporting. “support this explanation without proving it for other tasks” is a defensive caveat placed before the concrete diagnostic result; move secondary scope qualifications to Limitations. Results paragraphs also repeat the same bold-claim/effect-size/caveat frame, giving them a mechanically templated cadence. I found no casual “made-up” wording, unnecessary definitions of ordinary terms, or excessive reuse of the contract example.
+
+## 4. Criticism ledger (machine-readable)
+
+LEDGER: new | underpowered-null-overclaim | title treats failure to detect length degradation as evidence of no harm  
+LEDGER: new | quality-code-density-confound | filler quality is confounded with code density and candidate count  
+LEDGER: new | clustered-probes-ignored | Wilson intervals treat repeated scenario-family probes as independent  
+LEDGER: new | paired-uncertainty-missing | paired effect changes lack uncertainty intervals or paired tests  
+LEDGER: new | weak-pruning-baselines | mitigation uses only one filter predisposed to select the decoy  
+LEDGER: new | weak-practical-implication | end placement assumes prior knowledge of the answer-bearing clause  
+LEDGER: new | distractor-position-shift | clause insertion can shift the distractor despite the claimed fixed position  
+LEDGER: new | inaccurate-bib-authors | NoLiMa author metadata conflicts with the cached exemplar  
+LEDGER: new | pdf-author-error | compiled first page exposes a missing-corresponding-author error  
+LEDGER: new | crowded-tables | scaled tables are technically contained but uncomfortably small  
+LEDGER: new | language-polish | negative-direction phrasing and templated result frames remain unpolished  
+
+## 5. Spot checks
+
+### Citations
+
+- Liu et al., *Lost in the Middle*: real and resolved in `data/cache/citations/23391...json` through Crossref, DOI `10.1162/tacl_a_00638`. The cited sentence about a U-shaped position curve in multi-document QA and key-value retrieval is supported by the cached abstract and full text.
+
+- Levy et al., *Same Task, More Tokens*: real and resolved in `data/cache/citations/90d356...json`, DOI `10.18653/v1/2024.acl-long.818`. The sentence stating that matched problems were padded and degraded before the technical context limit is supported by the cached abstract and methods.
+
+- Modarressi et al., *NoLiMa*: real and resolved in `data/cache/citations/3a6879...json` through Semantic Scholar. Its content supports the claim that literal lexical matches can make needle retrieval artificially easy. However, the paper’s BibTeX author list conflicts with the cached exemplar metadata.
+
+### Numbers
+
+- **120 probes:** `data/probes/manifest.json` records 120/120 completed probes. `run_probes.py` generates and executes the grid; `run_all.py:88–94` reads each raw output, and `run_all.py:146` stores `len(scored)` as `sampleSize`. `results.json` contains `sampleSize = 120`, which `make_values.py` emits as `\sampleSize`. Chain complete.
+
+- **58.3-point shortest-tier start-to-end gain:** raw scoring gives 2/12 correct at the start and 9/12 at the end. `run_all.py:172–177` invokes the paired comparison, and `run_all.py:129–144` computes \(75.0-16.7=58.3\) points. `results.json` stores `positionTwoStartEndChange = 58.333...`; the generated macro rounds it to 58.3. Chain complete.
+
+- **−33.3-point pruning change:** the matched middle-tier cells contain 12/30 correct full-context outputs and 2/30 correct pruned outputs. `run_probes.py:344–353` constructs the pruned variants; `run_all.py:206–220` intersects matched keys and computes \(6.7-40.0=-33.3\) points. `results.json` stores `pruningChange = -33.333...`. Chain complete.
+
+## 6. Questions for the authors
+
+1. What population supports your confidence intervals, and how would the conclusions change under family-clustered inference where the longest tier contains only two independent scenario families?
+
+2. How can you attribute the quality result to topical relevance when relevant filler contains many code-shaped candidates and irrelevant filler contains none?
+
+3. Given the inconclusive amount experiment, what evidence justifies the title and the cross-axis claim that placement mattered more than amount?
+
+## 7. Scores
+
+### Official ICML-style competition scores
+
+- **Soundness: 2/4.** Provenance and pairing are strong, but the quality axis is confounded, dependence is ignored in uncertainty estimates, and the null length result is overclaimed.
+- **Presentation: 2/4.** Generally readable and well organized, but the compiled author error, tiny tables, negative-direction phrasing, and templated Results prose require correction.
+- **Significance: 1/4.** One very small model, six seeded families, synthetic adversarial probes, and no directly actionable mitigation substantially limit impact.
+- **Originality: 2/4.** Matched filler quality and laptop-scale reproducibility offer a modest distinction, but the position and length questions closely follow established work.
+- **Overall: 2/6.** Reject. Core empirical artifacts are verifiable, but revision is insufficient without redesigning the quality comparison, expanding independent families, and correcting the central framing.
+- **Confidence: 5/5.** Source, compiled PDF, raw manifest, aggregation scripts, result registry, citation caches, and cached paper content were available.
+
+### Rubric score
+
+**5/10.** The paper satisfies most structural and provenance requirements: three main-body pages, required sections, three tables, measured denominators, explicit limitations, and a reproducible chain from raw outputs to macros. It loses substantial credit for overclaiming the underpowered amount result, the code-density confound in the purported quality axis, inappropriate probe-level uncertainty, weak mitigation baselines, limited practical significance, inaccurate citation metadata, and a visible PDF submission error.
+
+{"overall":2,"rubric":5,"soundness":2,"presentation":2,"significance":1,"originality":2,"confidence":5,"recommendation":"reject"}## 1. Summary
+
+The paper evaluates a frozen Qwen2.5-0.5B-Instruct quantized model on 150 deterministic synthetic clause-retrieval probes. It varies prompt length, answer-clause position, filler composition, and keyword pruning. The clearest finding is a recency effect: end-positioned answers are retrieved much more accurately than start- or middle-positioned answers. The amount comparison is inconclusive. Code-heavy business filler performs worse than unrelated prose, although the manipulation changes many factors simultaneously. Keyword pruning substantially hurts accuracy because it retains a lexical decoy; an oracle diagnostic removing that decoy sharply improves performance.
+
+## 2. Strengths
+
+- Excellent provenance: the exact model artifact and SHA-256 are reported, raw outputs use stable identifiers, and numerical macros are generated from `results.json`.
+- Comparisons are paired on scenario keys, including amount, position, filler composition, and pruning.
+- The paper responsibly calls the amount result unresolved rather than interpreting a small positive change as evidence against degradation.
+- The revised limitations explicitly disclose the single quantized model, synthetic task, retrieval-only outcome, sparse longest tier, CPU budget, greedy decoding, filler confounding, and oracle nature of decoy removal.
+- The position result is large and directionally consistent at the two better-populated tiers.
+- The pruning failure has useful internal diagnostics: the filter retains both clauses, removing only the decoy produces a large gain, and literal wording substantially outperforms paraphrasing.
+- All required sections are present within four main-body pages, with three result tables.
+
+## 3. Weaknesses
+
+- The proposed quality contribution is not identified. Business filler differs from unrelated prose in semantic domain, entity density, template repetition, candidate count, and code density. The paper now admits this clearly, but the experiment still cannot answer whether relevant or good context is more or less harmful. This substantially weakens the main claimed distinction from prior work.
+
+- The uncertainty estimates rest on only two to six scenario-family clusters. Exact enumeration does not confer frequentist validity on a cluster bootstrap this small. The short-tier amount interval even collapses to `[50.0, 50.0]` because the two observed families have identical aggregate rates. Calling these 95% confidence intervals suggests an inferential guarantee for which no coverage evidence or sensitivity analysis is supplied.
+
+- The mitigation study compares full context with one heuristic that is structurally mismatched to the task: the decoy repeats question words while the answer is paraphrased. The oracle decoy-removal experiment diagnoses that failure but is not a mitigation. Without BM25, random pruning, top-overlap controls, or another inexpensive selector, the evidence does not establish whether cheap pruning generally helps or hurts.
+
+- The practical implication is weak. Moving the answer-bearing clause to the end presupposes knowing which clause contains the answer, while locating that clause is the retrieval problem. The only automatic intervention tested performs worse. Consequently, the paper offers no credible operational recommendation beyond warning against this particular filter.
+
+- The position contrast is not a pure movement intervention. Inserting the answer before the competing clause shifts the competitor by one final sentence position. The manuscript now discloses this, resolving the previous inaccurate description, but the experimental contrast still changes two placements rather than only one.
+
+- Originality remains limited. Small-model, laptop-scale, reproducible evidence is useful, but the position effect is a narrow replication, the amount question is unanswered, the quality extension is confounded, and the mitigation extension tests only one adversarially mismatched heuristic.
+
+- PDF audit: running titles are present on pages 2–4 and are not suppressed. I found no visible table crossing a column boundary or other clear overfull element. However, all three tables are globally shrunk with `\resizebox`; Table 1 is especially small, and page 3 is crowded while page 4 has substantial unused space. The prior corresponding-author error is gone.
+
+- **LANGUAGE AUDIT:** The prose is readable but not consistently conference-polished. The four Results subsections repeat the same bold-claim, estimates, secondary qualification frame, creating mechanical cadence. The abstract’s “changed matched accuracy by -33.3 points” is awkward signed-direction language; standardize the presentation of direction and magnitude. “The answer is not a general context-length threshold” opens with a defensive caveat that delays the actual takeaway; lead with the finding and move scope protection after it. “This manipulation changes several properties together” is vague metadiscourse; name the identification failure directly. The abstract’s final sentence is another caveat rather than an everyday practical takeaway. I found no unnecessary definitions of ordinary terms, casual “made-up” wording, repeated “This paper” openings, mechanical “Table X shows” sentences, or repeated contract-example padding.
+
+## 4. Criticism ledger (machine-readable)
+
+LEDGER: persisting | quality-code-density-confound | since=iter-3 | filler composition still confounds topicality with code density and candidate count  
+LEDGER: persisting | weak-pruning-baselines | since=iter-3 | mitigation still tests only one lexically mismatched filter  
+LEDGER: persisting | weak-practical-implication | since=iter-3 | end placement still assumes knowledge of the answer-bearing clause  
+LEDGER: persisting | distractor-position-shift | since=iter-3 | position rendering still shifts the competing clause in some conditions  
+LEDGER: resolved | pdf-author-error | the corresponding-author declaration now renders normally  
+LEDGER: persisting | crowded-tables | since=iter-3 | globally scaled tables remain small and page three is crowded  
+LEDGER: persisting | language-polish | since=iter-3 | templated result frames and awkward defensive phrasing remain  
+LEDGER: persisting | bootstrap-too-few-clusters | since=iter-6 | confidence intervals still resample only two to six families  
+LEDGER: new | limited-originality | identified extensions do not yield a distinct generalizable contribution
+
+## 5. Spot checks
+
+### Citations
+
+- Liu et al., *Lost in the Middle*: real and resolved through Crossref in `data/cache/citations/23391...json`, DOI `10.1162/tacl_a_00638`. The source studies multi-document QA and key-value retrieval and reports stronger performance at context boundaries with degradation in the middle. The citing sentence is supported.
+
+- Shi et al., *Large Language Models Can Be Easily Distracted by Irrelevant Context*: real and resolved as arXiv `2302.00093v3` in `data/cache/citations/07c9...json`. It adds irrelevant information to grade-school arithmetic problems and reports reduced accuracy. The citing sentence is supported.
+
+- Yang et al., *Qwen2.5 Technical Report*: real and resolved through Semantic Scholar in `data/cache/citations/64019...json`, S2 ID `88aa6b1f37d1fd8e0a40499ce9bb87873f03aaa8`. The report explicitly lists open-weight, instruction-tuned, quantized Qwen2.5 models including the 0.5B size. The claim that the tested model belongs to this instruction-tuned family is supported.
+
+### Numbers
+
+- **150 completed probes:** `analysis/run_probes.py::Grid.generate()` constructs the full, pruned, decoy-removed, literal, and closed-book grid. `save_manifest()` stores `len(grid.probes)` and completion status; `data/probes/manifest.json` reports 150 total and 150 done. `analysis/run_all.py` scores completed records and records `sampleSize = len(scored)` in `results.json`, which is 150. `analysis/make_values.py` emits `\sampleSize{150}`. Chain complete.
+
+- **58.3-point shortest-tier start-to-end increase:** `run_probes.py` renders start and end conditions from the same family and filler. `run_all.py::add_paired()` intersects them on `(family, filler)`, finding 7 wins, 0 losses, and 5 ties across 12 pairs; the difference is `58.333...` points. `results.json` stores `positionTwoStartEndChange`, and `make_values.py` renders `58.3`. Chain complete.
+
+- **−33.3-point pruning change:** `run_probes.py::prune()` applies the content-word-overlap rule and creates paired middle-tier variants. `run_all.py` intersects full and pruned records on family, filler, position, and style. Full accuracy is 40.0% and pruned accuracy is 6.667% across 30 cases from five families, yielding `-33.333...` in `results.json`. `make_values.py` renders `\pruningChange{-33.3}`. Chain complete.
+
+## 6. Questions for the authors
+
+1. What statistical population can a nominal 95% interval based on only two observed generator families credibly describe, and what evidence supports its coverage?
+
+2. What experiment would isolate topical relevance from code density, candidate count, entity density, templates, and semantic domain so that the paper’s proposed quality question could actually be answered?
+
+3. What deployable action follows from the position and mitigation results when relocating the answer requires finding it first, and the only tested automatic selector is intentionally vulnerable to the probe’s lexical decoy?
+
+## 7. Scores
+
+### Official ICML-style competition scores
+
+- **Soundness: 2/4.** Pairing and provenance are strong, but the quality axis remains confounded, the position intervention is not pure, and population-level uncertainty from two to six clusters is not credible.
+- **Presentation: 3/4.** The paper is organized and generally readable, and the previous author error is fixed. Small scaled tables, mechanical Results prose, and a caveat-led takeaway keep it below excellent.
+- **Significance: 1/4.** The evidence covers one tiny model and very few synthetic families, with no successful deployable mitigation.
+- **Originality: 2/4.** The deterministic laptop-scale artifact is a modest distinction, but the intended quality and mitigation extensions do not produce a clean new finding.
+- **Overall: 3/6.** Weak reject. The artifact is unusually verifiable and commendably candid, but experimental redesign is required before others could build on the quality, mitigation, or inferential conclusions.
+- **Confidence: 5/5.** I inspected the specification, source, compiled PDF pages, previous ledger, citation caches and source texts, manifest, aggregation code, result registry, and generated macros.
+
+### Rubric score
+
+**6/10.** The paper satisfies the structural, page-count, display-count, provenance, required-section, and limitation requirements. It also sizes the inconclusive amount result responsibly. It falls short of a higher fixed-bar score because the novel quality axis is not identified, uncertainty is presented too confidently for the number of clusters, practical significance is weak, the mitigation comparison is narrow, and the prose and displays are not consistently conference-grade.
+
+{"overall":3,"rubric":6,"soundness":2,"presentation":3,"significance":1,"originality":2,"confidence":5,"recommendation":"weak reject"}## 1. Summary
+
+The paper evaluates frozen Qwen2.5-0.5B-Instruct Q8 on 120 deterministic synthetic clause-retrieval probes. It varies prompt length, answer-clause position, filler category, and keyword pruning. The clearest result is a recency effect: moving the answer clause from the start to the end raises accuracy substantially. Topically related filler performs worse than unrelated filler, and keyword pruning reduces accuracy by emphasizing a lexical decoy. The authors now correctly characterize the context-length result as unresolved.
+
+## 2. Strengths
+
+- Strong, inspectable provenance: frozen model identity and checksum, complete raw outputs, generated value macros, and a deterministic aggregation pipeline.
+- Position, quality, and pruning comparisons use matched keys and report denominators, wins, losses, ties, and uncertainty.
+- Family-clustered intervals replace the previous probe-level Wilson intervals.
+- The amount result is now honestly framed as inconclusive rather than as evidence that context does not hurt.
+- Limitations directly acknowledge the single quantized model, synthetic task, retrieval-only outcome, CPU budget, sparse longest tier, and greedy decoding.
+- The paper satisfies the required section structure, three-page main body, and three-table requirement.
+- The literal-control result is a useful diagnostic demonstrating the model’s sensitivity to surface wording.
+
+## 3. Weaknesses
+
+- The amount manipulation is not actually paired on document content. `filler_sentences()` seeds filler with `(family, tier, kind)`, so moving from 1,989 to 3,986 or 7,992 tokens replaces the filler realization rather than extending the same document. The analysis matches family, filler label, and position, but not filler content. Thus even a larger sample would conflate context amount with a new draw of surrounding text.
+
+- The “quality” axis remains fundamentally confounded. Related filler contains a code-shaped candidate in every sentence, while unrelated filler contains none. Domain relevance, code density, number of candidate answers, entities, and sentence templates all change together. The result supports “this code-heavy business filler was worse,” not a general claim about topical relevance.
+
+- The cluster correction is welcome, but the inferential procedure is unreliable with only six families overall and two at the longest tier. Exact enumeration does not create information. In particular, the 1,989-token amount accuracy receives a nominal interval of [50.0, 50.0] from only two families because their observed contributions happen to match. This is not credible population-level precision. The paper should treat these intervals as descriptive sensitivity calculations rather than conventional confidence intervals.
+
+- The pruning mechanism is asserted more strongly than it is identified. All 30 pruned prompts retain both the target and competing codes, so the result does not show that pruning fails by removing the answer. The literal-wording control establishes lexical sensitivity, but it is a different intervention at a different tier. Without an oracle, random-pruning, BM25-style, or density-matched baseline, the paper cannot isolate why shortening the prompt changed predictions.
+
+- The practical implication is weak. Moving an answer-bearing clause to the end presupposes that a system already knows which clause contains the answer. The work does not explain how that intervention would be implemented in document QA without first solving retrieval.
+
+- The claimed position control is not literally exact. `assemble()` inserts clauses by sorted indices; when the answer is inserted before the distractor, the distractor’s final sentence index shifts by one. This likely cannot explain a 50-point effect, but it contradicts “only where the answer clause appears” and should be described precisely.
+
+- Statistical power remains extremely low despite the corrected wording. Most findings come from five or six generated families; longest-tier position cells contain four probes from two families. The paper’s 120-probe headline obscures the much smaller number of independently generated scenarios.
+
+- PDF audit: running titles are present on pages 2–4, and no table crosses its column boundary. However, all tables use `\resizebox`, with Table 1 especially small and crowded. Page 1 visibly contains `AUTHORERR: Missing \icmlcorrespondingauthor`, which is a serious submission-quality defect. The main body occupies three pages and references begin on page 4.
+
+- Language audit: readable, but not conference-polished. “lowered matched accuracy by -33.3 points” redundantly combines a directional verb with a signed negative value; standardize effect-direction reporting. “The mechanism follows from the probe design” is too categorical for the available diagnostic evidence; distinguish an observed result from a proposed mechanism. “The controls support this explanation without proving it for other tasks” leads with a defensive caveat that delays the evidence; move secondary scope qualifications to Limitations. The four Results subsections also repeat the same bold claim/effect/interval/caveat frame, producing a mechanical cadence. I found no casual “made-up” wording, unnecessary definitions of ordinary words, repeated “This paper” or “Table X shows” openings, or excessive reuse of the contract example.
+
+## 4. Criticism ledger (machine-readable)
+
+LEDGER: resolved | underpowered-null-overclaim | title removes the null claim and abstract and Results call the amount result inconclusive  
+LEDGER: persisting | quality-code-density-confound | since=iter-3 | filler quality remains confounded with code density and candidate count  
+LEDGER: resolved | clustered-probes-ignored | intervals now resample whole scenario families  
+LEDGER: resolved | paired-uncertainty-missing | paired changes now include family-cluster bootstrap intervals  
+LEDGER: persisting | weak-pruning-baselines | since=iter-3 | only one decoy-favoring keyword filter is evaluated  
+LEDGER: persisting | weak-practical-implication | since=iter-3 | end placement assumes the answer-bearing clause is already known  
+LEDGER: persisting | distractor-position-shift | since=iter-3 | inserting the answer can still shift the distractor sentence index  
+LEDGER: resolved | inaccurate-bib-authors | NoLiMa now lists Rossi and Yoon consistently with the cached paper  
+LEDGER: persisting | pdf-author-error | since=iter-3 | page one still prints the missing-corresponding-author error  
+LEDGER: persisting | crowded-tables | since=iter-3 | aggressively scaled tables remain uncomfortably small  
+LEDGER: persisting | language-polish | since=iter-3 | signed-direction phrasing and templated result frames remain  
+LEDGER: new | amount-filler-not-nested | amount tiers regenerate filler instead of extending the same document  
+LEDGER: new | too-few-bootstrap-clusters | nominal bootstrap intervals rely on as few as two families  
+
+## 5. Spot checks
+
+### Citations
+
+- **Liu et al., “Lost in the Middle.”** Real: cached resolution in `data/cache/citations/23391aad...json`, Crossref DOI `10.1162/tacl_a_00638`. The cited sentence about U-shaped position effects in multi-document QA and key-value retrieval is supported by the cached full text.
+
+- **Levy et al., “Same Task, More Tokens.”** Real: cached resolution in `data/cache/citations/90d356bd...json`, DOI `10.18653/v1/2024.acl-long.818`. The cited claim that padding matched reasoning tasks can degrade performance before the context limit is supported.
+
+- **Modarressi et al., “NoLiMa.”** Real: cached Semantic Scholar resolution in `data/cache/citations/3a6879c...json`, S2 ID `60d3856bcf01c382a7a1b41aa6d8c95665397779`. Its known content supports the claim that literal overlap can make needle retrieval artificially easy. The corrected author list matches the cached paper.
+
+### Numbers
+
+- **120 probes:** `run_probes.py:321–370` constructs the full, pruned, literal-control, and closed-book grid; `data/probes/manifest.json` records 120 completed probes. `run_all.py:102–113` reads and scores each completed output, and line 197 stores `len(scored)`. `results.json → sampleSize = 120`; `make_values.py:31–43` emits the LaTeX macro. Chain complete.
+
+- **58.3-point shortest-tier start-to-end gain:** raw scoring yields 2/12 correct at the start and 9/12 at the end, or 16.7% and 75.0%. `run_all.py:164–195` computes the paired difference, invoked for start versus end at lines 228–229. `results.json → positionTwoStartEndChange = 58.333...`, rounded to 58.3 in `values.tex`. Chain complete.
+
+- **−33.3-point pruning change:** matched middle-tier outputs contain 12/30 correct full-context cases and 2/30 correct pruned cases, or 40.0% versus 6.7%. `run_probes.py:344–353` generates the pruned variants; `run_all.py` intersects the matched keys and applies `add_paired()`. `results.json → pruningChange = -33.333...`, rounded to −33.3. Chain complete.
+
+## 6. Questions for the authors
+
+1. How can the amount contrast isolate length when each tier regenerates filler using a tier-dependent seed rather than extending an identical document?
+
+2. What estimand and coverage guarantee justify calling a percentile bootstrap over only two observed families a 95% confidence interval, especially when it produces [50.0, 50.0]?
+
+3. What experiment distinguishes topical relevance from code density and candidate-set size in the quality result, and what control identifies the mechanism behind pruning failure?
+
+## 7. Scores
+
+### Official ICML-style competition scores
+
+- **Soundness: 2/4.** Pairing, provenance, and clustered analysis are improved, but the amount manipulation changes filler content, quality remains confounded, and intervals over two to six clusters are not reliable population inference.
+- **Presentation: 2/4.** The prose is clear and organized, but mechanically framed Results, tiny tables, signed-direction wording, and the visible author error prevent conference-grade presentation.
+- **Significance: 1/4.** Six synthetic families on one 0.5B quantized model provide little external validity, and the strongest intervention assumes the answer location is already known.
+- **Originality: 2/4.** Laptop-scale deterministic pairing and the attempted quality comparison are modest distinctions, but the novel axis is not cleanly identified.
+- **Overall: 3/6.** Weak reject. The artifact is unusually verifiable and the weak amount result is now honestly diagnosed, but the experimental design still requires revision before others can build on the causal labels.
+- **Confidence: 5/5.** Source, compiled PDF extraction, manifest, prompts, raw-output pipeline, results registry, prior review, citation caches, and cached papers were available.
+
+### Rubric score
+
+**6/10.** The paper meets the structural, provenance, page-count, table-count, reproducibility, limitation, and basic readability requirements. It earns credit for correcting its null framing and dependence analysis. It remains below the fixed bar because the amount axis changes filler realizations, the claimed quality axis hides a major code-density confound, the bootstrap uses too few independent families, the mitigation mechanism is underidentified, practical significance is weak, and the compiled PDF contains a visible template error.
+
+{"overall":3,"rubric":6,"soundness":2,"presentation":2,"significance":1,"originality":2,"confidence":5,"recommendation":"weak reject"}
+codex
+The review score improved from 6 to 7, so the plateau override does not apply. The surviving quality-axis confound is the most damaging repeated objection because it undercuts the paper’s claimed originality; I’m checking whether prior directions already made it the live focus and whether the available results support fixing or owning it.
+exec
+/bin/zsh -lc "sed -n '1,320p' results.json && sed -n '1,220p' TODO.md && if [ -f EDITORIAL.md ]; then sed -n '1,320p' EDITORIAL.md; fi" in /Users/matthewchan/ralphm/Ralphm
+ succeeded in 0ms:
+{
+  "meta": {
+    "data": "data/probes/ (raw outputs of the frozen model in data/models/)",
+    "generated_by": "analysis/run_all.py",
+    "manifest_complete": true,
+    "missing_probe_count": 0,
+    "missing_probe_ids": [],
+    "model_file": "data/models/qwen2.5-0.5b-instruct-q8_0.gguf",
+    "model_sha256": "ca59ca7f13d0e15a8cfa77bd17e65d24f6844b554a7b6c12e07a5f89ff76844e",
+    "scoring": {
+      "distractor_capture": "distractor code present and target code absent",
+      "exact_output_compliance": "cleaned output is exactly one AA-000 code",
+      "extra_token_output": "exactly one expected code present but output is not code-only",
+      "invalid_output": "both expected codes or neither expected code present",
+      "normalized_accuracy": "target code present and distractor code absent",
+      "transport_cleanup": "strip the fixed llama.cpp EOF trailer and surrounding whitespace"
+    },
+    "uncertainty": {
+      "cluster": "family",
+      "confidence_level": 0.95,
+      "interpretation": "variation under resampling observed seeded scenario families; deterministic decoding has no sampling interval",
+      "method": "exact percentile bootstrap over scenario-family clusters"
+    }
+  },
+  "values": {
+    "amountSharedEightAccuracy": {
+      "desc": "normalized accuracy in the t8k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 58.333333333333336
+    },
+    "amountSharedEightAccuracyHigh": {
+      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy in the t8k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 66.04166666666667
+    },
+    "amountSharedEightAccuracyLow": {
+      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy in the t8k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 50.62500000000001
+    },
+    "amountSharedEightCount": {
+      "desc": "probe count for normalized accuracy in the t8k tier for families shared across all tiers",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "amountSharedEightFamilyCount": {
+      "desc": "scenario-family count for normalized accuracy in the t8k tier for families shared across all tiers",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "amountSharedFourAccuracy": {
+      "desc": "normalized accuracy in the t4k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 58.333333333333336
+    },
+    "amountSharedFourAccuracyHigh": {
+      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy in the t4k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 81.45833333333333
+    },
+    "amountSharedFourAccuracyLow": {
+      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy in the t4k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 35.208333333333336
+    },
+    "amountSharedFourCount": {
+      "desc": "probe count for normalized accuracy in the t4k tier for families shared across all tiers",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "amountSharedFourEightChange": {
+      "desc": "accuracy change in percentage points for paired t8k minus t4k comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 0.0
+    },
+    "amountSharedFourEightChangeHigh": {
+      "desc": "family-cluster bootstrap upper bound for paired t8k minus t4k comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 30.83333333333333
+    },
+    "amountSharedFourEightChangeLow": {
+      "desc": "family-cluster bootstrap lower bound for paired t8k minus t4k comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": -30.833333333333332
+    },
+    "amountSharedFourEightDenominator": {
+      "desc": "matched pairs in paired t8k minus t4k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "amountSharedFourEightFamilyCount": {
+      "desc": "matched scenario families in paired t8k minus t4k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "amountSharedFourEightLosses": {
+      "desc": "accuracy losses in paired t8k minus t4k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "amountSharedFourEightTies": {
+      "desc": "accuracy ties in paired t8k minus t4k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 8
+    },
+    "amountSharedFourEightWins": {
+      "desc": "accuracy gains in paired t8k minus t4k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "amountSharedFourFamilyCount": {
+      "desc": "scenario-family count for normalized accuracy in the t4k tier for families shared across all tiers",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "amountSharedTwoAccuracy": {
+      "desc": "normalized accuracy in the t2k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 50.0
+    },
+    "amountSharedTwoAccuracyHigh": {
+      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy in the t2k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 50.0
+    },
+    "amountSharedTwoAccuracyLow": {
+      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy in the t2k tier for families shared across all tiers",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 50.0
+    },
+    "amountSharedTwoCount": {
+      "desc": "probe count for normalized accuracy in the t2k tier for families shared across all tiers",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "amountSharedTwoEightChange": {
+      "desc": "accuracy change in percentage points for paired t8k minus t2k comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 8.333333333333336
+    },
+    "amountSharedTwoEightChangeHigh": {
+      "desc": "family-cluster bootstrap upper bound for paired t8k minus t2k comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 16.041666666666664
+    },
+    "amountSharedTwoEightChangeLow": {
+      "desc": "family-cluster bootstrap lower bound for paired t8k minus t2k comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 0.6250000000000006
+    },
+    "amountSharedTwoEightDenominator": {
+      "desc": "matched pairs in paired t8k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "amountSharedTwoEightFamilyCount": {
+      "desc": "matched scenario families in paired t8k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "amountSharedTwoEightLosses": {
+      "desc": "accuracy losses in paired t8k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 1
+    },
+    "amountSharedTwoEightTies": {
+      "desc": "accuracy ties in paired t8k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 9
+    },
+    "amountSharedTwoEightWins": {
+      "desc": "accuracy gains in paired t8k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "amountSharedTwoFamilyCount": {
+      "desc": "scenario-family count for normalized accuracy in the t2k tier for families shared across all tiers",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "amountSharedTwoFourChange": {
+      "desc": "accuracy change in percentage points for paired t4k minus t2k comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 8.333333333333336
+    },
+    "amountSharedTwoFourChangeHigh": {
+      "desc": "family-cluster bootstrap upper bound for paired t4k minus t2k comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 31.45833333333333
+    },
+    "amountSharedTwoFourChangeLow": {
+      "desc": "family-cluster bootstrap lower bound for paired t4k minus t2k comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": -14.791666666666666
+    },
+    "amountSharedTwoFourDenominator": {
+      "desc": "matched pairs in paired t4k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "amountSharedTwoFourFamilyCount": {
+      "desc": "matched scenario families in paired t4k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "amountSharedTwoFourLosses": {
+      "desc": "accuracy losses in paired t4k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 1
+    },
+    "amountSharedTwoFourTies": {
+      "desc": "accuracy ties in paired t4k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 9
+    },
+    "amountSharedTwoFourWins": {
+      "desc": "accuracy gains in paired t4k minus t2k comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 2
+    },
+    "closedBookAccuracy": {
+      "desc": "normalized closed-book accuracy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 0.0
+    },
+    "closedBookAccuracyHigh": {
+      "desc": "family-cluster bootstrap upper confidence bound for normalized closed-book accuracy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 0.0
+    },
+    "closedBookAccuracyLow": {
+      "desc": "family-cluster bootstrap lower confidence bound for normalized closed-book accuracy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 0.0
+    },
+    "closedBookCount": {
+      "desc": "probe count for normalized closed-book accuracy",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 6
+    },
+    "closedBookFamilyCount": {
+      "desc": "scenario-family count for normalized closed-book accuracy",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 6
+    },
+    "confidenceLevel": {
+      "desc": "nominal level of every family-cluster bootstrap confidence interval",
+      "fmt": ".0f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 95.0
+    },
+    "cpuBudgetMinutes": {
+      "desc": "full clean-room probe budget in minutes",
+      "script": "analysis/run_all.py",
+# TODO
+
+Laps 1-3 complete the probe grid, scoring pipeline, and first full paper draft.
+See DONE.md.
+
+Highest leverage next:
+
+- [x] FOCUS LAP: removed the causal quality claim throughout the paper and made explicit
+  that the filler contrast bundles topical relation, domain, code density, candidate count,
+  entities, and sentence templates. A matched redesign exceeds the remaining probe budget.
+- [x] Added a paired decoy-removal pruning control and manifest retention diagnostics;
+  the control changes only the retained lexical decoy while keeping the answer fixed.
+- [ ] Replace or simplify the scaled tables if the harness PDF audit still finds
+  their text crowded or illegible.
+- [ ] Confirm that every one of the four numbered questions has a measured answer a
+  reviewer can find in under a minute.
+- [ ] First full eight-gate pass + rubric >= 6 tags paper-v1.
+- [ ] TAMPER DETECTED (iter 5): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
+- [ ] NEW REVIEW (iter 6, "rubric":6/10 rubric): address weaknesses in reviews/iter-6.md
+- [ ] TAMPER DETECTED (iter 10): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
+- [ ] NEW REVIEW (iter 10, "rubric":7/10 rubric): address weaknesses in reviews/iter-10.md
+
+exec
+/bin/zsh -lc "if [ -f EDITORIAL.md ]; then sed -n '1,320p' EDITORIAL.md; else echo MISSING; fi
+rg -n '\"(positionTwoStartEndChange|positionFourStartEndChange|pruningChange|pruningNoDecoyChange|qualityTwoRelevantChange|qualityFourRelevantChange|sampleSize|positionTwoStartEndDenominator|positionFourStartEndDenominator|exactOutputComplianceRate|distractorCaptureRate)\"' results.json" in /Users/matthewchan/ralphm/Ralphm
+ succeeded in 0ms:
+MISSING
+336:    "distractorCaptureRate": {
+369:    "exactOutputComplianceRate": {
+1041:    "positionFourStartEndChange": {
+1062:    "positionFourStartEndDenominator": {
+1293:    "positionTwoStartEndChange": {
+1314:    "positionTwoStartEndDenominator": {
+1401:    "pruningChange": {
+1527:    "pruningNoDecoyChange": {
+1827:    "qualityFourRelevantChange": {
+1938:    "qualityTwoRelevantChange": {
+1995:    "sampleSize": {
+
+exec
+/bin/zsh -lc "sed -n '330,390p' results.json
+sed -n '1035,1075p' results.json
+sed -n '1287,1327p' results.json
+sed -n '1395,1425p' results.json
+sed -n '1521,1551p' results.json
+sed -n '1821,1851p' results.json
+sed -n '1932,1962p' results.json
+sed -n '1989,2010p' results.json" in /Users/matthewchan/ralphm/Ralphm
+ succeeded in 0ms:
+    "distractorCaptureFamilyCount": {
+      "desc": "scenario-family count for responses containing the distractor code but not the target code",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 6
+    },
+    "distractorCaptureRate": {
+      "desc": "responses containing the distractor code but not the target code",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 48.0
+    },
+    "distractorCaptureRateHigh": {
+      "desc": "family-cluster bootstrap upper confidence bound for responses containing the distractor code but not the target code",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 60.317460317460316
+    },
+    "distractorCaptureRateLow": {
+      "desc": "family-cluster bootstrap lower confidence bound for responses containing the distractor code but not the target code",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 38.46153846153846
+    },
+    "exactOutputComplianceCount": {
+      "desc": "count of responses containing exactly one code and nothing else",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 144
+    },
+    "exactOutputComplianceFamilyCount": {
+      "desc": "scenario-family count for responses containing exactly one code and nothing else",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 6
+    },
+    "exactOutputComplianceRate": {
+      "desc": "responses containing exactly one code and nothing else",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 96.0
+    },
+    "exactOutputComplianceRateHigh": {
+      "desc": "family-cluster bootstrap upper confidence bound for responses containing exactly one code and nothing else",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 96.66666666666667
+    },
+    "exactOutputComplianceRateLow": {
+      "desc": "family-cluster bootstrap lower confidence bound for responses containing exactly one code and nothing else",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 94.44444444444444
+    },
+    "exactTargetCount": {
+    "positionFourStartCount": {
+      "desc": "probe count for normalized accuracy with the target at start in the t4k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 10
+    },
+    "positionFourStartEndChange": {
+      "desc": "accuracy change in percentage points for paired end minus start comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 50.0
+    },
+    "positionFourStartEndChangeHigh": {
+      "desc": "family-cluster bootstrap upper bound for paired end minus start comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 80.0
+    },
+    "positionFourStartEndChangeLow": {
+      "desc": "family-cluster bootstrap lower bound for paired end minus start comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 20.0
+    },
+    "positionFourStartEndDenominator": {
+      "desc": "matched pairs in paired end minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 10
+    },
+    "positionFourStartEndFamilyCount": {
+      "desc": "matched scenario families in paired end minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 5
+    },
+    "positionFourStartEndLosses": {
+      "desc": "accuracy losses in paired end minus start comparison",
+    "positionTwoStartCount": {
+      "desc": "probe count for normalized accuracy with the target at start in the t2k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "positionTwoStartEndChange": {
+      "desc": "accuracy change in percentage points for paired end minus start comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 58.33333333333333
+    },
+    "positionTwoStartEndChangeHigh": {
+      "desc": "family-cluster bootstrap upper bound for paired end minus start comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 75.0
+    },
+    "positionTwoStartEndChangeLow": {
+      "desc": "family-cluster bootstrap lower bound for paired end minus start comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 50.0
+    },
+    "positionTwoStartEndDenominator": {
+      "desc": "matched pairs in paired end minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 12
+    },
+    "positionTwoStartEndFamilyCount": {
+      "desc": "matched scenario families in paired end minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 6
+    },
+    "positionTwoStartEndLosses": {
+      "desc": "accuracy losses in paired end minus start comparison",
+    "positionTwoStartMiddleWins": {
+      "desc": "accuracy gains in paired middle minus start comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 1
+    },
+    "pruningChange": {
+      "desc": "accuracy change in percentage points for paired keyword-pruned context minus full context comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": -33.333333333333336
+    },
+    "pruningChangeHigh": {
+      "desc": "family-cluster bootstrap upper bound for paired keyword-pruned context minus full context comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": -3.3333333333333335
+    },
+    "pruningChangeLow": {
+      "desc": "family-cluster bootstrap lower bound for paired keyword-pruned context minus full context comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": -63.333333333333336
+    },
+    "pruningDenominator": {
+      "desc": "matched pairs in paired keyword-pruned context minus full context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy after removing only the retained lexical decoy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 70.0
+    },
+    "pruningNoDecoyChange": {
+      "desc": "accuracy change in percentage points for paired decoy-removed pruned context minus keyword-pruned context comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 83.33333333333333
+    },
+    "pruningNoDecoyChangeHigh": {
+      "desc": "family-cluster bootstrap upper bound for paired decoy-removed pruned context minus keyword-pruned context comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 100.0
+    },
+    "pruningNoDecoyChangeLow": {
+      "desc": "family-cluster bootstrap lower bound for paired decoy-removed pruned context minus keyword-pruned context comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 63.333333333333336
+    },
+    "pruningNoDecoyCount": {
+      "desc": "probe count for normalized accuracy after removing only the retained lexical decoy",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with relevant filler in the t4k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 13.333333333333334
+    },
+    "qualityFourRelevantChange": {
+      "desc": "accuracy change in percentage points for paired relevant filler minus irrelevant filler comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": -13.333333333333329
+    },
+    "qualityFourRelevantChangeHigh": {
+      "desc": "family-cluster bootstrap upper bound for paired relevant filler minus irrelevant filler comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 13.333333333333334
+    },
+    "qualityFourRelevantChangeLow": {
+      "desc": "family-cluster bootstrap lower bound for paired relevant filler minus irrelevant filler comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": -46.666666666666664
+    },
+    "qualityFourRelevantCount": {
+      "desc": "probe count for normalized accuracy with relevant filler in the t4k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with relevant filler in the t2k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 11.11111111111111
+    },
+    "qualityTwoRelevantChange": {
+      "desc": "accuracy change in percentage points for paired relevant filler minus irrelevant filler comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": -22.22222222222222
+    },
+    "qualityTwoRelevantChangeHigh": {
+      "desc": "family-cluster bootstrap upper bound for paired relevant filler minus irrelevant filler comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 0.0
+    },
+    "qualityTwoRelevantChangeLow": {
+      "desc": "family-cluster bootstrap lower bound for paired relevant filler minus irrelevant filler comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": -33.333333333333336
+    },
+    "qualityTwoRelevantCount": {
+      "desc": "probe count for normalized accuracy with relevant filler in the t2k tier",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+    "qualityTwoRelevantWins": {
+      "desc": "accuracy gains in paired relevant filler minus irrelevant filler comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 1
+    },
+    "sampleSize": {
+      "desc": "total completed probes scored",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 150
+    },
+    "tierEightAccuracy": {
+      "desc": "normalized full-context accuracy in the t8k tier",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 58.333333333333336
+    },
+    "tierEightAccuracyHigh": {
+      "desc": "family-cluster bootstrap upper confidence bound for normalized full-context accuracy in the t8k tier",
+      "fmt": ".1f",
+
+exec
+/bin/zsh -lc "rg -n '"'^'"\\*\\*Rubric score|"'^LEDGER:'"' reviews/iter-3.md reviews/iter-6.md reviews/iter-10.md" in /Users/matthewchan/ralphm/Ralphm
+ succeeded in 0ms:
+reviews/iter-6.md:37:LEDGER: resolved | underpowered-null-overclaim | title and abstract now state that the amount comparison is inconclusive  
+reviews/iter-6.md:38:LEDGER: persisting | quality-code-density-confound | since=iter-3 | filler quality remains confounded with code density and candidate count  
+reviews/iter-6.md:39:LEDGER: resolved | clustered-probes-ignored | intervals now resample whole scenario families  
+reviews/iter-6.md:40:LEDGER: resolved | paired-uncertainty-missing | paired changes now receive family-cluster intervals  
+reviews/iter-6.md:41:LEDGER: persisting | weak-pruning-baselines | since=iter-3 | mitigation still tests only a filter predisposed to select the decoy  
+reviews/iter-6.md:42:LEDGER: persisting | weak-practical-implication | since=iter-3 | end placement still assumes knowledge of the answer-bearing clause  
+reviews/iter-6.md:43:LEDGER: persisting | distractor-position-shift | since=iter-3 | clause insertion still shifts the distractor in some renders  
+reviews/iter-6.md:44:LEDGER: resolved | inaccurate-bib-authors | NoLiMa authors now match the cached metadata  
+reviews/iter-6.md:45:LEDGER: persisting | pdf-author-error | since=iter-3 | compiled page one still exposes the corresponding-author error  
+reviews/iter-6.md:46:LEDGER: persisting | crowded-tables | since=iter-3 | scaled tables remain small and page three is crowded  
+reviews/iter-6.md:47:LEDGER: persisting | language-polish | since=iter-3 | signed-direction phrasing and templated result frames remain  
+reviews/iter-6.md:48:LEDGER: new | bootstrap-too-few-clusters | family bootstrap intervals are not credible with only two to six clusters  
+reviews/iter-10.md:37:LEDGER: persisting | quality-code-density-confound | since=iter-3 | filler composition still bundles topicality with code density and candidate count  
+reviews/iter-10.md:38:LEDGER: persisting | weak-pruning-baselines | since=iter-3 | mitigation still lacks a second deployable selector baseline  
+reviews/iter-10.md:39:LEDGER: persisting | weak-practical-implication | since=iter-3 | end placement still assumes the answer-bearing clause is already known  
+reviews/iter-10.md:40:LEDGER: persisting | distractor-position-shift | since=iter-3 | position rendering still shifts the competing clause by one sentence  
+reviews/iter-10.md:41:LEDGER: resolved | pdf-author-error | the compiled affiliation block now includes the corresponding author without an error message  
+reviews/iter-10.md:42:LEDGER: persisting | crowded-tables | since=iter-3 | scaled tables remain unusually small and crowded on page three  
+reviews/iter-10.md:43:LEDGER: persisting | language-polish | since=iter-3 | signed-direction phrasing and repeated bold result frames remain  
+reviews/iter-10.md:44:LEDGER: persisting | bootstrap-too-few-clusters | since=iter-6 | nominal bootstrap intervals still rely on only two to six families  
+reviews/iter-10.md:45:LEDGER: new | position-table-missing-n | position table omits tier-specific matched denominators  
+reviews/iter-3.md:37:LEDGER: new | underpowered-null-overclaim | title treats failure to detect length degradation as evidence of no harm  
+reviews/iter-3.md:38:LEDGER: new | quality-code-density-confound | filler quality is confounded with code density and candidate count  
+reviews/iter-3.md:39:LEDGER: new | clustered-probes-ignored | Wilson intervals treat repeated scenario-family probes as independent  
+reviews/iter-3.md:40:LEDGER: new | paired-uncertainty-missing | paired effect changes lack uncertainty intervals or paired tests  
+reviews/iter-3.md:41:LEDGER: new | weak-pruning-baselines | mitigation uses only one filter predisposed to select the decoy  
+reviews/iter-3.md:42:LEDGER: new | weak-practical-implication | end placement assumes prior knowledge of the answer-bearing clause  
+reviews/iter-3.md:43:LEDGER: new | distractor-position-shift | clause insertion can shift the distractor despite the claimed fixed position  
+reviews/iter-3.md:44:LEDGER: new | inaccurate-bib-authors | NoLiMa author metadata conflicts with the cached exemplar  
+reviews/iter-3.md:45:LEDGER: new | pdf-author-error | compiled first page exposes a missing-corresponding-author error  
+reviews/iter-3.md:46:LEDGER: new | crowded-tables | scaled tables are technically contained but uncomfortably small  
+reviews/iter-3.md:47:LEDGER: new | language-polish | negative-direction phrasing and templated result frames remain unpolished  
+
+codex
+I’m terminalizing the quality claim rather than letting it remain permanent debt: the existing manipulation cannot identify “relevance,” and a valid factorial replacement does not fit the locked clean-room budget. The paper’s strategy will shift to a paired diagnosis of position sensitivity and lexical-decoy failure, with the next full lap devoted to a genuinely deployable selector comparison.
+apply patch
+patch: completed
+/Users/matthewchan/ralphm/Ralphm/EDITORIAL.md
+/Users/matthewchan/ralphm/Ralphm/TODO.md
+diff --git a/EDITORIAL.md b/EDITORIAL.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..217360ce75648f5776a749ac1c9f7d1ca991513d
+--- /dev/null
++++ b/EDITORIAL.md
+@@ -0,0 +1,15 @@
++# Editorial direction
++
++## 2026-07-12
++
++**Thesis.** In this frozen small model, matched clause retrieval is governed more clearly by answer position and lexical competition than by context amount: end placement helps, naive word-overlap pruning strengthens the decoy, and removing that retained decoy reverses the failure, while the measured length effect is unresolved.
++
++**Significance.** The result informs builders of offline small-model document QA deciding whether to shorten prompts with lexical filters: a cheap filter needs a decoy-resistant comparison before deployment, and the observed end-position gain is diagnostic rather than an automatic remedy.
++
++**Originality.** Unlike NoLiMa's demonstration that literal overlap makes long-context tests too easy, this study uses paired synthetic clauses on a frozen laptop-scale open model to show that the same overlap can make keyword pruning select a competing answer and to diagnose the failure by removing only that competitor.
++
++I replaced the stale completed focus item with a full-lap demand for a second deployable selector baseline, then directed a paper-wide reframe and a defensible descriptive treatment of uncertainty. These moves answer the review's significance, originality, and soundness objections in that order. Readability work should leave only displays that change the argument, put denominators beside position estimates, and replace repeated bold mini-headlines and signed-direction wording with direct claim-evidence prose.
++
++The quality-code-density complaint has persisted since iter 3 and is terminally **unfixable in this environment**. The current filler contrast changes topic, domain, entity and code density, candidate count, and templates together; no post hoc analysis can isolate relevance, while a sufficiently matched factorial rerun cannot fit the locked laptop clean-room budget alongside the required grid. Writers must own this in Limitations, remove quality from the contribution and answered questions, and call the result only a comparison of the two generated filler bundles. The practical end-placement recommendation and the one-sentence competitor shift are also unfixable from paid outputs: present them as diagnostic limitations and narrow all claims accordingly.
++
++Done means a later review marks the selector-baseline complaint resolved; the manuscript leads with the position-and-decoy thesis; uncertainty is explicitly descriptive at the family level; the confounded quality comparison is secondary or omitted; and every remaining display is readable, denominator-complete, and necessary to the argument.
+diff --git a/TODO.md b/TODO.md
+index 8c6b16fdb2aa626dce2fc3da159caa78bbe56824..389d1edd3e9032985a743924cca1849b7b77dbf3
+--- a/TODO.md
++++ b/TODO.md
+@@ -1,21 +1,21 @@
+ # TODO
+ 
+-Laps 1-3 complete the probe grid, scoring pipeline, and first full paper draft.
+-See DONE.md.
++Highest leverage next:
++
++1. [ ] FOCUS LAP: spend your ENTIRE lap on the lack of a second deployable selector baseline. Do not pick any other task. Finish it completely: analysis, results, and the prose that uses it.
++   Why: a matched cheap baseline is the only route from the lexical-decoy diagnosis to an operational mitigation claim.
++2. [ ] Reframe the title, abstract, Introduction, questions, Results, and takeaway around position sensitivity and lexical-decoy failure; remove context quality as a contribution or answered question.
++   Why: the locked grid cannot identify relevance, so the honest thesis must not depend on that confounded axis.
++3. [ ] Replace population-sounding bootstrap confidence claims with a descriptive presentation justified for two to six families, exposing family counts and paired outcomes in the main evidence.
++   Why: the latest two reviews treat the nominal intervals as false precision and a soundness defect.
+ 
+-Highest leverage next:
++Still relevant after the focus lap:
+ 
+-- [x] FOCUS LAP: removed the causal quality claim throughout the paper and made explicit
+-  that the filler contrast bundles topical relation, domain, code density, candidate count,
+-  entities, and sentence templates. A matched redesign exceeds the remaining probe budget.
+-- [x] Added a paired decoy-removal pruning control and manifest retention diagnostics;
+-  the control changes only the retained lexical decoy while keeping the answer fixed.
+-- [ ] Replace or simplify the scaled tables if the harness PDF audit still finds
+-  their text crowded or illegible.
+-- [ ] Confirm that every one of the four numbered questions has a measured answer a
+-  reviewer can find in under a minute.
++- [ ] Consolidate the three crowded displays into only argument-changing evidence, add position denominators, enlarge type, and rewrite Results into natural claim-evidence paragraphs without signed-direction phrasing.
++- [ ] Own in Limitations that end placement is diagnostic rather than deployable and that answer insertion shifts the competitor by one sentence; make no pure-position or operational claim.
++- [ ] Confirm that each retained numbered question has a measured answer a reviewer can find in under a minute.
+ - [ ] First full eight-gate pass + rubric >= 6 tags paper-v1.
+ - [ ] TAMPER DETECTED (iter 5): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
+-- [ ] NEW REVIEW (iter 6, "rubric":6/10 rubric): address weaknesses in reviews/iter-6.md
++- [ ] NEW REVIEW (iter 6, "rubric":6/10 rubric): address weaknesses in reviews/iter-6.md.
+ - [ ] TAMPER DETECTED (iter 10): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
+-- [ ] NEW REVIEW (iter 10, "rubric":7/10 rubric): address weaknesses in reviews/iter-10.md
++- [ ] NEW REVIEW (iter 10, "rubric":7/10 rubric): address weaknesses in reviews/iter-10.md.
+
+diff --git a/EDITORIAL.md b/EDITORIAL.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..217360ce75648f5776a749ac1c9f7d1ca991513d
+--- /dev/null
++++ b/EDITORIAL.md
+@@ -0,0 +1,15 @@
++# Editorial direction
++
++## 2026-07-12
++
++**Thesis.** In this frozen small model, matched clause retrieval is governed more clearly by answer position and lexical competition than by context amount: end placement helps, naive word-overlap pruning strengthens the decoy, and removing that retained decoy reverses the failure, while the measured length effect is unresolved.
++
++**Significance.** The result informs builders of offline small-model document QA deciding whether to shorten prompts with lexical filters: a cheap filter needs a decoy-resistant comparison before deployment, and the observed end-position gain is diagnostic rather than an automatic remedy.
++
++**Originality.** Unlike NoLiMa's demonstration that literal overlap makes long-context tests too easy, this study uses paired synthetic clauses on a frozen laptop-scale open model to show that the same overlap can make keyword pruning select a competing answer and to diagnose the failure by removing only that competitor.
++
++I replaced the stale completed focus item with a full-lap demand for a second deployable selector baseline, then directed a paper-wide reframe and a defensible descriptive treatment of uncertainty. These moves answer the review's significance, originality, and soundness objections in that order. Readability work should leave only displays that change the argument, put denominators beside position estimates, and replace repeated bold mini-headlines and signed-direction wording with direct claim-evidence prose.
++
++The quality-code-density complaint has persisted since iter 3 and is terminally **unfixable in this environment**. The current filler contrast changes topic, domain, entity and code density, candidate count, and templates together; no post hoc analysis can isolate relevance, while a sufficiently matched factorial rerun cannot fit the locked laptop clean-room budget alongside the required grid. Writers must own this in Limitations, remove quality from the contribution and answered questions, and call the result only a comparison of the two generated filler bundles. The practical end-placement recommendation and the one-sentence competitor shift are also unfixable from paid outputs: present them as diagnostic limitations and narrow all claims accordingly.
++
++Done means a later review marks the selector-baseline complaint resolved; the manuscript leads with the position-and-decoy thesis; uncertainty is explicitly descriptive at the family level; the confounded quality comparison is secondary or omitted; and every remaining display is readable, denominator-complete, and necessary to the argument.
+diff --git a/TODO.md b/TODO.md
+index 8c6b16fdb2aa626dce2fc3da159caa78bbe56824..389d1edd3e9032985a743924cca1849b7b77dbf3
+--- a/TODO.md
++++ b/TODO.md
+@@ -1,21 +1,21 @@
+ # TODO
+ 
+-Laps 1-3 complete the probe grid, scoring pipeline, and first full paper draft.
+-See DONE.md.
++Highest leverage next:
++
++1. [ ] FOCUS LAP: spend your ENTIRE lap on the lack of a second deployable selector baseline. Do not pick any other task. Finish it completely: analysis, results, and the prose that uses it.
++   Why: a matched cheap baseline is the only route from the lexical-decoy diagnosis to an operational mitigation claim.
++2. [ ] Reframe the title, abstract, Introduction, questions, Results, and takeaway around position sensitivity and lexical-decoy failure; remove context quality as a contribution or answered question.
++   Why: the locked grid cannot identify relevance, so the honest thesis must not depend on that confounded axis.
++3. [ ] Replace population-sounding bootstrap confidence claims with a descriptive presentation justified for two to six families, exposing family counts and paired outcomes in the main evidence.
++   Why: the latest two reviews treat the nominal intervals as false precision and a soundness defect.
+ 
+-Highest leverage next:
++Still relevant after the focus lap:
+ 
+-- [x] FOCUS LAP: removed the causal quality claim throughout the paper and made explicit
+-  that the filler contrast bundles topical relation, domain, code density, candidate count,
+-  entities, and sentence templates. A matched redesign exceeds the remaining probe budget.
+-- [x] Added a paired decoy-removal pruning control and manifest retention diagnostics;
+-  the control changes only the retained lexical decoy while keeping the answer fixed.
+-- [ ] Replace or simplify the scaled tables if the harness PDF audit still finds
+-  their text crowded or illegible.
+-- [ ] Confirm that every one of the four numbered questions has a measured answer a
+-  reviewer can find in under a minute.
++- [ ] Consolidate the three crowded displays into only argument-changing evidence, add position denominators, enlarge type, and rewrite Results into natural claim-evidence paragraphs without signed-direction phrasing.
++- [ ] Own in Limitations that end placement is diagnostic rather than deployable and that answer insertion shifts the competitor by one sentence; make no pure-position or operational claim.
++- [ ] Confirm that each retained numbered question has a measured answer a reviewer can find in under a minute.
+ - [ ] First full eight-gate pass + rubric >= 6 tags paper-v1.
+ - [ ] TAMPER DETECTED (iter 5): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
+-- [ ] NEW REVIEW (iter 6, "rubric":6/10 rubric): address weaknesses in reviews/iter-6.md
++- [ ] NEW REVIEW (iter 6, "rubric":6/10 rubric): address weaknesses in reviews/iter-6.md.
+ - [ ] TAMPER DETECTED (iter 10): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
+-- [ ] NEW REVIEW (iter 10, "rubric":7/10 rubric): address weaknesses in reviews/iter-10.md
++- [ ] NEW REVIEW (iter 10, "rubric":7/10 rubric): address weaknesses in reviews/iter-10.md.
+
+exec
+/bin/zsh -lc "wc -l TODO.md EDITORIAL.md && sed -n '1,220p' TODO.md && sed -n '1,260p' EDITORIAL.md" in /Users/matthewchan/ralphm/Ralphm
+ succeeded in 0ms:
+      21 TODO.md
+      15 EDITORIAL.md
+      36 total
+# TODO
+
+Highest leverage next:
+
+1. [ ] FOCUS LAP: spend your ENTIRE lap on the lack of a second deployable selector baseline. Do not pick any other task. Finish it completely: analysis, results, and the prose that uses it.
+   Why: a matched cheap baseline is the only route from the lexical-decoy diagnosis to an operational mitigation claim.
+2. [ ] Reframe the title, abstract, Introduction, questions, Results, and takeaway around position sensitivity and lexical-decoy failure; remove context quality as a contribution or answered question.
+   Why: the locked grid cannot identify relevance, so the honest thesis must not depend on that confounded axis.
+3. [ ] Replace population-sounding bootstrap confidence claims with a descriptive presentation justified for two to six families, exposing family counts and paired outcomes in the main evidence.
+   Why: the latest two reviews treat the nominal intervals as false precision and a soundness defect.
+
+Still relevant after the focus lap:
+
+- [ ] Consolidate the three crowded displays into only argument-changing evidence, add position denominators, enlarge type, and rewrite Results into natural claim-evidence paragraphs without signed-direction phrasing.
+- [ ] Own in Limitations that end placement is diagnostic rather than deployable and that answer insertion shifts the competitor by one sentence; make no pure-position or operational claim.
+- [ ] Confirm that each retained numbered question has a measured answer a reviewer can find in under a minute.
+- [ ] First full eight-gate pass + rubric >= 6 tags paper-v1.
+- [ ] TAMPER DETECTED (iter 5): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
+- [ ] NEW REVIEW (iter 6, "rubric":6/10 rubric): address weaknesses in reviews/iter-6.md.
+- [ ] TAMPER DETECTED (iter 10): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
+- [ ] NEW REVIEW (iter 10, "rubric":7/10 rubric): address weaknesses in reviews/iter-10.md.
+# Editorial direction
+
+## 2026-07-12
+
+**Thesis.** In this frozen small model, matched clause retrieval is governed more clearly by answer position and lexical competition than by context amount: end placement helps, naive word-overlap pruning strengthens the decoy, and removing that retained decoy reverses the failure, while the measured length effect is unresolved.
+
+**Significance.** The result informs builders of offline small-model document QA deciding whether to shorten prompts with lexical filters: a cheap filter needs a decoy-resistant comparison before deployment, and the observed end-position gain is diagnostic rather than an automatic remedy.
+
+**Originality.** Unlike NoLiMa's demonstration that literal overlap makes long-context tests too easy, this study uses paired synthetic clauses on a frozen laptop-scale open model to show that the same overlap can make keyword pruning select a competing answer and to diagnose the failure by removing only that competitor.
+
+I replaced the stale completed focus item with a full-lap demand for a second deployable selector baseline, then directed a paper-wide reframe and a defensible descriptive treatment of uncertainty. These moves answer the review's significance, originality, and soundness objections in that order. Readability work should leave only displays that change the argument, put denominators beside position estimates, and replace repeated bold mini-headlines and signed-direction wording with direct claim-evidence prose.
+
+The quality-code-density complaint has persisted since iter 3 and is terminally **unfixable in this environment**. The current filler contrast changes topic, domain, entity and code density, candidate count, and templates together; no post hoc analysis can isolate relevance, while a sufficiently matched factorial rerun cannot fit the locked laptop clean-room budget alongside the required grid. Writers must own this in Limitations, remove quality from the contribution and answered questions, and call the result only a comparison of the two generated filler bundles. The practical end-placement recommendation and the one-sentence competitor shift are also unfixable from paid outputs: present them as diagnostic limitations and narrow all claims accordingly.
+
+Done means a later review marks the selector-baseline complaint resolved; the manuscript leads with the position-and-decoy thesis; uncertainty is explicitly descriptive at the family level; the confounded quality comparison is secondary or omitted; and every remaining display is readable, denominator-complete, and necessary to the argument.
+
+diff --git a/EDITORIAL.md b/EDITORIAL.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..217360ce75648f5776a749ac1c9f7d1ca991513d
+--- /dev/null
++++ b/EDITORIAL.md
+@@ -0,0 +1,15 @@
++# Editorial direction
++
++## 2026-07-12
++
++**Thesis.** In this frozen small model, matched clause retrieval is governed more clearly by answer position and lexical competition than by context amount: end placement helps, naive word-overlap pruning strengthens the decoy, and removing that retained decoy reverses the failure, while the measured length effect is unresolved.
++
++**Significance.** The result informs builders of offline small-model document QA deciding whether to shorten prompts with lexical filters: a cheap filter needs a decoy-resistant comparison before deployment, and the observed end-position gain is diagnostic rather than an automatic remedy.
++
++**Originality.** Unlike NoLiMa's demonstration that literal overlap makes long-context tests too easy, this study uses paired synthetic clauses on a frozen laptop-scale open model to show that the same overlap can make keyword pruning select a competing answer and to diagnose the failure by removing only that competitor.
++
++I replaced the stale completed focus item with a full-lap demand for a second deployable selector baseline, then directed a paper-wide reframe and a defensible descriptive treatment of uncertainty. These moves answer the review's significance, originality, and soundness objections in that order. Readability work should leave only displays that change the argument, put denominators beside position estimates, and replace repeated bold mini-headlines and signed-direction wording with direct claim-evidence prose.
++
++The quality-code-density complaint has persisted since iter 3 and is terminally **unfixable in this environment**. The current filler contrast changes topic, domain, entity and code density, candidate count, and templates together; no post hoc analysis can isolate relevance, while a sufficiently matched factorial rerun cannot fit the locked laptop clean-room budget alongside the required grid. Writers must own this in Limitations, remove quality from the contribution and answered questions, and call the result only a comparison of the two generated filler bundles. The practical end-placement recommendation and the one-sentence competitor shift are also unfixable from paid outputs: present them as diagnostic limitations and narrow all claims accordingly.
++
++Done means a later review marks the selector-baseline complaint resolved; the manuscript leads with the position-and-decoy thesis; uncertainty is explicitly descriptive at the family level; the confounded quality comparison is secondary or omitted; and every remaining display is readable, denominator-complete, and necessary to the argument.
+diff --git a/TODO.md b/TODO.md
+index 8c6b16fdb2aa626dce2fc3da159caa78bbe56824..389d1edd3e9032985a743924cca1849b7b77dbf3
+--- a/TODO.md
++++ b/TODO.md
+@@ -1,21 +1,21 @@
+ # TODO
+ 
+-Laps 1-3 complete the probe grid, scoring pipeline, and first full paper draft.
+-See DONE.md.
++Highest leverage next:
++
++1. [ ] FOCUS LAP: spend your ENTIRE lap on the lack of a second deployable selector baseline. Do not pick any other task. Finish it completely: analysis, results, and the prose that uses it.
++   Why: a matched cheap baseline is the only route from the lexical-decoy diagnosis to an operational mitigation claim.
++2. [ ] Reframe the title, abstract, Introduction, questions, Results, and takeaway around position sensitivity and lexical-decoy failure; remove context quality as a contribution or answered question.
++   Why: the locked grid cannot identify relevance, so the honest thesis must not depend on that confounded axis.
++3. [ ] Replace population-sounding bootstrap confidence claims with a descriptive presentation justified for two to six families, exposing family counts and paired outcomes in the main evidence.
++   Why: the latest two reviews treat the nominal intervals as false precision and a soundness defect.
+ 
+-Highest leverage next:
++Still relevant after the focus lap:
+ 
+-- [x] FOCUS LAP: removed the causal quality claim throughout the paper and made explicit
+-  that the filler contrast bundles topical relation, domain, code density, candidate count,
+-  entities, and sentence templates. A matched redesign exceeds the remaining probe budget.
+-- [x] Added a paired decoy-removal pruning control and manifest retention diagnostics;
+-  the control changes only the retained lexical decoy while keeping the answer fixed.
+-- [ ] Replace or simplify the scaled tables if the harness PDF audit still finds
+-  their text crowded or illegible.
+-- [ ] Confirm that every one of the four numbered questions has a measured answer a
+-  reviewer can find in under a minute.
++- [ ] Consolidate the three crowded displays into only argument-changing evidence, add position denominators, enlarge type, and rewrite Results into natural claim-evidence paragraphs without signed-direction phrasing.
++- [ ] Own in Limitations that end placement is diagnostic rather than deployable and that answer insertion shifts the competitor by one sentence; make no pure-position or operational claim.
++- [ ] Confirm that each retained numbered question has a measured answer a reviewer can find in under a minute.
+ - [ ] First full eight-gate pass + rubric >= 6 tags paper-v1.
+ - [ ] TAMPER DETECTED (iter 5): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
+-- [ ] NEW REVIEW (iter 6, "rubric":6/10 rubric): address weaknesses in reviews/iter-6.md
++- [ ] NEW REVIEW (iter 6, "rubric":6/10 rubric): address weaknesses in reviews/iter-6.md.
+ - [ ] TAMPER DETECTED (iter 10): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
+-- [ ] NEW REVIEW (iter 10, "rubric":7/10 rubric): address weaknesses in reviews/iter-10.md
++- [ ] NEW REVIEW (iter 10, "rubric":7/10 rubric): address weaknesses in reviews/iter-10.md.
+
+codex
+Thesis: In this frozen small model, matched clause retrieval is governed more clearly by answer position and lexical competition than by context amount: end placement helps, naive word-overlap pruning strengthens the decoy, and removing that decoy reverses the failure, while the measured length effect remains unresolved.
+
+1. FOCUS LAP: add and fully evaluate a second deployable selector baseline.
+2. Reframe the entire paper around position sensitivity and lexical-decoy failure; remove context quality as a contribution.
+3. Replace population-sounding bootstrap claims with descriptive family-level evidence, counts, and paired outcomes.
+diff --git a/EDITORIAL.md b/EDITORIAL.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..217360ce75648f5776a749ac1c9f7d1ca991513d
+--- /dev/null
++++ b/EDITORIAL.md
+@@ -0,0 +1,15 @@
++# Editorial direction
++
++## 2026-07-12
++
++**Thesis.** In this frozen small model, matched clause retrieval is governed more clearly by answer position and lexical competition than by context amount: end placement helps, naive word-overlap pruning strengthens the decoy, and removing that retained decoy reverses the failure, while the measured length effect is unresolved.
++
++**Significance.** The result informs builders of offline small-model document QA deciding whether to shorten prompts with lexical filters: a cheap filter needs a decoy-resistant comparison before deployment, and the observed end-position gain is diagnostic rather than an automatic remedy.
++
++**Originality.** Unlike NoLiMa's demonstration that literal overlap makes long-context tests too easy, this study uses paired synthetic clauses on a frozen laptop-scale open model to show that the same overlap can make keyword pruning select a competing answer and to diagnose the failure by removing only that competitor.
++
++I replaced the stale completed focus item with a full-lap demand for a second deployable selector baseline, then directed a paper-wide reframe and a defensible descriptive treatment of uncertainty. These moves answer the review's significance, originality, and soundness objections in that order. Readability work should leave only displays that change the argument, put denominators beside position estimates, and replace repeated bold mini-headlines and signed-direction wording with direct claim-evidence prose.
++
++The quality-code-density complaint has persisted since iter 3 and is terminally **unfixable in this environment**. The current filler contrast changes topic, domain, entity and code density, candidate count, and templates together; no post hoc analysis can isolate relevance, while a sufficiently matched factorial rerun cannot fit the locked laptop clean-room budget alongside the required grid. Writers must own this in Limitations, remove quality from the contribution and answered questions, and call the result only a comparison of the two generated filler bundles. The practical end-placement recommendation and the one-sentence competitor shift are also unfixable from paid outputs: present them as diagnostic limitations and narrow all claims accordingly.
++
++Done means a later review marks the selector-baseline complaint resolved; the manuscript leads with the position-and-decoy thesis; uncertainty is explicitly descriptive at the family level; the confounded quality comparison is secondary or omitted; and every remaining display is readable, denominator-complete, and necessary to the argument.
+diff --git a/TODO.md b/TODO.md
+index 8c6b16fdb2aa626dce2fc3da159caa78bbe56824..389d1edd3e9032985a743924cca1849b7b77dbf3
+--- a/TODO.md
++++ b/TODO.md
+@@ -1,21 +1,21 @@
+ # TODO
+ 
+-Laps 1-3 complete the probe grid, scoring pipeline, and first full paper draft.
+-See DONE.md.
++Highest leverage next:
++
++1. [ ] FOCUS LAP: spend your ENTIRE lap on the lack of a second deployable selector baseline. Do not pick any other task. Finish it completely: analysis, results, and the prose that uses it.
++   Why: a matched cheap baseline is the only route from the lexical-decoy diagnosis to an operational mitigation claim.
++2. [ ] Reframe the title, abstract, Introduction, questions, Results, and takeaway around position sensitivity and lexical-decoy failure; remove context quality as a contribution or answered question.
++   Why: the locked grid cannot identify relevance, so the honest thesis must not depend on that confounded axis.
++3. [ ] Replace population-sounding bootstrap confidence claims with a descriptive presentation justified for two to six families, exposing family counts and paired outcomes in the main evidence.
++   Why: the latest two reviews treat the nominal intervals as false precision and a soundness defect.
+ 
+-Highest leverage next:
++Still relevant after the focus lap:
+ 
+-- [x] FOCUS LAP: removed the causal quality claim throughout the paper and made explicit
+-  that the filler contrast bundles topical relation, domain, code density, candidate count,
+-  entities, and sentence templates. A matched redesign exceeds the remaining probe budget.
+-- [x] Added a paired decoy-removal pruning control and manifest retention diagnostics;
+-  the control changes only the retained lexical decoy while keeping the answer fixed.
+-- [ ] Replace or simplify the scaled tables if the harness PDF audit still finds
+-  their text crowded or illegible.
+-- [ ] Confirm that every one of the four numbered questions has a measured answer a
+-  reviewer can find in under a minute.
++- [ ] Consolidate the three crowded displays into only argument-changing evidence, add position denominators, enlarge type, and rewrite Results into natural claim-evidence paragraphs without signed-direction phrasing.
++- [ ] Own in Limitations that end placement is diagnostic rather than deployable and that answer insertion shifts the competitor by one sentence; make no pure-position or operational claim.
++- [ ] Confirm that each retained numbered question has a measured answer a reviewer can find in under a minute.
+ - [ ] First full eight-gate pass + rubric >= 6 tags paper-v1.
+ - [ ] TAMPER DETECTED (iter 5): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
+-- [ ] NEW REVIEW (iter 6, "rubric":6/10 rubric): address weaknesses in reviews/iter-6.md
++- [ ] NEW REVIEW (iter 6, "rubric":6/10 rubric): address weaknesses in reviews/iter-6.md.
+ - [ ] TAMPER DETECTED (iter 10): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
+-- [ ] NEW REVIEW (iter 10, "rubric":7/10 rubric): address weaknesses in reviews/iter-10.md
++- [ ] NEW REVIEW (iter 10, "rubric":7/10 rubric): address weaknesses in reviews/iter-10.md.
+
+tokens used
+46,225
+Thesis: In this frozen small model, matched clause retrieval is governed more clearly by answer position and lexical competition than by context amount: end placement helps, naive word-overlap pruning strengthens the decoy, and removing that decoy reverses the failure, while the measured length effect remains unresolved.
+
+1. FOCUS LAP: add and fully evaluate a second deployable selector baseline.
+2. Reframe the entire paper around position sensitivity and lexical-decoy failure; remove context quality as a contribution.
+3. Replace population-sounding bootstrap claims with descriptive family-level evidence, counts, and paired outcomes.

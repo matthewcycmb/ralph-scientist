@@ -1,0 +1,5 @@
+Thesis: In this frozen small model, matched clause retrieval is governed more clearly by answer position and lexical competition than by context amount: end placement helps, naive word-overlap pruning strengthens the decoy, and removing that decoy reverses the failure, while the measured length effect remains unresolved.
+
+1. FOCUS LAP: add and fully evaluate a second deployable selector baseline.
+2. Reframe the entire paper around position sensitivity and lexical-decoy failure; remove context quality as a contribution.
+3. Replace population-sounding bootstrap claims with descriptive family-level evidence, counts, and paired outcomes.

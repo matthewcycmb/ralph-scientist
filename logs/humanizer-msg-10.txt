@@ -1,0 +1,13 @@
+Revised [paper/main.tex](/Users/matthewchan/ralphm/Ralphm/paper/main.tex) for clarity, flow, terminology, and professional register.
+
+Also added the unclear keyword-filter fallback threshold to [TODO.md](/Users/matthewchan/ralphm/Ralphm/TODO.md).
+
+Checks:
+
+- Style gate: PASS
+- `git diff --check`: PASS
+- LaTeX commands, environments, and numeric literals preserved
+- No tables, citations, macros, preamble, packages, or section structure changed
+- No commit created
+- Tectonic and `harness/run_gates.sh` were not run
+- Existing unrelated working-tree changes were left untouched

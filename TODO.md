@@ -1,20 +1,22 @@
 # TODO
 
-Laps 1-3 complete the probe grid, scoring pipeline, and first full paper draft.
-See DONE.md.
-
 Highest leverage next:
 
-- [x] FOCUS LAP: removed the causal quality claim throughout the paper and made explicit
-  that the filler contrast bundles topical relation, domain, code density, candidate count,
-  entities, and sentence templates. A matched redesign exceeds the remaining probe budget.
-- [x] Added a paired decoy-removal pruning control and manifest retention diagnostics;
-  the control changes only the retained lexical decoy while keeping the answer fixed.
-- [ ] Replace or simplify the scaled tables if the harness PDF audit still finds
-  their text crowded or illegible.
-- [ ] Confirm that every one of the four numbered questions has a measured answer a
-  reviewer can find in under a minute.
+1. [ ] FOCUS LAP: spend your ENTIRE lap on the lack of a second deployable selector baseline. Do not pick any other task. Finish it completely: analysis, results, and the prose that uses it.
+   Why: a matched cheap baseline is the only route from the lexical-decoy diagnosis to an operational mitigation claim.
+2. [ ] Reframe the title, abstract, Introduction, questions, Results, and takeaway around position sensitivity and lexical-decoy failure; remove context quality as a contribution or answered question.
+   Why: the locked grid cannot identify relevance, so the honest thesis must not depend on that confounded axis.
+3. [ ] Replace population-sounding bootstrap confidence claims with a descriptive presentation justified for two to six families, exposing family counts and paired outcomes in the main evidence.
+   Why: the latest two reviews treat the nominal intervals as false precision and a soundness defect.
+
+Still relevant after the focus lap:
+
+- [ ] Consolidate the three crowded displays into only argument-changing evidence, add position denominators, enlarge type, and rewrite Results into natural claim-evidence paragraphs without signed-direction phrasing.
+- [ ] Own in Limitations that end placement is diagnostic rather than deployable and that answer insertion shifts the competitor by one sentence; make no pure-position or operational claim.
+- [ ] Confirm that each retained numbered question has a measured answer a reviewer can find in under a minute.
 - [ ] First full eight-gate pass + rubric >= 6 tags paper-v1.
 - [ ] TAMPER DETECTED (iter 5): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
-- [ ] NEW REVIEW (iter 6, "rubric":6/10 rubric): address weaknesses in reviews/iter-6.md
+- [ ] NEW REVIEW (iter 6, "rubric":6/10 rubric): address weaknesses in reviews/iter-6.md.
 - [ ] TAMPER DETECTED (iter 10): an agent modified protected harness or frozen-input metadata. The harness restored it; fix the underlying problem instead.
+- [ ] NEW REVIEW (iter 10, "rubric":7/10 rubric): address weaknesses in reviews/iter-10.md.
+- [ ] Clarify the keyword filter's fallback threshold: "if too few qualify" does not state how many retained sentences trigger fallback.
