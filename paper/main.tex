@@ -63,7 +63,9 @@ Input amount can matter even when the underlying problem is fixed. \citet{levy20
 \section{Probe Design}
 
 \paragraph{Model and execution.}
-The subject is the frozen \modelFile{} artifact with SHA checksum \modelSha{}. We run it through \texttt{llama-completion} with greedy decoding, zero temperature, and a fixed seed. The complete manifest contains \manifestProbeCount{} probes, each stored as one prompt and one raw output. Existing outputs are skipped on rerun, so interrupted inference resumes by stable probe identifier.
+The subject is the frozen \modelFile{} artifact, with its SHA checksum shown below:
+\par\noindent\resizebox{\linewidth}{!}{\modelSha}\par
+We run it through \texttt{llama-completion} with greedy decoding, zero temperature, and a fixed seed. The complete manifest contains \manifestProbeCount{} probes, each stored as one prompt and one raw output. Existing outputs are skipped on rerun, so interrupted inference resumes by stable probe identifier.
 
 \paragraph{Scenario families.}
 Seeded code generates a company, target code, competing company and code, question, and filler for each family. The question asks for the renewal code needed to extend the target company's contract. Its wording exactly matches the competing clause, whereas the answer-bearing clause calls the same value a renewal identifier. A matched literal control reverses these phrasings while retaining the same filler.

@@ -1,0 +1,3 @@
+Fixed the sole failing gate issue: the protected SHA checksum is now scaled to column width, preventing the overfull box.
+
+Updated `TODO.md` and `DONE.md`. Seven non-compilation gates pass, including pipeline freshness. Per instructions, I did not run Tectonic or commit changes.

@@ -44,3 +44,9 @@
   position and quality cells as sparse.
 - Activated only citations already present in the resolver cache. Individual
   number, style, submission, and citation gates pass.
+
+## Lap 4 (2026-07-12)
+
+- Fixed the sole iteration-2 compile-gate defect by placing the protected model
+  checksum in a column-width box, preventing its unbreakable hexadecimal text
+  from overflowing the column. The harness-side compile verdict remains pending.

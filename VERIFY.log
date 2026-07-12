@@ -23,3 +23,13 @@ PASS  submission-ready
 FAIL  latex-compiles
 DETAIL latex-compiles: warning: main.tex:67: Overfull \hbox (73.18251pt too wide) in paragraph at lines 66--67 warning: main.tex:67: Overfull \hbox (73.18251pt too wide) in paragraph at lines 66--67 warning: main.tex:67: Overfull \hbox (73.18251pt too wide) in paragraph at lines 66--67 FAIL: paper has overfull horizontal boxes; shorten prose or tables 
 gates failed: 1
+--- gates @ iteration 3 13:32:20 ---
+PASS  frozen-inputs
+PASS  citations-resolve
+PASS  no-number-literals
+PASS  pipeline-fresh
+PASS  results-sane
+PASS  prose-style
+PASS  submission-ready
+PASS  latex-compiles
+gates failed: 0
