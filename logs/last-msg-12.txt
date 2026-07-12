@@ -1,0 +1,10 @@
+Completed exactly one task: the manuscript-wide thesis reframe.
+
+Changed:
+
+- Title, abstract, Introduction, research questions, Results, and takeaway now center position sensitivity and lexical-decoy failure.
+- Context quality is no longer presented as a contribution or answered question.
+- Results directly answer the three retained questions in order.
+- Updated `TODO.md`.
+
+Checks passed: number provenance, prose style, submission readiness, result sanity, citation resolution, and `git diff --check`. TeX compilation was left to the harness as required.

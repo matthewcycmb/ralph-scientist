@@ -4,8 +4,8 @@ Highest leverage next:
 
 1. [x] FOCUS LAP: added a matched query-entity selector that uses only visible text, ran all new probes, regenerated results and values, and integrated its retention, accuracy, paired outcomes, and scope into the paper.
    Result: the deployable selector excludes the lexical decoy in this grid and resolves the missing-baseline criticism with a direct keyword-versus-entity comparison.
-2. [ ] Reframe the title, abstract, Introduction, questions, Results, and takeaway around position sensitivity and lexical-decoy failure; remove context quality as a contribution or answered question.
-   Why: the locked grid cannot identify relevance, so the honest thesis must not depend on that confounded axis.
+2. [x] Reframed the title, abstract, Introduction, questions, Results, and takeaway around position sensitivity and lexical-decoy failure; removed context quality as a contribution and answered question.
+   Result: the visible argument now answers position, decoy-sensitive selection, and matched length in that order; filler bundles remain balanced controls whose contrast is not interpreted.
 3. [ ] Replace population-sounding bootstrap confidence claims with a descriptive presentation justified for two to six families, exposing family counts and paired outcomes in the main evidence.
    Why: the latest two reviews treat the nominal intervals as false precision and a soundness defect.
 

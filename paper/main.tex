@@ -11,13 +11,13 @@
 \InputIfFileExists{values.tex}{}{}
 \input{model.tex}
 
-\icmltitlerunning{\smash{Context Position and Pruning in a Small Language Model}}
+\icmltitlerunning{\smash{Position Sensitivity and Lexical Competition}}
 
 \begin{document}
 
 \twocolumn[
-\icmltitle{Answer Position and Lexical Pruning Shape Synthetic Clause Retrieval\
-           in a Small Language Model}
+\icmltitle{Position Sensitivity and Lexical Competition in Synthetic Clause Retrieval\
+           with a Small Language Model}
 \icmlsetsymbol{equal}{*}
 \begin{icmlauthorlist}
 \icmlauthor{Anonymous Authors}{anon}
@@ -30,28 +30,27 @@
 \printAffiliationsAndNotice{}
 
 \begin{abstract}
-Does adding context hurt a small language model, and do the location and composition of that context matter? We evaluate the frozen \modelName{} artifact on \sampleSize{} synthetic contract-clause probes. Deterministic runs span mean prompt lengths of \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Moving the answer clause from the start to the end raised accuracy by \positionTwoStartEndChange{} points at the shortest tier and \positionFourStartEndChange{} points at the middle tier. Keyword pruning changed matched accuracy by \pruningChange{} points, whereas selecting sentences that named the question's company reached \entitySelectorAccuracy{}\% accuracy and improved on keyword pruning by \selectorComparisonChange{} points. The matched comparison across prompt lengths was inconclusive, and the filler manipulation does not isolate topical relevance.
+Where an answer appears and which competing text survives selection may govern clause retrieval more clearly than prompt length in a small language model. We evaluate the frozen \modelName{} artifact on \sampleSize{} deterministic synthetic contract-clause probes spanning mean prompt lengths of \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Moving the answer clause from the start to the end raised accuracy by \positionTwoStartEndChange{} points at the shortest tier and \positionFourStartEndChange{} points at the middle tier. Keyword pruning reduced accuracy from \pruningFullAccuracy{}\% to \pruningPrunedAccuracy{}\% because it retained a clause whose wording matched the question but whose code was wrong. A query-entity selector excluded that lexical decoy and reached \entitySelectorAccuracy{}\% accuracy on the same \entitySelectorCount{} cases. The matched length comparison remained inconclusive, so the practical finding is narrower: test a cheap selector against plausible lexical competitors before using it to shorten documents for this model.
 \end{abstract}
 
 \section{Introduction}
 
 You paste a long contract into a chatbot and ask, ``What code renews the vendor agreement?'' The answer sits in one clause, but a similar buyer clause repeats the words in your question and gives a different code.
 
-This ordinary lookup becomes less predictable in a long prompt. The model may fail because it must process a longer document, because the answer appears in a weak position, or because nearby text resembles the question. Each explanation suggests a different response: shorten the prompt, move the key clause, or filter the document. Distinguishing among them requires an evaluation that varies a single property while holding the others fixed.
+This ordinary lookup becomes less predictable in a long prompt. The model may fail because it must process a longer document, because the answer appears in a weak position, or because nearby text resembles the question. Each explanation points to a different diagnosis: compare matched prompt lengths, move the key clause, or inspect what a filter retains. Distinguishing among them requires an evaluation that holds scenario content fixed across comparisons.
 
 We study these choices in a synthetic, gradeable version of the contract situation. Each document contains an answer-bearing vendor clause and a look-alike clause for another company. The question uses the wording of the look-alike clause, while the answer clause expresses the same relation with different words. This construction reduces the value of literal matching, following the motivation of NoLiMa \citep{modarressi2025nolima}.
 
-We provide a paired evaluation of a frozen open model at laptop scale. Prior work established position and length failures in larger systems \citep{liu2023lost,levy2024same} and showed that irrelevant statements can disrupt reasoning \citep{shi2023distracted}. Our comparisons match prompt lengths, answer positions, and questions while varying whether the filler is code-heavy business text or unrelated prose. We compare a deterministic keyword filter with a query-entity selector that keeps sentences naming the company in the question.
+We provide a paired evaluation of a frozen open model at laptop scale. Prior work established position and length failures in larger systems \citep{liu2023lost,levy2024same} and showed that irrelevant statements can disrupt reasoning \citep{shi2023distracted}. Our main comparison moves the same answer clause while preserving the question, clause wording, codes, and filler order. We then compare a deterministic keyword filter with a query-entity selector that keeps sentences naming the company in the question. This selector comparison tests whether shortening helps when the filter does or does not retain the lexical competitor.
 
-The experiment asks four questions:
+The experiment asks three questions:
 \begin{enumerate}
-    \item As mean prompt length grows from \tierTwoTokens{} to \tierEightTokens{} tokens, how much does accuracy change on shared cases?
     \item How does moving the same answer clause among the start, middle, and end change accuracy?
-    \item How does accuracy differ between code-heavy business filler and unrelated prose in matched documents?
-    \item Which cheap selector better preserves accuracy: keyword overlap or matching the company named in the question?
+    \item How much accuracy do keyword overlap and query-entity selection preserve on the same cases, and which clauses do they retain?
+    \item As mean prompt length grows from \tierTwoTokens{} to \tierEightTokens{} tokens, how much does accuracy change on shared cases?
 \end{enumerate}
 
-The experiment does not identify a general context-length threshold. Within this grid, accuracy was higher when the answer appeared near the end and lower with code-heavy business filler than with unrelated prose. Keyword pruning amplified the lexical trap, while matching the query entity avoided it.
+Within this grid, accuracy was higher when the answer appeared near the end. That placement result is diagnostic because using it requires knowing the answer location. The deployable query-entity selector instead avoided the lexical trap that keyword pruning amplified, while the matched length comparison did not identify a degradation threshold.
 
 \section{Related Work}
 
@@ -59,7 +58,7 @@ The experiment does not identify a general context-length threshold. Within this
 
 Prompt length can matter even when the underlying problem is fixed. \citet{levy2024same} padded matched reasoning problems and observed degradation well before model context limits, while RULER found that usable context lengths can be shorter than advertised windows \citep{hsieh2024ruler}. Our prompt-length comparison includes only cases present at every tier, so the mix of scenarios remains fixed as prompts grow.
 
-\citet{shi2023distracted} added irrelevant statements to arithmetic problems and found lower reasoning accuracy. We compare filler from the same business domain with unrelated prose while matching prompt length and question wording. The business condition also contains more entities and code-shaped candidates, so the comparison measures that bundle rather than topical relevance alone. NoLiMa shows that synthetic retrieval tests based on literal word matches can overstate retrieval ability \citep{modarressi2025nolima}. We therefore paraphrase the question in the answer clause while giving the competing clause the same surface wording as the question. The tested model belongs to the instruction-tuned Qwen family \citep{qwen2024qwen25}.
+\citet{shi2023distracted} added irrelevant statements to arithmetic problems and found lower reasoning accuracy. Our filler bundles vary several properties together, so we use them to balance the main comparisons rather than to claim an isolated relevance effect. NoLiMa shows that synthetic retrieval tests based on literal word matches can overstate retrieval ability \citep{modarressi2025nolima}. We therefore paraphrase the question in the answer clause while giving the competing clause the same surface wording as the question. The tested model belongs to the instruction-tuned Qwen family \citep{qwen2024qwen25}.
 
 \section{Probe Design}
 
@@ -73,12 +72,12 @@ For each family, seeded code generates the target company and code, a competing 
 
 For each full-context family, we insert the answer clause near the start, middle, or end. Family generation does not use target position in any random seed. We assign the competing clause a fractional insertion index, either earlier or later in the document, that is independent of answer position and fixed across the three versions. Its final sentence index shifts by one when the answer is inserted before it. Thus, each paired position contrast changes both the answer placement and this mechanical one-sentence shift while preserving the scenario content and filler order.
 
-\paragraph{Amount and filler composition.}
+\paragraph{Amount and filler control.}
 The tokenizer, rather than a character estimate, determines prompt length. The three full-context tiers average \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Each tier balances business filler with unrelated sentences. Business filler consists of other companies, records, and unrelated codes; unrelated filler describes places and events outside the contract domain. Filler pairs share the family, target position, question, and measured tier.
 
 This manipulation changes several properties together. Compared with unrelated prose, the related filler contains more business entities, contract-like templates, and code-shaped answer candidates. The paired comparison therefore identifies the effect of these two generated filler conditions, not the effect of topical relevance alone.
 
-The final tier contains fewer families because it is more expensive to run. Prompt-length estimates therefore use only the \amountSharedEightCount{} cases shared by every tier rather than the unequal full-tier totals. Filler-composition estimates use \qualityTwoRelevantDenominator{}, \qualityFourRelevantDenominator{}, and \qualityEightRelevantDenominator{} pairs at the three tiers, respectively.
+The final tier contains fewer families because it is more expensive to run. Prompt-length estimates therefore use only the \amountSharedEightCount{} cases shared by every tier rather than the unequal full-tier totals. We balance both filler bundles within each reported position and length comparison but do not interpret their contrast as a context-quality effect.
 
 \paragraph{Selectors and controls.}
 At the middle tier, a keyword filter retains sentences with at least two content words shared with the question, falling back to the highest-overlap sentences if too few qualify. A second selector extracts the company named after ``contract with'' in the question and keeps sentences containing that name. If extraction or matching fails, it falls back to the keyword filter. Both rules use only visible text, preserve original order, and require no answer labels. The comparisons are restricted to the \pruningDenominator{} cases with full context and both selector outputs. We also include \closedBookCount{} closed-book questions and \literalControlDenominator{} matched literal-versus-paraphrase controls.
@@ -93,43 +92,8 @@ The inferential target is the population of synthetic scenario families defined 
 
 \section{Results}
 
-\paragraph{Amount.}
-\textbf{The relationship between prompt length and accuracy remains unresolved.} Accuracy was \amountSharedTwoAccuracy{}\% at a mean prompt length of \tierTwoTokens{} tokens and \amountSharedFourAccuracy{}\% at \tierFourTokens{} tokens. This paired change of \amountSharedTwoFourChange{} points has a family-cluster interval of [\amountSharedTwoFourChangeLow{}, \amountSharedTwoFourChangeHigh{}] over \amountSharedTwoFourDenominator{} cases. At \tierEightTokens{} tokens, accuracy was \amountSharedEightAccuracy{}\%, with \amountSharedFourEightWins{} wins, \amountSharedFourEightLosses{} losses, and \amountSharedFourEightTies{} ties relative to the middle tier (Table~\ref{tab:amount-quality}). Because the longest-tier intersection represents only \amountSharedEightCount{} probes from \amountSharedEightFamilyCount{} scenario families, these observations neither establish a benefit nor rule out degradation within the measured range.
-
-\begin{table}[t]
-\caption{Matched amount and filler-composition comparisons. Brackets give \confidenceLevel{}\% family-cluster bootstrap intervals; $n$ is the matched denominator. Changes are later minus earlier for amount and business filler minus unrelated prose for composition.}
-\label{tab:amount-quality}
-\centering
-\small
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{@{}lccc@{}}
-\toprule
-Comparison & Accuracy A & Accuracy B & Change ($n$) \\
-\midrule
-Amount: short to middle
-& \amountSharedTwoAccuracy{} [\amountSharedTwoAccuracyLow{}, \amountSharedTwoAccuracyHigh{}]
-& \amountSharedFourAccuracy{} [\amountSharedFourAccuracyLow{}, \amountSharedFourAccuracyHigh{}]
-& \amountSharedTwoFourChange{} (\amountSharedTwoFourDenominator{}) \\
-Amount: middle to long
-& \amountSharedFourAccuracy{} [\amountSharedFourAccuracyLow{}, \amountSharedFourAccuracyHigh{}]
-& \amountSharedEightAccuracy{} [\amountSharedEightAccuracyLow{}, \amountSharedEightAccuracyHigh{}]
-& \amountSharedFourEightChange{} (\amountSharedFourEightDenominator{}) \\
-\midrule
-Composition at short tier
-& \qualityTwoIrrelevantAccuracy{} [\qualityTwoIrrelevantAccuracyLow{}, \qualityTwoIrrelevantAccuracyHigh{}]
-& \qualityTwoRelevantAccuracy{} [\qualityTwoRelevantAccuracyLow{}, \qualityTwoRelevantAccuracyHigh{}]
-& \qualityTwoRelevantChange{} (\qualityTwoRelevantDenominator{}) \\
-Composition at middle tier
-& \qualityFourIrrelevantAccuracy{} [\qualityFourIrrelevantAccuracyLow{}, \qualityFourIrrelevantAccuracyHigh{}]
-& \qualityFourRelevantAccuracy{} [\qualityFourRelevantAccuracyLow{}, \qualityFourRelevantAccuracyHigh{}]
-& \qualityFourRelevantChange{} (\qualityFourRelevantDenominator{}) \\
-\bottomrule
-\end{tabular}
-}
-\end{table}
-
-\paragraph{Position.}
-\textbf{Moving the answer clause to the end produced the largest and most consistent gain.} At the shortest tier, accuracy rose from \positionTwoStartAccuracy{}\% at the start to \positionTwoEndAccuracy{}\% at the end. The paired increase was \positionTwoStartEndChange{} points, with a family-cluster interval of [\positionTwoStartEndChangeLow{}, \positionTwoStartEndChangeHigh{}], \positionTwoStartEndWins{} wins, and no losses. At the middle tier, the same move raised accuracy by \positionFourStartEndChange{} points [\positionFourStartEndChangeLow{}, \positionFourStartEndChangeHigh{}], with \positionFourStartEndWins{} wins and no losses. The sparse longest tier also favored the end over the start by \positionEightStartEndChange{} points, but it contains only \positionEightStartEndDenominator{} pairs. Accuracy with the clause in the middle was lower than accuracy with it at the end in the two populated tiers (Table~\ref{tab:position}).
+\paragraph{Answer to the first question: position.}
+Moving the answer clause to the end produced the largest and most consistent gain. At the shortest tier, accuracy rose from \positionTwoStartAccuracy{}\% at the start to \positionTwoEndAccuracy{}\% at the end. The paired increase was \positionTwoStartEndChange{} points, with a family-cluster interval of [\positionTwoStartEndChangeLow{}, \positionTwoStartEndChangeHigh{}], \positionTwoStartEndWins{} wins, and no losses. At the middle tier, the same move raised accuracy by \positionFourStartEndChange{} points [\positionFourStartEndChangeLow{}, \positionFourStartEndChangeHigh{}], with \positionFourStartEndWins{} wins and no losses. The sparse longest tier also favored the end over the start by \positionEightStartEndChange{} points, but it contains only \positionEightStartEndDenominator{} pairs. Accuracy with the clause in the middle was lower than accuracy with it at the end in the two populated tiers (Table~\ref{tab:position}).
 
 \begin{table}[t]
 \caption{Accuracy by answer-clause position. Each row compares the same scenario families across positions. Brackets give \confidenceLevel{}\% family-cluster bootstrap intervals.}
@@ -158,11 +122,8 @@ Mean tokens & Start & Middle & End \\
 }
 \end{table}
 
-\paragraph{Filler composition.}
-\textbf{Code-heavy business filler produced lower accuracy than unrelated prose.} The matched difference was \qualityTwoRelevantChange{} points [\qualityTwoRelevantChangeLow{}, \qualityTwoRelevantChangeHigh{}] over \qualityTwoRelevantDenominator{} pairs at the shortest tier and \qualityFourRelevantChange{} points [\qualityFourRelevantChangeLow{}, \qualityFourRelevantChangeHigh{}] over \qualityFourRelevantDenominator{} pairs at the middle tier. At the shortest tier, the paired outcomes were \qualityTwoRelevantWins{} win, \qualityTwoRelevantLosses{} losses, and \qualityTwoRelevantTies{} ties. At the middle tier, they were \qualityFourRelevantWins{} win, \qualityFourRelevantLosses{} losses, and \qualityFourRelevantTies{} ties. The longest-tier estimate was \qualityEightRelevantChange{} points, but its \qualityEightRelevantFamilyCount{} families are too sparse to strengthen that conclusion. Because the business filler also adds code-shaped candidates and repeated entity templates, these results do not show that topical relevance caused the difference.
-
-\paragraph{Mitigation.}
-\textbf{The query-entity selector reversed the keyword filter's failure.} Full-context accuracy was \pruningFullAccuracy{}\%, compared with \pruningPrunedAccuracy{}\% after keyword filtering and \entitySelectorAccuracy{}\% after query-entity selection. Query-entity selection improved on full context by \entitySelectorChange{} points [\entitySelectorChangeLow{}, \entitySelectorChangeHigh{}], with \entitySelectorWins{} wins and no losses. Compared with keyword pruning, it gained \selectorComparisonChange{} points [\selectorComparisonChangeLow{}, \selectorComparisonChangeHigh{}], with \selectorComparisonWins{} wins, no losses, and \selectorComparisonTies{} ties (Table~\ref{tab:pruning}).
+\paragraph{Answer to the second question: lexical selection.}
+The query-entity selector reversed the keyword filter's failure. Full-context accuracy was \pruningFullAccuracy{}\%, compared with \pruningPrunedAccuracy{}\% after keyword filtering and \entitySelectorAccuracy{}\% after query-entity selection. Query-entity selection improved on full context by \entitySelectorChange{} points [\entitySelectorChangeLow{}, \entitySelectorChangeHigh{}], with \entitySelectorWins{} wins and no losses. Compared with keyword pruning, it gained \selectorComparisonChange{} points [\selectorComparisonChangeLow{}, \selectorComparisonChangeHigh{}], with \selectorComparisonWins{} wins, no losses, and \selectorComparisonTies{} ties (Table~\ref{tab:pruning}).
 
 \begin{table}[t]
 \caption{Matched selector results and diagnostic controls. Accuracy intervals are \confidenceLevel{}\% family-cluster bootstrap intervals.}
@@ -201,6 +162,32 @@ Closed book
 \end{table}
 
 Removing only the retained decoy raised keyword-pruned accuracy to \pruningNoDecoyAccuracy{}\%, a change of \pruningNoDecoyChange{} points with \pruningNoDecoyWins{} wins and no losses. Literal wording changed matched accuracy by \literalControlChange{} points, with \literalControlWins{} wins and no losses. Across all outputs, distractor capture was \distractorCaptureRate{}\%, exact-output compliance was \exactOutputComplianceRate{}\%, and invalid output was \invalidOutputRate{}\%. The diagnostic and deployable selector agree that retaining the lexical competitor, rather than deleting the answer, caused the keyword filter's failure in this grid.
+
+\paragraph{Answer to the third question: prompt length.}
+The relationship between prompt length and accuracy remains unresolved. Accuracy was \amountSharedTwoAccuracy{}\% at a mean prompt length of \tierTwoTokens{} tokens and \amountSharedFourAccuracy{}\% at \tierFourTokens{} tokens. This paired change of \amountSharedTwoFourChange{} points has a family-cluster interval of [\amountSharedTwoFourChangeLow{}, \amountSharedTwoFourChangeHigh{}] over \amountSharedTwoFourDenominator{} cases. At \tierEightTokens{} tokens, accuracy was \amountSharedEightAccuracy{}\%, with \amountSharedFourEightWins{} wins, \amountSharedFourEightLosses{} losses, and \amountSharedFourEightTies{} ties relative to the middle tier (Table~\ref{tab:amount}). Because the longest-tier intersection represents only \amountSharedEightCount{} probes from \amountSharedEightFamilyCount{} scenario families, these observations neither establish a benefit nor rule out degradation within the measured range.
+
+\begin{table}[t]
+\caption{Matched prompt-length comparisons. Brackets give \confidenceLevel{}\% family-cluster bootstrap intervals; $n$ is the matched denominator. Changes are longer minus shorter.}
+\label{tab:amount}
+\centering
+\small
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Comparison & Accuracy A & Accuracy B & Change ($n$) \\
+\midrule
+Amount: short to middle
+& \amountSharedTwoAccuracy{} [\amountSharedTwoAccuracyLow{}, \amountSharedTwoAccuracyHigh{}]
+& \amountSharedFourAccuracy{} [\amountSharedFourAccuracyLow{}, \amountSharedFourAccuracyHigh{}]
+& \amountSharedTwoFourChange{} (\amountSharedTwoFourDenominator{}) \\
+Amount: middle to long
+& \amountSharedFourAccuracy{} [\amountSharedFourAccuracyLow{}, \amountSharedFourAccuracyHigh{}]
+& \amountSharedEightAccuracy{} [\amountSharedEightAccuracyLow{}, \amountSharedEightAccuracyHigh{}]
+& \amountSharedFourEightChange{} (\amountSharedFourEightDenominator{}) \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
 
 \section{Limitations}
 
