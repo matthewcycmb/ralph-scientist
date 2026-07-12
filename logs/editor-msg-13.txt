@@ -1,0 +1,5 @@
+Thesis: In this frozen small model, lexical and entity cues dominate synthetic clause retrieval: word-overlap pruning amplifies a decoy, exact entity selection nearly solves the template, answer recency helps under an imperfect control, and the matched length effect remains unresolved.
+
+1. **FOCUS LAP:** Fix the one-sentence competitor shift throughout analysis, results, and prose.
+2. Test deterministic code extraction and selector robustness to aliases, pronouns, ambiguity, and unseen question forms.
+3. Reframe the paper around benchmark shortcuts and lexical competition; retain only readable, argument-changing displays.

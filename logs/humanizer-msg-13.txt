@@ -1,0 +1,10 @@
+Revised [paper/main.tex](/Users/matthewchan/ralphm/Ralphm/paper/main.tex) for clarity, flow, terminology, and appropriately descriptive result language.
+
+Checks passed:
+
+- Required prose style gate
+- `git diff --check`
+- LaTeX brace and environment balance
+- Macro, citation, and numeric-value preservation
+
+No tectonic run, gate suite, or commit performed. Existing unrelated working-tree changes were untouched.

@@ -155,3 +155,7 @@ PASS  prose-style
 PASS  submission-ready
 PASS  latex-compiles
 gates failed: 0
+SHADOW: tagged green-v82 (iter=13)
+CONFIRM: rubric 6 >= 6 at iter 13 — running confirmation review
+RATCHET: tagged paper-v16 (score=6, iter=13)
+HUMANIZER pass at iter 13
