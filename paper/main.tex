@@ -55,7 +55,7 @@ The answer is not a general context-length threshold. In this grid, the model im
 
 \section{Related Work}
 
-\citet{liu2023lost} found a U-shaped position curve in multi-document question answering and key-value retrieval, with stronger use of information near context boundaries. Our design performs a smaller clause-reordering test: the question, filler, competing clause, and answer code remain fixed while only the answer clause moves. The observed pattern is primarily recency rather than a full U-shape because the start condition is also weak.
+\citet{liu2023lost} found a U-shaped position curve in multi-document question answering and key-value retrieval, with stronger use of information near context boundaries. Our design performs a smaller clause-reordering test: the question, filler sequence, clauses, and codes remain fixed while the answer clause is inserted at a different depth. Inserting it before the competing clause shifts that clause's final sentence index by one. The observed pattern is primarily recency rather than a full U-shape because the start condition is also weak.
 
 Input amount can matter even when the underlying problem is fixed. \citet{levy2024same} padded matched reasoning problems and observed degradation well before model context limits, while RULER found that usable context lengths can be shorter than advertised windows \citep{hsieh2024ruler}. Our amount comparison uses the intersection of cases present at every tier, avoiding a change in scenario mix as prompts grow.
 
@@ -71,7 +71,7 @@ We run it through \texttt{llama-completion} with greedy decoding, zero temperatu
 \paragraph{Scenario families.}
 Seeded code generates a company, target code, competing company and code, question, and filler for each family. The question asks for the renewal code needed to extend the target company's contract. Its wording exactly matches the competing clause, whereas the answer-bearing clause calls the same value a renewal identifier. A matched literal control reverses these phrasings while retaining the same filler.
 
-For each full-context family, we insert the answer clause near the start, middle, or end. Family generation does not use target position in any random seed. The competing clause is independently assigned to an earlier or later fractional depth and remains there across all three renders. Thus a paired position contrast changes only where the answer clause appears.
+For each full-context family, we insert the answer clause near the start, middle, or end. Family generation does not use target position in any random seed. The competing clause receives an earlier or later fractional insertion index that is independent of answer position and fixed across the three renders. Its final sentence index shifts by one when the answer is inserted before it. Thus a paired position contrast changes answer placement and this mechanical one-sentence shift, while preserving the scenario content and filler order.
 
 \paragraph{Amount and quality.}
 The tokenizer, rather than a character estimate, determines prompt length. The three full-context tiers average \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Each tier balances topically related filler with unrelated sentences. Related filler consists of other companies, business records, and unrelated codes; unrelated filler describes places and events outside the contract domain. Quality pairs share the family, target position, question, and measured tier.

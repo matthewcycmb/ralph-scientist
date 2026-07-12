@@ -11,8 +11,6 @@ Highest leverage next:
   candidate count, and semantic domain.
 - [ ] Add a pruning control that can distinguish lexical-selection failure from
   answer removal.
-- [ ] Correct the claimed distractor-position control in code or narrow the paper's
-  description after verifying the final sentence indices.
 - [ ] Replace or simplify the scaled tables if the harness PDF audit still finds
   their text crowded or illegible.
 - [ ] Confirm that every one of the four numbered questions has a measured answer a

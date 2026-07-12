@@ -1,0 +1,14 @@
+Corrected the distractor-position claim in [paper/main.tex](/Users/matthewchan/ralphm/Ralphm/paper/main.tex:58). It now accurately states that the distractor keeps a fixed insertion index but can shift by one final sentence position.
+
+Updated [TODO.md](/Users/matthewchan/ralphm/Ralphm/TODO.md) and archived the completed task in [DONE.md](/Users/matthewchan/ralphm/Ralphm/DONE.md).
+
+Passed individual gates:
+
+- Number literals
+- Prose style
+- Submission readiness
+- Citation resolution
+- Results sanity
+- `git diff --check`
+
+No analysis or protected result files were changed. Changes remain uncommitted.

@@ -74,3 +74,9 @@
 
 - Added the ICML template's required anonymous corresponding-author declaration,
   removing the visible missing-corresponding-author error from the affiliation block.
+
+## Lap 9 (2026-07-12)
+
+- Corrected the position-control description after checking the rendered clause
+  indices. The paper now states that the competing clause keeps a fixed insertion
+  index but shifts by one sentence when the answer is inserted before it.
