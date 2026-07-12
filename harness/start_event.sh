@@ -15,7 +15,7 @@ git rev-parse event-day-start >/dev/null 2>&1 || fail "event-day-start tag missi
 git merge-base --is-ancestor event-day-start HEAD || fail "event-day-start is not on the current lineage"
 git remote get-url origin >/dev/null 2>&1 || fail "origin remote missing"
 
-for cmd in codex tectonic llama-completion llama-tokenize git curl lsof pdfinfo pdftotext; do need "$cmd"; done
+for cmd in codex tectonic llama-completion llama-tokenize git curl lsof pgrep pdfinfo pdftotext; do need "$cmd"; done
 need python3
 need caffeinate
 command -v timeout >/dev/null 2>&1 || command -v gtimeout >/dev/null 2>&1 \
@@ -62,25 +62,34 @@ WANDB_LOG=/tmp/ralph-wandb.log
 PIDS=/tmp/ralph-event.pids
 LOOP_PID="" DASH_PID="" WANDB_PID=""
 
-terminate_group() {
-  local leader="${1:-}"
-  [[ -n "$leader" ]] || return 0
-  # Background jobs are launched in their own process groups below. Signalling
-  # the group, rather than only its leader, also stops Codex, make, Python, and
-  # llama-completion descendants before they can become orphaned.
-  kill -TERM -- "-$leader" 2>/dev/null || kill -TERM "$leader" 2>/dev/null || true
-  for _ in {1..20}; do
-    kill -0 -- "-$leader" 2>/dev/null || return 0
-    sleep 0.1
+terminate_tree() {
+  local root="${1:-}" pid child i
+  [[ -n "$root" ]] || return 0
+  # Snapshot the complete descendant tree before signalling. Background jobs
+  # may create their own process groups, so group-only termination is not enough.
+  local -a targets=("$root")
+  i=0
+  while (( i < ${#targets[@]} )); do
+    pid="${targets[$i]}"
+    while IFS= read -r child; do
+      [[ -n "$child" ]] && targets+=("$child")
+    done < <(pgrep -P "$pid" 2>/dev/null || true)
+    i=$((i + 1))
   done
-  kill -KILL -- "-$leader" 2>/dev/null || true
+  for ((i=${#targets[@]}-1; i>=0; i--)); do
+    kill -TERM "${targets[$i]}" 2>/dev/null || true
+  done
+  sleep 0.5
+  for ((i=${#targets[@]}-1; i>=0; i--)); do
+    kill -0 "${targets[$i]}" 2>/dev/null && kill -KILL "${targets[$i]}" 2>/dev/null || true
+  done
 }
 
 cleanup() {
   trap - EXIT INT TERM
-  terminate_group "$LOOP_PID"
-  terminate_group "$DASH_PID"
-  terminate_group "$WANDB_PID"
+  terminate_tree "$LOOP_PID"
+  terminate_tree "$DASH_PID"
+  terminate_tree "$WANDB_PID"
   [[ -n "$LOOP_PID" ]] && wait "$LOOP_PID" 2>/dev/null || true
   [[ -n "$DASH_PID" ]] && wait "$DASH_PID" 2>/dev/null || true
   [[ -n "$WANDB_PID" ]] && wait "$WANDB_PID" 2>/dev/null || true
@@ -101,8 +110,8 @@ else
 fi
 
 echo "STARTING research loop (worker=${WORKER_BACKEND:-codex}, PUSH=${PUSH:-1})"
-# Monitor mode gives every background job a distinct process group whose ID is
-# its leader PID, which makes terminate_group reliable on macOS.
+# Monitor mode keeps top-level jobs distinct; cleanup also walks descendants
+# because nested background agents can create additional process groups.
 set -m
 caffeinate -is env PUSH="${PUSH:-1}" harness/loop.sh &
 LOOP_PID=$!

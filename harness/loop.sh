@@ -140,9 +140,13 @@ citation_fingerprint() {
 }
 
 if [[ -n "${RESUME_RUN:-}" ]]; then
-  ITER=$(find logs -maxdepth 1 -type f -name 'iter-*.log' -print 2>/dev/null \
+  LOG_ITER=$(find logs -maxdepth 1 -type f -name 'iter-*.log' -print 2>/dev/null \
     | sed -n 's#.*iter-\([0-9][0-9]*\)\.log#\1#p' | sort -n | tail -1)
-  ITER="${ITER:-0}"
+  VERIFY_ITER=$(sed -n 's/^--- gates @ iteration \([0-9][0-9]*\).*/\1/p' VERIFY.log 2>/dev/null \
+    | sort -n | tail -1)
+  LOG_ITER="${LOG_ITER:-0}"
+  VERIFY_ITER="${VERIFY_ITER:-0}"
+  if (( VERIFY_ITER > LOG_ITER )); then ITER="$VERIFY_ITER"; else ITER="$LOG_ITER"; fi
   echo "RESUME: continuing event run after iteration $ITER"
 else
   ITER=0

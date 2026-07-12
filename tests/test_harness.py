@@ -52,7 +52,9 @@ class HarnessRegressionTests(unittest.TestCase):
 
     def test_event_launcher_kills_complete_process_groups(self) -> None:
         launcher = (ROOT / "harness/start_event.sh").read_text()
-        self.assertIn('kill -TERM -- "-$leader"', launcher)
+        self.assertIn("terminate_tree", launcher)
+        self.assertIn('pgrep -P "$pid"', launcher)
+        self.assertIn('kill -TERM "${targets[$i]}"', launcher)
         self.assertIn("set -m", launcher)
         self.assertIn("official-loop-start-20260712-1230", launcher)
         self.assertIn("official Ralph Loop window is 12:30-15:30 KST", launcher)
@@ -64,6 +66,7 @@ class HarnessRegressionTests(unittest.TestCase):
         self.assertIn('[[ -z "${RESUME_RUN:-}" ]]', loop)
         self.assertIn('echo "RESUME: continuing event run after iteration $ITER"', loop)
         self.assertIn("find logs -maxdepth 1", loop)
+        self.assertIn("VERIFY_ITER=$(sed", loop)
 
     def test_submission_gate_rejects_identity_and_placeholder_abstract(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
