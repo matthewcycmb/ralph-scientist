@@ -22,7 +22,9 @@ command -v timeout >/dev/null 2>&1 || command -v gtimeout >/dev/null 2>&1 \
   || fail "GNU timeout/gtimeout missing"
 
 codex --version
-if [[ "${WORKER_BACKEND:-codex}" == "claude" || "${POST_REVIEW_BACKEND:-${WORKER_BACKEND:-codex}}" == "claude" ]]; then
+if [[ "${WORKER_BACKEND:-codex}" == "claude" \
+   || "${POST_REVIEW_BACKEND:-${WORKER_BACKEND:-codex}}" == "claude" \
+   || "${REVIEW_BACKEND:-${WORKER_BACKEND:-codex}}" == "claude" ]]; then
   need claude
   claude auth status | grep -q '"loggedIn": true' \
     || fail "Claude worker requested but Claude Code is not logged in; run: claude auth login"

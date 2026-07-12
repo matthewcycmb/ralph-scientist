@@ -39,15 +39,16 @@ CODEX_MODEL="${CODEX_MODEL:-gpt-5.6-sol}"
 CODEX_REASONING_EFFORT="${CODEX_REASONING_EFFORT:-high}"
 WORKER_BACKEND="${WORKER_BACKEND:-codex}"
 POST_REVIEW_BACKEND="${POST_REVIEW_BACKEND:-$WORKER_BACKEND}"
+REVIEW_BACKEND="${REVIEW_BACKEND:-$WORKER_BACKEND}"
 CLAUDE_MODEL="${CLAUDE_MODEL:-fable}"
 CLAUDE_EFFORT="${CLAUDE_EFFORT:-high}"
-for backend in "$WORKER_BACKEND" "$POST_REVIEW_BACKEND"; do
+for backend in "$WORKER_BACKEND" "$POST_REVIEW_BACKEND" "$REVIEW_BACKEND"; do
   if [[ "$backend" != "codex" && "$backend" != "claude" ]]; then
     echo "FATAL: agent backends must be codex or claude, got $backend"
     exit 1
   fi
 done
-echo "AGENTS: worker=$WORKER_BACKEND post_review=$POST_REVIEW_BACKEND reviewer=codex codex=$CODEX_MODEL/$CODEX_REASONING_EFFORT claude=$CLAUDE_MODEL/$CLAUDE_EFFORT"
+echo "AGENTS: worker=$WORKER_BACKEND post_review=$POST_REVIEW_BACKEND reviewer=$REVIEW_BACKEND codex=$CODEX_MODEL/$CODEX_REASONING_EFFORT claude=$CLAUDE_MODEL/$CLAUDE_EFFORT"
 
 run_post_review_role() {
   local output_file="$1" log_file="$2" prompt="$3"
@@ -67,20 +68,38 @@ run_post_review_role() {
 
 run_scientific_review() {
   local output_file="$1" log_file="$2" prompt="$3"
-  "$TIMEOUT" "${REVIEW_CAP_MIN}m" codex exec -m "$CODEX_MODEL" \
-    -c "model_reasoning_effort=\"$CODEX_REASONING_EFFORT\"" \
-    -s read-only --skip-git-repo-check \
-    -o "$output_file" "$prompt" > "$log_file" 2>&1 || true
-  if .venv/bin/python harness/check_quota.py "$log_file"; then
-    echo "QUOTA: Codex review limit hit — retrying review with Claude $CLAUDE_MODEL" | tee -a VERIFY.log
-    mv "$log_file" "${log_file%.log}-codex-quota.log"
-    rm -f "$output_file"
+  if [[ "$REVIEW_BACKEND" == "claude" ]]; then
     "$TIMEOUT" "${REVIEW_CAP_MIN}m" claude -p --model "$CLAUDE_MODEL" \
       --effort "$CLAUDE_EFFORT" --permission-mode dontAsk \
       --tools "Read,Glob,Grep" --no-session-persistence \
       --output-format stream-json --verbose --include-partial-messages \
       "$prompt" > "$log_file" 2>&1 || true
     .venv/bin/python harness/extract_claude_result.py "$log_file" "$output_file" || true
+    if .venv/bin/python harness/check_quota.py "$log_file"; then
+      echo "QUOTA: Claude review limit hit — emergency retry with Codex" | tee -a VERIFY.log
+      mv "$log_file" "${log_file%.log}-claude-quota.log"
+      rm -f "$output_file"
+      "$TIMEOUT" "${REVIEW_CAP_MIN}m" codex exec -m "$CODEX_MODEL" \
+        -c "model_reasoning_effort=\"$CODEX_REASONING_EFFORT\"" \
+        -s read-only --skip-git-repo-check \
+        -o "$output_file" "$prompt" > "$log_file" 2>&1 || true
+    fi
+  else
+    "$TIMEOUT" "${REVIEW_CAP_MIN}m" codex exec -m "$CODEX_MODEL" \
+      -c "model_reasoning_effort=\"$CODEX_REASONING_EFFORT\"" \
+      -s read-only --skip-git-repo-check \
+      -o "$output_file" "$prompt" > "$log_file" 2>&1 || true
+    if .venv/bin/python harness/check_quota.py "$log_file"; then
+      echo "QUOTA: Codex review limit hit — retrying review with Claude $CLAUDE_MODEL" | tee -a VERIFY.log
+      mv "$log_file" "${log_file%.log}-codex-quota.log"
+      rm -f "$output_file"
+      "$TIMEOUT" "${REVIEW_CAP_MIN}m" claude -p --model "$CLAUDE_MODEL" \
+        --effort "$CLAUDE_EFFORT" --permission-mode dontAsk \
+        --tools "Read,Glob,Grep" --no-session-persistence \
+        --output-format stream-json --verbose --include-partial-messages \
+        "$prompt" > "$log_file" 2>&1 || true
+      .venv/bin/python harness/extract_claude_result.py "$log_file" "$output_file" || true
+    fi
   fi
 }
 
