@@ -44,7 +44,8 @@ We built an agent that designs context experiments, runs them on a
  │                                   ▼                                   │
  │  5 · EVERY 3RD LAP                                                    │
  │       REVIEWER    reads the paper like a harsh conference reviewer.   │
- │                   Scores it /10. Keeps a list of every complaint:     │
+ │                   Scores 4 dimensions /4 + overall /6. Tracks every  │
+ │                   complaint:                                         │
  │                   new / still open / fixed.                           │
  │       EDITOR      looks at the actual numbers and decides what the    │
  │                   paper's main point should be. Reorders TODO.md.     │
@@ -132,7 +133,7 @@ We built an agent that designs context experiments, runs them on a
    "Why such a small model?"              — Because it makes the paper
      checkable. Delete the results, type make all, watch identical
      numbers come back. No API paper can do that.
-   "Your own reviewer scores it 3/10?"    — That's the novelty score;
+   "Your rehearsal reviewer rejected it?" — The old run exposed weak design;
      our reviewer grades like a real conference. The quality bar it
      enforces (6+, confirmed twice) is what tags a version.
    "Did you write any of this?"           — I wrote the rulebook before

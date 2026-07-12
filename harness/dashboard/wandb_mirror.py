@@ -52,7 +52,7 @@ def snapshot():
         reviews = s.get("reviews") or []
         if reviews:
             last = reviews[-1]
-            for k in ("rubric", "overall", "soundness", "presentation", "significance", "originality"):
+            for k in ("rubric", "overall", "soundness", "presentation", "significance", "originality", "confidence"):
                 if isinstance(last.get(k), (int, float)):
                     out[f"review_{k}"] = last[k]
         rd = s.get("readability")

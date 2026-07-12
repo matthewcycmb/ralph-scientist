@@ -17,7 +17,7 @@ flowchart TD
     TASK["2 · Does ONE task<br>run analysis / write / fix<br>then leaves a working tree"]
     GATES{"3 · Seven deterministic gates<br>frozen inputs? · citations? · zero typed numbers?<br>fresh results? · sane schema? · plain prose? · PDF?"}
     FIX["failure appended to TODO.md<br>(a future agent must fix it)"]
-    REVIEW["4 · Every 3rd lap: separate skeptical agent<br>writes an ICML-style review, scores /10"]
+    REVIEW["4 · On first green, then every 3 laps<br>ICML-style review: four dimensions /4 + overall /6"]
     RATCHET["5 · Commit verified checkpoint, then ratchet<br>all gates green AND score ≥ last tag<br>→ git tag paper-vN"]
     SPEC --> AGENT --> TASK --> GATES
     GATES -- "any fail" --> FIX --> AGENT
@@ -90,5 +90,5 @@ on review of the experiment design and scoring code.
 | Reviewer calibration — honest 4/10 vs sabotaged 2/10 (`harness/calibration/`) | ✅ done |
 | Endurance run: 9 effective laps, 12/12 gates green, 12 shadow tags, analysis 18→76 values | ✅ done |
 | Quota-outage behavior: degraded gracefully; backoff + review-pointer added to loop | ✅ fixed |
-| Latest context-paper review — rubric 6/7 but ICML overall 3/10 reject | ⚠️ design lessons folded into seed |
+| Latest context-paper review — legacy rubric 6/7 but legacy overall 3/10 reject | ⚠️ design lessons folded into seed |
 | Dress rehearsal — context paper through paper-v13, independent review + confirmation | ✅ done |

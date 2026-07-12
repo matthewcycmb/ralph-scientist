@@ -263,7 +263,7 @@ async function refresh() {
 
   const last = s.reviews[s.reviews.length - 1];
   setStat('st-score', 'score', last ? (last.rubric ?? last.overall) + '/10' : '–');
-  setStat('st-icml', 'icml', last && last.rubric != null ? last.overall + '/10' : '–');
+  setStat('st-icml', 'icml', last && last.rubric != null ? last.overall + '/6' : '–');
   const rd = s.readability;
   setStat('st-read', 'read', rd ? rd.flesch.toFixed(0) : '–');
   if (rd) document.getElementById('readnote').textContent =
@@ -321,7 +321,7 @@ async function refresh() {
 
   document.getElementById('editorial').textContent = s.editorial || '(appears after the first editor lap)';
   document.getElementById('scores').innerHTML = s.reviews.length
-    ? s.reviews.map(r => `<span><b>${r.rubric != null ? r.rubric + ' | ' + r.overall : r.overall}</b><small>lap ${r.iter}${r.confirm != null ? ' · 2nd read ' + r.confirm : ''}</small>` +
+    ? s.reviews.map(r => `<span><b>${r.rubric != null ? r.rubric + '/10 | ' + r.overall + '/6' : r.overall + '/6'}</b><small>lap ${r.iter}${r.confirm != null ? ' · 2nd read ' + r.confirm : ''}</small>` +
         (r.ledger ? `<small>${r.ledger.resolved} fixed · ${r.ledger.persisting} open · ${r.ledger.new} new</small>` : '') + `</span>`).join('')
     : '<span class="muted">no reviews yet</span>';
   const lastLed = [...s.reviews].reverse().find(r => r.ledger)?.ledger;

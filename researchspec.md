@@ -96,7 +96,10 @@ Every reviewed checkpoint receives separate scores for:
 - **Significance:** The paper identifies who should care, what practical or scientific decision the evidence informs, and why the result matters beyond one experimental grid without overstating its scope.
 - **Originality:** The paper names a specific difference from the closest prior work, such as a new experimental factor, matched mitigation, new subject scale, or reproducibility contribution.
 
-Reproducibility strengthens soundness but does not substitute for significance or originality. A passing score must survive an independent confirmation review, and the lower score controls promotion.
+The four dimensions use integer scores from 1–4. Overall uses 1–6 and reviewer confidence
+uses 1–5. Reproducibility strengthens soundness but does not substitute for significance or
+originality. A passing internal rubric score must survive an independent confirmation review,
+and the lower score controls promotion.
 
 ## Paper standard
 

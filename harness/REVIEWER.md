@@ -37,8 +37,8 @@ Write your review to stdout in the ICML format:
      produced it. Report the chain or the break.
 6. **Questions for the authors** — the 3 hardest ones.
 7. **Scores** — two DIFFERENT scores:
-   - **ICML-style competition scores:** Soundness /4, Presentation /4,
-     Significance /4, Originality /4, Overall /10. Score each separately and justify it.
+   - **Official ICML-style competition scores:** Soundness /4, Presentation /4,
+     Significance /4, Originality /4, Overall /6, Confidence /5. Use integers and justify each.
    - **Rubric score /10** (fixed bar): does THIS paper do what SPEC.md demands, at
      the quality demanded? Score ONLY against SPEC's rubric and hard requirements:
      sound methods for what is claimed, every claim sized to evidence (overclaiming
@@ -55,6 +55,6 @@ Write your review to stdout in the ICML format:
    - Recommendation: accept | weak accept | weak reject | reject.
 
 Finish with exactly one line of machine-readable JSON:
-{"overall": <int 1-10>, "rubric": <int 1-10>, "soundness": <int 1-4>, "presentation": <int 1-4>, "significance": <int 1-4>, "originality": <int 1-4>, "recommendation": "<accept|weak accept|weak reject|reject>"}
+{"overall": <int 1-6>, "rubric": <int 1-10>, "soundness": <int 1-4>, "presentation": <int 1-4>, "significance": <int 1-4>, "originality": <int 1-4>, "confidence": <int 1-5>, "recommendation": "<accept|weak accept|weak reject|reject>"}
 
 Do not fix anything. Do not edit any file. Judge only.

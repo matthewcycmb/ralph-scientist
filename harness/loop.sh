@@ -38,7 +38,7 @@ TIMEOUT=$(command -v timeout || command -v gtimeout) || {
 # reach: any lap that modifies harness/ or Makefile gets auto-reverted + logged.
 START_SHA=$(git rev-parse HEAD)
 harness_fingerprint() {
-  cat harness/loop.sh harness/checkpoint.sh harness/review_due.sh harness/run_gates.sh harness/ratchet.sh harness/REVIEWER.md \
+  cat harness/loop.sh harness/checkpoint.sh harness/review_due.sh harness/run_gates.sh harness/ratchet.sh harness/REVIEWER.md harness/ASSIGNMENT_REVIEW.md \
       harness/EDITOR.md harness/HUMANIZER.md harness/gates/* Makefile PROMPT.md SPEC.md \
       analysis/make_values.py analysis/RESULTS_SCHEMA.md data/models/CHECKSUMS.txt \
       data/models/FETCH.sh data/cache/nlsy97/CHECKSUMS.txt requirements.txt \
@@ -50,7 +50,7 @@ restore_protected_files() {
   if [[ "$(harness_fingerprint)" != "$BASELINE_FP" ]]; then
     echo "TAMPER: protected harness inputs modified at iter $ITER — restoring from $START_SHA" | tee -a VERIFY.log
     git checkout "$START_SHA" -- harness/loop.sh harness/checkpoint.sh harness/review_due.sh harness/run_gates.sh \
-      harness/ratchet.sh harness/REVIEWER.md harness/EDITOR.md harness/HUMANIZER.md \
+      harness/ratchet.sh harness/REVIEWER.md harness/ASSIGNMENT_REVIEW.md harness/EDITOR.md harness/HUMANIZER.md \
       harness/gates Makefile PROMPT.md SPEC.md analysis/make_values.py \
       analysis/RESULTS_SCHEMA.md data/models/CHECKSUMS.txt data/models/FETCH.sh \
       data/cache/nlsy97/CHECKSUMS.txt requirements.txt paper/*.sty paper/*.bst

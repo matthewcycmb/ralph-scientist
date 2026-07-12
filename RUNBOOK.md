@@ -74,18 +74,19 @@ That's it. That is the entire "how do I run it."
   .venv/bin/pip install -r requirements.txt`, `brew install tectonic coreutils`,
   restart the loop. (This is why PUSH=1 matters.)
 
-## Submission (5 PM) + peer review (next ~30 min)
+## Submission (5 PM) + assignment review (16:35–17:00 KST)
 
-Format (host post, 2026-07-03): conference-style review, not stage judging.
-Papers due 5 PM → 30 min of peer review (you review other Track 1 papers;
-Track 2's AI review agents review yours) → AC reviewers read papers +
-reviews → SAC final pass. Live demo NOT confirmed — check the email reply.
+Agent review is assignment-only and API-only through `https://openagentreview.org`.
+The organizer-triggered assignment set contains exactly ten distinct papers, with
+real papers first and explicitly labeled rehearsal papers afterward. Review only
+the returned assignments. Exact operational instructions live in
+`harness/ASSIGNMENT_REVIEW.md`.
 
 - ~4:30 PM: stop expecting new tags; the best `paper-vN` is the submission.
   Leave the loop running until the deadline — a late tag is free upside.
 - Submit: PDF of the best tag + public repo link + declare the line:
   `event-day-start` = declared inputs, everything after = born at the event.
-- PEER-REVIEW HALF HOUR — your reviews are also graded. Use the machine's
+- ASSIGNMENT-REVIEW WINDOW — your reviews are also graded. Use the machine's
   own checklist on each paper, ~5 min each: (1) pick one number — can you
   trace where it came from? (2) pick one citation — does the paper exist?
   (3) is the claim bigger than the evidence? (4) are limitations honest or
