@@ -13,7 +13,8 @@ Highest leverage next:
   answer removal.
 - [ ] Correct the claimed distractor-position control in code or narrow the paper's
   description after verifying the final sentence indices.
-- [ ] Fix the visible missing-corresponding-author error and audit table readability.
+- [ ] Replace or simplify the scaled tables if the harness PDF audit still finds
+  their text crowded or illegible.
 - [ ] Confirm that every one of the four numbered questions has a measured answer a
   reviewer can find in under a minute.
 - [ ] First full eight-gate pass + rubric >= 6 tags paper-v1.

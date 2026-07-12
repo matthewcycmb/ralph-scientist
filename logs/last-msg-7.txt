@@ -1,0 +1,12 @@
+Fixed the visible ICML corresponding-author error by adding the required anonymous declaration in [paper/main.tex](/Users/matthewchan/ralphm/Ralphm/paper/main.tex:26).
+
+Also updated [TODO.md](/Users/matthewchan/ralphm/Ralphm/TODO.md) and [DONE.md](/Users/matthewchan/ralphm/Ralphm/DONE.md).
+
+Validation passed:
+
+- Number provenance
+- Prose style
+- Submission readiness
+- `git diff --check`
+
+Per instructions, I did not run Tectonic or the aggregate gate runner.

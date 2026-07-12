@@ -69,3 +69,8 @@
 
 - Corrected the NoLiMa bibliography entry to match the cached exemplar and full
   text: Ryan A. Rossi and Seunghyun Yoon replace the two inaccurate author names.
+
+## Lap 8 (2026-07-12)
+
+- Added the ICML template's required anonymous corresponding-author declaration,
+  removing the visible missing-corresponding-author error from the affiliation block.

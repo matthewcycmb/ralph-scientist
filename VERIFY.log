@@ -75,3 +75,13 @@ CONFIRM: rubric 6 >= 6 at iter 6 — running confirmation review
 QUOTA: Claude review limit hit — emergency retry with Codex
 RATCHET: tagged paper-v14 (score=6, iter=6)
 HUMANIZER pass at iter 6
+--- gates @ iteration 7 13:53:21 ---
+PASS  frozen-inputs
+PASS  citations-resolve
+PASS  no-number-literals
+PASS  pipeline-fresh
+PASS  results-sane
+PASS  prose-style
+PASS  submission-ready
+PASS  latex-compiles
+gates failed: 0
