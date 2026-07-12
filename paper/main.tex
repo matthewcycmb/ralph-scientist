@@ -88,74 +88,67 @@ The keyword filter retained the answer clause and lexical decoy in all \pruningP
 
 Normalized accuracy requires the target code to appear without the competing code. Exact-output compliance requires a response containing one code and no other text. A distractor capture contains the competing code without the target, and an invalid response contains both expected codes or neither. We strip only the runner's fixed transport trailer before applying these rules.
 
-The inferential target is the population of synthetic scenario families defined by the seeded generator. To compute each \confidenceLevel{}\% interval, we resample whole observed families while retaining all positions, filler types, and variants from every selected family. Exact enumeration makes this cluster bootstrap deterministic. Paired changes are differences in accuracy over an exact intersection of scenario keys, and their intervals use the same family-level resampling. The intervals describe sensitivity to the small sample of families, while wins, losses, and ties expose the underlying paired outcomes. Because greedy decoding is deterministic, the intervals do not measure uncertainty from repeated decoding.
+We report descriptive results for the observed seeded scenario families. Each accuracy appears with its probe and family counts. Paired changes use the exact intersection of scenario keys and include wins, losses, and ties, where a win is a case corrected by the second condition and a loss is a newly incorrect case. The grid contains only \tierEightFamilyCount{} to \tierTwoFamilyCount{} families per full-context tier, which does not support a population confidence claim. Greedy decoding is deterministic, so repeated decoding adds no sampling uncertainty.
 
 \section{Results}
 
 \paragraph{Answer to the first question: position.}
-Moving the answer clause to the end produced the largest and most consistent gain. At the shortest tier, accuracy rose from \positionTwoStartAccuracy{}\% at the start to \positionTwoEndAccuracy{}\% at the end. The paired increase was \positionTwoStartEndChange{} points, with a family-cluster interval of [\positionTwoStartEndChangeLow{}, \positionTwoStartEndChangeHigh{}], \positionTwoStartEndWins{} wins, and no losses. At the middle tier, the same move raised accuracy by \positionFourStartEndChange{} points [\positionFourStartEndChangeLow{}, \positionFourStartEndChangeHigh{}], with \positionFourStartEndWins{} wins and no losses. The sparse longest tier also favored the end over the start by \positionEightStartEndChange{} points, but it contains only \positionEightStartEndDenominator{} pairs. Accuracy with the clause in the middle was lower than accuracy with it at the end in the two populated tiers (Table~\ref{tab:position}).
+Moving the answer clause to the end produced the largest and most consistent observed gain. At the shortest tier, accuracy rose from \positionTwoStartAccuracy{}\% at the start to \positionTwoEndAccuracy{}\% at the end. The paired increase was \positionTwoStartEndChange{} points across \positionTwoStartEndDenominator{} cases from \positionTwoStartEndFamilyCount{} families, with \positionTwoStartEndWins{} wins, \positionTwoStartEndLosses{} losses, and \positionTwoStartEndTies{} ties. At the middle tier, the same move raised accuracy by \positionFourStartEndChange{} points across \positionFourStartEndDenominator{} cases from \positionFourStartEndFamilyCount{} families, with \positionFourStartEndWins{} wins and \positionFourStartEndLosses{} losses. The longest tier also favored the end by \positionEightStartEndChange{} points, but its \positionEightStartEndDenominator{} pairs came from only \positionEightStartEndFamilyCount{} families (Table~\ref{tab:position}).
 
 \begin{table}[t]
-\caption{Accuracy by answer-clause position. Each row compares the same scenario families across positions. Brackets give \confidenceLevel{}\% family-cluster bootstrap intervals.}
+\caption{Descriptive accuracy by answer-clause position. Each row compares the same cases across positions; W/L/T gives paired start-to-end outcomes.}
 \label{tab:position}
 \centering
 \small
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{@{}lccc@{}}
+\begin{tabular}{@{}lcccccc@{}}
 \toprule
-Mean tokens & Start & Middle & End \\
+Tokens & Start & Middle & End & Pairs & Families & W/L/T \\
 \midrule
 \tierTwoTokens{}
-& \positionTwoStartAccuracy{} [\positionTwoStartAccuracyLow{}, \positionTwoStartAccuracyHigh{}]
-& \positionTwoMiddleAccuracy{} [\positionTwoMiddleAccuracyLow{}, \positionTwoMiddleAccuracyHigh{}]
-& \positionTwoEndAccuracy{} [\positionTwoEndAccuracyLow{}, \positionTwoEndAccuracyHigh{}] \\
+& \positionTwoStartAccuracy{} & \positionTwoMiddleAccuracy{} & \positionTwoEndAccuracy{}
+& \positionTwoStartEndDenominator{} & \positionTwoStartEndFamilyCount{}
+& \positionTwoStartEndWins{}/\positionTwoStartEndLosses{}/\positionTwoStartEndTies{} \\
 \tierFourTokens{}
-& \positionFourStartAccuracy{} [\positionFourStartAccuracyLow{}, \positionFourStartAccuracyHigh{}]
-& \positionFourMiddleAccuracy{} [\positionFourMiddleAccuracyLow{}, \positionFourMiddleAccuracyHigh{}]
-& \positionFourEndAccuracy{} [\positionFourEndAccuracyLow{}, \positionFourEndAccuracyHigh{}] \\
+& \positionFourStartAccuracy{} & \positionFourMiddleAccuracy{} & \positionFourEndAccuracy{}
+& \positionFourStartEndDenominator{} & \positionFourStartEndFamilyCount{}
+& \positionFourStartEndWins{}/\positionFourStartEndLosses{}/\positionFourStartEndTies{} \\
 \tierEightTokens{}
-& \positionEightStartAccuracy{} [\positionEightStartAccuracyLow{}, \positionEightStartAccuracyHigh{}]
-& \positionEightMiddleAccuracy{} [\positionEightMiddleAccuracyLow{}, \positionEightMiddleAccuracyHigh{}]
-& \positionEightEndAccuracy{} [\positionEightEndAccuracyLow{}, \positionEightEndAccuracyHigh{}] \\
+& \positionEightStartAccuracy{} & \positionEightMiddleAccuracy{} & \positionEightEndAccuracy{}
+& \positionEightStartEndDenominator{} & \positionEightStartEndFamilyCount{}
+& \positionEightStartEndWins{}/\positionEightStartEndLosses{}/\positionEightStartEndTies{} \\
 \bottomrule
 \end{tabular}
 }
 \end{table}
 
 \paragraph{Answer to the second question: lexical selection.}
-The query-entity selector reversed the keyword filter's failure. Full-context accuracy was \pruningFullAccuracy{}\%, compared with \pruningPrunedAccuracy{}\% after keyword filtering and \entitySelectorAccuracy{}\% after query-entity selection. Query-entity selection improved on full context by \entitySelectorChange{} points [\entitySelectorChangeLow{}, \entitySelectorChangeHigh{}], with \entitySelectorWins{} wins and no losses. Compared with keyword pruning, it gained \selectorComparisonChange{} points [\selectorComparisonChangeLow{}, \selectorComparisonChangeHigh{}], with \selectorComparisonWins{} wins, no losses, and \selectorComparisonTies{} ties (Table~\ref{tab:pruning}).
+The query-entity selector reversed the keyword filter's failure. Full-context accuracy was \pruningFullAccuracy{}\%, compared with \pruningPrunedAccuracy{}\% after keyword filtering and \entitySelectorAccuracy{}\% after query-entity selection. Against full context, query-entity selection produced \entitySelectorWins{} wins, \entitySelectorLosses{} losses, and \entitySelectorTies{} ties across \entitySelectorDenominator{} cases from \entitySelectorFamilyCount{} families. Against keyword pruning, it gained \selectorComparisonChange{} points, with \selectorComparisonWins{} wins, \selectorComparisonLosses{} losses, and \selectorComparisonTies{} ties over the same family count (Table~\ref{tab:pruning}).
 
 \begin{table}[t]
-\caption{Matched selector results and diagnostic controls. Accuracy intervals are \confidenceLevel{}\% family-cluster bootstrap intervals.}
+\caption{Descriptive accuracy for matched selectors and diagnostic controls. Counts are probes/families.}
 \label{tab:pruning}
 \centering
 \small
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{@{}lcc@{}}
 \toprule
-Condition & Accuracy & Count \\
+Condition & Accuracy & Probes/families \\
 \midrule
 Full context
-& \pruningFullAccuracy{} [\pruningFullAccuracyLow{}, \pruningFullAccuracyHigh{}]
-& \pruningFullCount{} \\
+& \pruningFullAccuracy{} & \pruningFullCount{}/\pruningFullFamilyCount{} \\
 Keyword pruned
-& \pruningPrunedAccuracy{} [\pruningPrunedAccuracyLow{}, \pruningPrunedAccuracyHigh{}]
-& \pruningPrunedCount{} \\
+& \pruningPrunedAccuracy{} & \pruningPrunedCount{}/\pruningPrunedFamilyCount{} \\
 Query entity
-& \entitySelectorAccuracy{} [\entitySelectorAccuracyLow{}, \entitySelectorAccuracyHigh{}]
-& \entitySelectorCount{} \\
+& \entitySelectorAccuracy{} & \entitySelectorCount{}/\entitySelectorFamilyCount{} \\
 Decoy removed
-& \pruningNoDecoyAccuracy{} [\pruningNoDecoyAccuracyLow{}, \pruningNoDecoyAccuracyHigh{}]
-& \pruningNoDecoyCount{} \\
+& \pruningNoDecoyAccuracy{} & \pruningNoDecoyCount{}/\pruningNoDecoyFamilyCount{} \\
 Literal wording
-& \literalControlAccuracy{} [\literalControlAccuracyLow{}, \literalControlAccuracyHigh{}]
-& \literalControlCount{} \\
+& \literalControlAccuracy{} & \literalControlCount{}/\literalControlFamilyCount{} \\
 Paraphrase wording
-& \paraphraseControlAccuracy{} [\paraphraseControlAccuracyLow{}, \paraphraseControlAccuracyHigh{}]
-& \paraphraseControlCount{} \\
+& \paraphraseControlAccuracy{} & \paraphraseControlCount{}/\paraphraseControlFamilyCount{} \\
 Closed book
-& \closedBookAccuracy{} [\closedBookAccuracyLow{}, \closedBookAccuracyHigh{}]
-& \closedBookCount{} \\
+& \closedBookAccuracy{} & \closedBookCount{}/\closedBookFamilyCount{} \\
 \bottomrule
 \end{tabular}
 }
@@ -164,26 +157,26 @@ Closed book
 Removing only the retained decoy raised keyword-pruned accuracy to \pruningNoDecoyAccuracy{}\%, a change of \pruningNoDecoyChange{} points with \pruningNoDecoyWins{} wins and no losses. Literal wording changed matched accuracy by \literalControlChange{} points, with \literalControlWins{} wins and no losses. Across all outputs, distractor capture was \distractorCaptureRate{}\%, exact-output compliance was \exactOutputComplianceRate{}\%, and invalid output was \invalidOutputRate{}\%. The diagnostic and deployable selector agree that retaining the lexical competitor, rather than deleting the answer, caused the keyword filter's failure in this grid.
 
 \paragraph{Answer to the third question: prompt length.}
-The relationship between prompt length and accuracy remains unresolved. Accuracy was \amountSharedTwoAccuracy{}\% at a mean prompt length of \tierTwoTokens{} tokens and \amountSharedFourAccuracy{}\% at \tierFourTokens{} tokens. This paired change of \amountSharedTwoFourChange{} points has a family-cluster interval of [\amountSharedTwoFourChangeLow{}, \amountSharedTwoFourChangeHigh{}] over \amountSharedTwoFourDenominator{} cases. At \tierEightTokens{} tokens, accuracy was \amountSharedEightAccuracy{}\%, with \amountSharedFourEightWins{} wins, \amountSharedFourEightLosses{} losses, and \amountSharedFourEightTies{} ties relative to the middle tier (Table~\ref{tab:amount}). Because the longest-tier intersection represents only \amountSharedEightCount{} probes from \amountSharedEightFamilyCount{} scenario families, these observations neither establish a benefit nor rule out degradation within the measured range.
+The relationship between prompt length and accuracy remains unresolved. Accuracy was \amountSharedTwoAccuracy{}\% at a mean prompt length of \tierTwoTokens{} tokens and \amountSharedFourAccuracy{}\% at \tierFourTokens{} tokens. This paired change of \amountSharedTwoFourChange{} points comprised \amountSharedTwoFourWins{} wins, \amountSharedTwoFourLosses{} losses, and \amountSharedTwoFourTies{} ties over \amountSharedTwoFourDenominator{} cases from \amountSharedTwoFourFamilyCount{} families. At \tierEightTokens{} tokens, accuracy was \amountSharedEightAccuracy{}\%, with \amountSharedFourEightWins{} wins, \amountSharedFourEightLosses{} losses, and \amountSharedFourEightTies{} ties relative to the middle tier (Table~\ref{tab:amount}). Because the longest-tier intersection represents only \amountSharedEightCount{} probes from \amountSharedEightFamilyCount{} scenario families, these observations neither establish a benefit nor rule out degradation within the measured range.
 
 \begin{table}[t]
-\caption{Matched prompt-length comparisons. Brackets give \confidenceLevel{}\% family-cluster bootstrap intervals; $n$ is the matched denominator. Changes are longer minus shorter.}
+\caption{Descriptive matched prompt-length comparisons. Changes are longer minus shorter; W/L/T gives paired outcomes.}
 \label{tab:amount}
 \centering
 \small
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{@{}lccc@{}}
+\begin{tabular}{@{}lccccc@{}}
 \toprule
-Comparison & Accuracy A & Accuracy B & Change ($n$) \\
+Comparison & Accuracy A & Accuracy B & Change & Pairs/families & W/L/T \\
 \midrule
 Amount: short to middle
-& \amountSharedTwoAccuracy{} [\amountSharedTwoAccuracyLow{}, \amountSharedTwoAccuracyHigh{}]
-& \amountSharedFourAccuracy{} [\amountSharedFourAccuracyLow{}, \amountSharedFourAccuracyHigh{}]
-& \amountSharedTwoFourChange{} (\amountSharedTwoFourDenominator{}) \\
+& \amountSharedTwoAccuracy{} & \amountSharedFourAccuracy{} & \amountSharedTwoFourChange{}
+& \amountSharedTwoFourDenominator{}/\amountSharedTwoFourFamilyCount{}
+& \amountSharedTwoFourWins{}/\amountSharedTwoFourLosses{}/\amountSharedTwoFourTies{} \\
 Amount: middle to long
-& \amountSharedFourAccuracy{} [\amountSharedFourAccuracyLow{}, \amountSharedFourAccuracyHigh{}]
-& \amountSharedEightAccuracy{} [\amountSharedEightAccuracyLow{}, \amountSharedEightAccuracyHigh{}]
-& \amountSharedFourEightChange{} (\amountSharedFourEightDenominator{}) \\
+& \amountSharedFourAccuracy{} & \amountSharedEightAccuracy{} & \amountSharedFourEightChange{}
+& \amountSharedFourEightDenominator{}/\amountSharedFourEightFamilyCount{}
+& \amountSharedFourEightWins{}/\amountSharedFourEightLosses{}/\amountSharedFourEightTies{} \\
 \bottomrule
 \end{tabular}
 }
@@ -191,7 +184,7 @@ Amount: middle to long
 
 \section{Limitations}
 
-The findings concern one small quantized model and may not transfer to larger models or other quantization levels. Synthetic clause lookup is not natural contract analysis, and retrieval accuracy is not a measure of general capability. The \cpuBudgetMinutes{}-minute CPU budget capped the grid, leaving only \tierEightCount{} full-context probes at the longest tier and wide intervals throughout. That sparse tier prevents a conclusion about degradation within the measured range, and the experiment cannot address longer prompts. The filler comparison confounds topical relation with semantic domain, entity and code density, candidate count, and sentence templates. A factorial design that matches those properties would be needed to identify a topical-relevance effect. Greedy decoding removes run-to-run sampling variation but does not show how sampling would change the estimates. Query-entity selection assumes that the question names one company exactly and that the relevant sentence repeats that name. It does not address aliases, pronouns, or queries without a unique named subject. The decoy-removal control also depends on an oracle label unavailable in natural documents.
+The findings concern one small quantized model and may not transfer to larger models or other quantization levels. Synthetic clause lookup is not natural contract analysis, and retrieval accuracy is not a measure of general capability. The \cpuBudgetMinutes{}-minute CPU budget capped the grid, leaving only \tierEightCount{} full-context probes at the longest tier and few families throughout. The estimates describe those observed families rather than a broader generator population. That sparse tier prevents a conclusion about degradation within the measured range, and the experiment cannot address longer prompts. The filler comparison confounds topical relation with semantic domain, entity and code density, candidate count, and sentence templates. A factorial design that matches those properties would be needed to identify a topical-relevance effect. Greedy decoding removes run-to-run sampling variation but does not show how sampling would change the estimates. Query-entity selection assumes that the question names one company exactly and that the relevant sentence repeats that name. It does not address aliases, pronouns, or queries without a unique named subject. The decoy-removal control also depends on an oracle label unavailable in natural documents.
 
 \section{Reproducibility}
 

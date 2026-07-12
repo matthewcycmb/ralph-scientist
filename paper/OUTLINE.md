@@ -47,8 +47,8 @@ through a macro generated in `paper/values.tex`.
 ## Scoring and Comparisons
 
 - Define exact-answer scoring, distractor capture, invalid output, and exact-output compliance.
-- Report per-cell probe and family counts with family-cluster bootstrap intervals for
-  every accuracy estimate and paired change.
+- Report per-cell probe and family counts, matched denominators, and paired wins, losses,
+  and ties. Treat all estimates as descriptive because each tier has few scenario families.
 - Amount: compare adequately populated tokenizer-measured tiers; do not claim a threshold
   unless the grid can locate one.
 - Position: use the matched scenario families and report paired changes.

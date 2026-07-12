@@ -6,8 +6,8 @@ Highest leverage next:
    Result: the deployable selector excludes the lexical decoy in this grid and resolves the missing-baseline criticism with a direct keyword-versus-entity comparison.
 2. [x] Reframed the title, abstract, Introduction, questions, Results, and takeaway around position sensitivity and lexical-decoy failure; removed context quality as a contribution and answered question.
    Result: the visible argument now answers position, decoy-sensitive selection, and matched length in that order; filler bundles remain balanced controls whose contrast is not interpreted.
-3. [ ] Replace population-sounding bootstrap confidence claims with a descriptive presentation justified for two to six families, exposing family counts and paired outcomes in the main evidence.
-   Why: the latest two reviews treat the nominal intervals as false precision and a soundness defect.
+3. [x] Removed family-cluster bootstrap intervals from the analysis registry and paper, and replaced them with descriptive point estimates, family counts, matched denominators, and paired outcomes in the main evidence.
+   Result: the paper makes no population confidence claim from the two to six observed families, and the regenerated pipeline contains no interval-bound values.
 
 Still relevant after the focus lap:
 

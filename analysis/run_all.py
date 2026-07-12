@@ -18,7 +18,6 @@ conditions.  A response is invalid when it contains both expected codes or
 neither.  Extra-token responses contain exactly one expected code but are not
 code-only compliant.
 """
-import itertools
 import json
 import re
 import sys
@@ -31,7 +30,6 @@ RESULTS = ROOT / "results.json"
 SCRIPT = "analysis/run_all.py"
 CODE_RE = re.compile(r"(?<![A-Z0-9])[A-Z]{2}-[0-9]{3}(?![A-Z0-9])")
 EOF_RE = re.compile(r"(?:\r?\n)?\s*> EOF by user[\s\S]*\Z")
-CONFIDENCE = 0.95
 
 
 def clean_output(raw: str) -> str:
@@ -64,37 +62,6 @@ def pct(successes: int, n: int) -> float:
     return 100.0 * successes / n if n else 0.0
 
 
-def percentile(sorted_values: list, quantile: float) -> float:
-    """Linearly interpolated quantile of an already sorted nonempty sequence."""
-    index = quantile * (len(sorted_values) - 1)
-    lower = int(index)
-    upper = min(lower + 1, len(sorted_values) - 1)
-    weight = index - lower
-    return sorted_values[lower] * (1.0 - weight) + sorted_values[upper] * weight
-
-
-def cluster_bootstrap_interval(contributions: list) -> tuple:
-    """Exact percentile interval from resampling observed scenario families.
-
-    Each contribution is ``(numerator, denominator)`` for one family.  We
-    enumerate every ordered bootstrap sample of the observed family clusters,
-    which is practical because the frozen grid contains at most six families.
-    This avoids treating repeated positions, fillers, and variants from one
-    generated scenario as independent observations.
-    """
-    if not contributions:
-        return 0.0, 0.0
-    cluster_count = len(contributions)
-    estimates = []
-    for sample in itertools.product(range(cluster_count), repeat=cluster_count):
-        numerator = sum(contributions[i][0] for i in sample)
-        denominator = sum(contributions[i][1] for i in sample)
-        estimates.append(pct(numerator, denominator))
-    estimates.sort()
-    tail = (1.0 - CONFIDENCE) / 2.0
-    return percentile(estimates, tail), percentile(estimates, 1.0 - tail)
-
-
 def main() -> int:
     if not MANIFEST.is_file():
         print("run_all: data/probes/manifest.json is missing", file=sys.stderr)
@@ -124,39 +91,19 @@ def main() -> int:
         n = len(rows)
         successes = sum(r["accurate"] for r in rows)
         families = sorted({r["family"] for r in rows})
-        contributions = [
-            (sum(r["accurate"] for r in rows if r["family"] == family),
-             sum(1 for r in rows if r["family"] == family))
-            for family in families
-        ]
-        low, high = cluster_bootstrap_interval(contributions)
         add(prefix + "Count", n, "count", f"probe count for {desc}")
         add(prefix + "FamilyCount", len(families), "count",
             f"scenario-family count for {desc}")
         add(prefix + "Accuracy", pct(successes, n), "pct", desc, ".1f")
-        add(prefix + "AccuracyLow", low, "pct",
-            f"family-cluster bootstrap lower confidence bound for {desc}", ".1f")
-        add(prefix + "AccuracyHigh", high, "pct",
-            f"family-cluster bootstrap upper confidence bound for {desc}", ".1f")
 
     def add_binary_rate(prefix, rows, field, desc):
         n = len(rows)
         successes = sum(r[field] for r in rows)
         families = sorted({r["family"] for r in rows})
-        contributions = [
-            (sum(r[field] for r in rows if r["family"] == family),
-             sum(1 for r in rows if r["family"] == family))
-            for family in families
-        ]
-        low, high = cluster_bootstrap_interval(contributions)
         add(prefix + "Count", successes, "count", f"count of {desc}")
         add(prefix + "FamilyCount", len(families), "count",
             f"scenario-family count for {desc}")
         add(prefix + "Rate", pct(successes, n), "pct", desc, ".1f")
-        add(prefix + "RateLow", low, "pct",
-            f"family-cluster bootstrap lower confidence bound for {desc}", ".1f")
-        add(prefix + "RateHigh", high, "pct",
-            f"family-cluster bootstrap upper confidence bound for {desc}", ".1f")
 
     def keyed(rows, fields):
         return {tuple(r[f] for f in fields): r for r in rows}
@@ -171,15 +118,6 @@ def main() -> int:
         delta = pct(sum(rm[k]["accurate"] for k in keys), len(keys)) - pct(
             sum(lm[k]["accurate"] for k in keys), len(keys))
         families = sorted({lm[k]["family"] for k in keys})
-        contributions = []
-        for family in families:
-            family_keys = [k for k in keys if lm[k]["family"] == family]
-            contributions.append((
-                sum(int(rm[k]["accurate"]) - int(lm[k]["accurate"])
-                    for k in family_keys),
-                len(family_keys),
-            ))
-        low, high = cluster_bootstrap_interval(contributions)
         comparison = f"paired {right_label} minus {left_label} comparison"
         add(prefix + "Denominator", len(keys), "count", f"matched pairs in {comparison}")
         add(prefix + "FamilyCount", len(families), "count",
@@ -189,16 +127,10 @@ def main() -> int:
         add(prefix + "Ties", ties, "count", f"accuracy ties in {comparison}")
         add(prefix + "Change", delta, "raw",
             f"accuracy change in percentage points for {comparison}", ".1f")
-        add(prefix + "ChangeLow", low, "raw",
-            f"family-cluster bootstrap lower bound for {comparison}", ".1f")
-        add(prefix + "ChangeHigh", high, "raw",
-            f"family-cluster bootstrap upper bound for {comparison}", ".1f")
 
     add("sampleSize", len(scored), "count", "total completed probes scored")
     add("manifestProbeCount", len(records), "count", "total probes in the manifest")
     add("missingProbeCount", len(missing), "count", "manifest probes without completed raw outputs")
-    add("confidenceLevel", 100.0 * CONFIDENCE, "pct",
-        "nominal level of every family-cluster bootstrap confidence interval", ".0f")
     add("cpuBudgetMinutes", 45, "count", "full clean-room probe budget in minutes")
 
     full = [r for r in scored if r["variant"] == "full" and r["style"] == "para"]
@@ -358,10 +290,9 @@ def main() -> int:
                 "extra_token_output": "exactly one expected code present but output is not code-only",
             },
             "uncertainty": {
-                "method": "exact percentile bootstrap over scenario-family clusters",
-                "confidence_level": CONFIDENCE,
-                "cluster": "family",
-                "interpretation": "variation under resampling observed seeded scenario families; deterministic decoding has no sampling interval",
+                "method": "descriptive summaries of the observed seeded scenario families",
+                "reported": "point estimates, family counts, matched denominators, and paired wins/losses/ties",
+                "interpretation": "no population confidence claim; deterministic decoding has no repeated-decoding uncertainty",
             },
             "missing_probe_ids": missing,
         },

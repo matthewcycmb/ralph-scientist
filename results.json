@@ -16,10 +16,9 @@
       "transport_cleanup": "strip the fixed llama.cpp EOF trailer and surrounding whitespace"
     },
     "uncertainty": {
-      "cluster": "family",
-      "confidence_level": 0.95,
-      "interpretation": "variation under resampling observed seeded scenario families; deterministic decoding has no sampling interval",
-      "method": "exact percentile bootstrap over scenario-family clusters"
+      "interpretation": "no population confidence claim; deterministic decoding has no repeated-decoding uncertainty",
+      "method": "descriptive summaries of the observed seeded scenario families",
+      "reported": "point estimates, family counts, matched denominators, and paired wins/losses/ties"
     }
   },
   "values": {
@@ -29,20 +28,6 @@
       "script": "analysis/run_all.py",
       "unit": "pct",
       "value": 58.333333333333336
-    },
-    "amountSharedEightAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy in the t8k tier for families shared across all tiers",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 66.04166666666667
-    },
-    "amountSharedEightAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy in the t8k tier for families shared across all tiers",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 50.62500000000001
     },
     "amountSharedEightCount": {
       "desc": "probe count for normalized accuracy in the t8k tier for families shared across all tiers",
@@ -63,20 +48,6 @@
       "unit": "pct",
       "value": 58.333333333333336
     },
-    "amountSharedFourAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy in the t4k tier for families shared across all tiers",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 81.45833333333333
-    },
-    "amountSharedFourAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy in the t4k tier for families shared across all tiers",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 35.208333333333336
-    },
     "amountSharedFourCount": {
       "desc": "probe count for normalized accuracy in the t4k tier for families shared across all tiers",
       "script": "analysis/run_all.py",
@@ -89,20 +60,6 @@
       "script": "analysis/run_all.py",
       "unit": "raw",
       "value": 0.0
-    },
-    "amountSharedFourEightChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired t8k minus t4k comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 30.83333333333333
-    },
-    "amountSharedFourEightChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired t8k minus t4k comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": -30.833333333333332
     },
     "amountSharedFourEightDenominator": {
       "desc": "matched pairs in paired t8k minus t4k comparison",
@@ -147,20 +104,6 @@
       "unit": "pct",
       "value": 50.0
     },
-    "amountSharedTwoAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy in the t2k tier for families shared across all tiers",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 50.0
-    },
-    "amountSharedTwoAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy in the t2k tier for families shared across all tiers",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 50.0
-    },
     "amountSharedTwoCount": {
       "desc": "probe count for normalized accuracy in the t2k tier for families shared across all tiers",
       "script": "analysis/run_all.py",
@@ -173,20 +116,6 @@
       "script": "analysis/run_all.py",
       "unit": "raw",
       "value": 8.333333333333336
-    },
-    "amountSharedTwoEightChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired t8k minus t2k comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 16.041666666666664
-    },
-    "amountSharedTwoEightChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired t8k minus t2k comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 0.6250000000000006
     },
     "amountSharedTwoEightDenominator": {
       "desc": "matched pairs in paired t8k minus t2k comparison",
@@ -231,20 +160,6 @@
       "unit": "raw",
       "value": 8.333333333333336
     },
-    "amountSharedTwoFourChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired t4k minus t2k comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 31.45833333333333
-    },
-    "amountSharedTwoFourChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired t4k minus t2k comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": -14.791666666666666
-    },
     "amountSharedTwoFourDenominator": {
       "desc": "matched pairs in paired t4k minus t2k comparison",
       "script": "analysis/run_all.py",
@@ -282,20 +197,6 @@
       "unit": "pct",
       "value": 0.0
     },
-    "closedBookAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized closed-book accuracy",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 0.0
-    },
-    "closedBookAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized closed-book accuracy",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 0.0
-    },
     "closedBookCount": {
       "desc": "probe count for normalized closed-book accuracy",
       "script": "analysis/run_all.py",
@@ -307,13 +208,6 @@
       "script": "analysis/run_all.py",
       "unit": "count",
       "value": 6
-    },
-    "confidenceLevel": {
-      "desc": "nominal level of every family-cluster bootstrap confidence interval",
-      "fmt": ".0f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 95.0
     },
     "cpuBudgetMinutes": {
       "desc": "full clean-room probe budget in minutes",
@@ -340,36 +234,8 @@
       "unit": "pct",
       "value": 40.0
     },
-    "distractorCaptureRateHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for responses containing the distractor code but not the target code",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 50.0
-    },
-    "distractorCaptureRateLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for responses containing the distractor code but not the target code",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 32.323232323232325
-    },
     "entitySelectorAccuracy": {
       "desc": "normalized accuracy after query-entity selection",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 100.0
-    },
-    "entitySelectorAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy after query-entity selection",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 100.0
-    },
-    "entitySelectorAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy after query-entity selection",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
@@ -381,20 +247,6 @@
       "script": "analysis/run_all.py",
       "unit": "raw",
       "value": 60.0
-    },
-    "entitySelectorChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired query-entity-selected context minus full context comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 86.66666666666667
-    },
-    "entitySelectorChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired query-entity-selected context minus full context comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 33.333333333333336
     },
     "entitySelectorCount": {
       "desc": "probe count for normalized accuracy after query-entity selection",
@@ -422,20 +274,6 @@
     },
     "entitySelectorDistractorRetainedRate": {
       "desc": "query-entity-selected prompts retaining the lexical decoy",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 0.0
-    },
-    "entitySelectorDistractorRetainedRateHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for query-entity-selected prompts retaining the lexical decoy",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 0.0
-    },
-    "entitySelectorDistractorRetainedRateLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for query-entity-selected prompts retaining the lexical decoy",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
@@ -472,20 +310,6 @@
       "unit": "pct",
       "value": 100.0
     },
-    "entitySelectorTargetRetainedRateHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for query-entity-selected prompts retaining the answer clause",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 100.0
-    },
-    "entitySelectorTargetRetainedRateLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for query-entity-selected prompts retaining the answer clause",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 100.0
-    },
     "entitySelectorTies": {
       "desc": "accuracy ties in paired query-entity-selected context minus full context comparison",
       "script": "analysis/run_all.py",
@@ -517,20 +341,6 @@
       "unit": "pct",
       "value": 96.66666666666667
     },
-    "exactOutputComplianceRateHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for responses containing exactly one code and nothing else",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 97.22222222222223
-    },
-    "exactOutputComplianceRateLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for responses containing exactly one code and nothing else",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 95.23809523809524
-    },
     "exactTargetCount": {
       "desc": "count of responses containing exactly the target code and nothing else",
       "script": "analysis/run_all.py",
@@ -550,20 +360,6 @@
       "unit": "pct",
       "value": 52.77777777777778
     },
-    "exactTargetRateHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for responses containing exactly the target code and nothing else",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 59.677419354838705
-    },
-    "exactTargetRateLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for responses containing exactly the target code and nothing else",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 44.0
-    },
     "extraTokenOutputCount": {
       "desc": "count of responses containing one expected code plus extra output",
       "script": "analysis/run_all.py",
@@ -578,20 +374,6 @@
     },
     "extraTokenOutputRate": {
       "desc": "responses containing one expected code plus extra output",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 0.0
-    },
-    "extraTokenOutputRateHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for responses containing one expected code plus extra output",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 0.0
-    },
-    "extraTokenOutputRateLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for responses containing one expected code plus extra output",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
@@ -616,20 +398,6 @@
       "unit": "pct",
       "value": 7.222222222222222
     },
-    "invalidOutputRateHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for responses containing both expected codes or neither expected code",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 11.827956989247312
-    },
-    "invalidOutputRateLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for responses containing both expected codes or neither expected code",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 4.022988505747127
-    },
     "literalControlAccuracy": {
       "desc": "normalized literal-control accuracy",
       "fmt": ".1f",
@@ -637,40 +405,12 @@
       "unit": "pct",
       "value": 83.33333333333333
     },
-    "literalControlAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized literal-control accuracy",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 100.0
-    },
-    "literalControlAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized literal-control accuracy",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 50.0
-    },
     "literalControlChange": {
       "desc": "accuracy change in percentage points for paired literal wording minus paraphrase wording comparison",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "raw",
       "value": 66.66666666666666
-    },
-    "literalControlChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired literal wording minus paraphrase wording comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 100.0
-    },
-    "literalControlChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired literal wording minus paraphrase wording comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 33.333333333333336
     },
     "literalControlCount": {
       "desc": "probe count for normalized literal-control accuracy",
@@ -727,20 +467,6 @@
       "unit": "pct",
       "value": 52.77777777777778
     },
-    "overallAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy across all completed probes",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 59.677419354838705
-    },
-    "overallAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy across all completed probes",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 44.0
-    },
     "overallCount": {
       "desc": "probe count for normalized accuracy across all completed probes",
       "script": "analysis/run_all.py",
@@ -759,20 +485,6 @@
       "script": "analysis/run_all.py",
       "unit": "pct",
       "value": 16.666666666666668
-    },
-    "paraphraseControlAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy in the matched paraphrase-control scenarios",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 50.0
-    },
-    "paraphraseControlAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy in the matched paraphrase-control scenarios",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 0.0
     },
     "paraphraseControlCount": {
       "desc": "probe count for normalized accuracy in the matched paraphrase-control scenarios",
@@ -793,20 +505,6 @@
       "unit": "pct",
       "value": 75.0
     },
-    "positionEightEndAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy with the target at end in the t8k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 98.125
-    },
-    "positionEightEndAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with the target at end in the t8k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 51.87500000000001
-    },
     "positionEightEndCount": {
       "desc": "probe count for normalized accuracy with the target at end in the t8k tier",
       "script": "analysis/run_all.py",
@@ -826,20 +524,6 @@
       "unit": "pct",
       "value": 75.0
     },
-    "positionEightMiddleAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy with the target at mid in the t8k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 98.125
-    },
-    "positionEightMiddleAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with the target at mid in the t8k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 51.87500000000001
-    },
     "positionEightMiddleCount": {
       "desc": "probe count for normalized accuracy with the target at mid in the t8k tier",
       "script": "analysis/run_all.py",
@@ -848,20 +532,6 @@
     },
     "positionEightMiddleEndChange": {
       "desc": "accuracy change in percentage points for paired end minus middle comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 0.0
-    },
-    "positionEightMiddleEndChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired end minus middle comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 0.0
-    },
-    "positionEightMiddleEndChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired end minus middle comparison",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "raw",
@@ -910,20 +580,6 @@
       "unit": "pct",
       "value": 25.0
     },
-    "positionEightStartAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy with the target at start in the t8k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 48.125
-    },
-    "positionEightStartAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with the target at start in the t8k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 1.8750000000000018
-    },
     "positionEightStartCount": {
       "desc": "probe count for normalized accuracy with the target at start in the t8k tier",
       "script": "analysis/run_all.py",
@@ -936,20 +592,6 @@
       "script": "analysis/run_all.py",
       "unit": "raw",
       "value": 50.0
-    },
-    "positionEightStartEndChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired end minus start comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 96.25
-    },
-    "positionEightStartEndChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired end minus start comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 3.7500000000000036
     },
     "positionEightStartEndDenominator": {
       "desc": "matched pairs in paired end minus start comparison",
@@ -994,20 +636,6 @@
       "unit": "raw",
       "value": 50.0
     },
-    "positionEightStartMiddleChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired middle minus start comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 96.25
-    },
-    "positionEightStartMiddleChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired middle minus start comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 3.7500000000000036
-    },
     "positionEightStartMiddleDenominator": {
       "desc": "matched pairs in paired middle minus start comparison",
       "script": "analysis/run_all.py",
@@ -1045,20 +673,6 @@
       "unit": "pct",
       "value": 70.0
     },
-    "positionFourEndAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy with the target at end in the t4k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 100.0
-    },
-    "positionFourEndAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with the target at end in the t4k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 30.0
-    },
     "positionFourEndCount": {
       "desc": "probe count for normalized accuracy with the target at end in the t4k tier",
       "script": "analysis/run_all.py",
@@ -1078,20 +692,6 @@
       "unit": "pct",
       "value": 30.0
     },
-    "positionFourMiddleAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy with the target at mid in the t4k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 70.0
-    },
-    "positionFourMiddleAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with the target at mid in the t4k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 0.0
-    },
     "positionFourMiddleCount": {
       "desc": "probe count for normalized accuracy with the target at mid in the t4k tier",
       "script": "analysis/run_all.py",
@@ -1104,20 +704,6 @@
       "script": "analysis/run_all.py",
       "unit": "raw",
       "value": 40.0
-    },
-    "positionFourMiddleEndChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired end minus middle comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 70.0
-    },
-    "positionFourMiddleEndChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired end minus middle comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 10.0
     },
     "positionFourMiddleEndDenominator": {
       "desc": "matched pairs in paired end minus middle comparison",
@@ -1162,20 +748,6 @@
       "unit": "pct",
       "value": 20.0
     },
-    "positionFourStartAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy with the target at start in the t4k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 40.0
-    },
-    "positionFourStartAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with the target at start in the t4k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 0.0
-    },
     "positionFourStartCount": {
       "desc": "probe count for normalized accuracy with the target at start in the t4k tier",
       "script": "analysis/run_all.py",
@@ -1188,20 +760,6 @@
       "script": "analysis/run_all.py",
       "unit": "raw",
       "value": 50.0
-    },
-    "positionFourStartEndChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired end minus start comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 80.0
-    },
-    "positionFourStartEndChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired end minus start comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 20.0
     },
     "positionFourStartEndDenominator": {
       "desc": "matched pairs in paired end minus start comparison",
@@ -1246,20 +804,6 @@
       "unit": "raw",
       "value": 10.0
     },
-    "positionFourStartMiddleChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired middle minus start comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 30.0
-    },
-    "positionFourStartMiddleChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired middle minus start comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 0.0
-    },
     "positionFourStartMiddleDenominator": {
       "desc": "matched pairs in paired middle minus start comparison",
       "script": "analysis/run_all.py",
@@ -1297,20 +841,6 @@
       "unit": "pct",
       "value": 75.0
     },
-    "positionTwoEndAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy with the target at end in the t2k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 91.66666666666667
-    },
-    "positionTwoEndAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with the target at end in the t2k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 58.33333333333334
-    },
     "positionTwoEndCount": {
       "desc": "probe count for normalized accuracy with the target at end in the t2k tier",
       "script": "analysis/run_all.py",
@@ -1330,20 +860,6 @@
       "unit": "pct",
       "value": 8.333333333333334
     },
-    "positionTwoMiddleAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy with the target at mid in the t2k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 25.0
-    },
-    "positionTwoMiddleAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with the target at mid in the t2k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 0.0
-    },
     "positionTwoMiddleCount": {
       "desc": "probe count for normalized accuracy with the target at mid in the t2k tier",
       "script": "analysis/run_all.py",
@@ -1356,20 +872,6 @@
       "script": "analysis/run_all.py",
       "unit": "raw",
       "value": 66.66666666666667
-    },
-    "positionTwoMiddleEndChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired end minus middle comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 83.33333333333333
-    },
-    "positionTwoMiddleEndChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired end minus middle comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 50.0
     },
     "positionTwoMiddleEndDenominator": {
       "desc": "matched pairs in paired end minus middle comparison",
@@ -1414,20 +916,6 @@
       "unit": "pct",
       "value": 16.666666666666668
     },
-    "positionTwoStartAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy with the target at start in the t2k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 33.333333333333336
-    },
-    "positionTwoStartAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with the target at start in the t2k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 0.0
-    },
     "positionTwoStartCount": {
       "desc": "probe count for normalized accuracy with the target at start in the t2k tier",
       "script": "analysis/run_all.py",
@@ -1440,20 +928,6 @@
       "script": "analysis/run_all.py",
       "unit": "raw",
       "value": 58.33333333333333
-    },
-    "positionTwoStartEndChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired end minus start comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 75.0
-    },
-    "positionTwoStartEndChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired end minus start comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 50.0
     },
     "positionTwoStartEndDenominator": {
       "desc": "matched pairs in paired end minus start comparison",
@@ -1498,20 +972,6 @@
       "unit": "raw",
       "value": -8.333333333333334
     },
-    "positionTwoStartMiddleChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired middle minus start comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 16.666666666666668
-    },
-    "positionTwoStartMiddleChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired middle minus start comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": -33.333333333333336
-    },
     "positionTwoStartMiddleDenominator": {
       "desc": "matched pairs in paired middle minus start comparison",
       "script": "analysis/run_all.py",
@@ -1549,20 +1009,6 @@
       "unit": "raw",
       "value": -33.333333333333336
     },
-    "pruningChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired keyword-pruned context minus full context comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": -3.3333333333333335
-    },
-    "pruningChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired keyword-pruned context minus full context comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": -63.333333333333336
-    },
     "pruningDenominator": {
       "desc": "matched pairs in paired keyword-pruned context minus full context comparison",
       "script": "analysis/run_all.py",
@@ -1588,20 +1034,6 @@
       "unit": "pct",
       "value": 100.0
     },
-    "pruningDistractorRetainedRateHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for matched keyword-pruned prompts retaining the lexical decoy",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 100.0
-    },
-    "pruningDistractorRetainedRateLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for matched keyword-pruned prompts retaining the lexical decoy",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 100.0
-    },
     "pruningFamilyCount": {
       "desc": "matched scenario families in paired keyword-pruned context minus full context comparison",
       "script": "analysis/run_all.py",
@@ -1614,20 +1046,6 @@
       "script": "analysis/run_all.py",
       "unit": "pct",
       "value": 40.0
-    },
-    "pruningFullAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized full-context accuracy in matched pruning scenarios",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 66.66666666666667
-    },
-    "pruningFullAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized full-context accuracy in matched pruning scenarios",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 13.333333333333334
     },
     "pruningFullCount": {
       "desc": "probe count for normalized full-context accuracy in matched pruning scenarios",
@@ -1654,40 +1072,12 @@
       "unit": "pct",
       "value": 90.0
     },
-    "pruningNoDecoyAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy after removing only the retained lexical decoy",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 100.0
-    },
-    "pruningNoDecoyAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy after removing only the retained lexical decoy",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 70.0
-    },
     "pruningNoDecoyChange": {
       "desc": "accuracy change in percentage points for paired decoy-removed pruned context minus keyword-pruned context comparison",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "raw",
       "value": 83.33333333333333
-    },
-    "pruningNoDecoyChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired decoy-removed pruned context minus keyword-pruned context comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 100.0
-    },
-    "pruningNoDecoyChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired decoy-removed pruned context minus keyword-pruned context comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 63.333333333333336
     },
     "pruningNoDecoyCount": {
       "desc": "probe count for normalized accuracy after removing only the retained lexical decoy",
@@ -1732,20 +1122,6 @@
       "unit": "pct",
       "value": 6.666666666666667
     },
-    "pruningPrunedAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized pruned-context accuracy in matched pruning scenarios",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 20.0
-    },
-    "pruningPrunedAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized pruned-context accuracy in matched pruning scenarios",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 0.0
-    },
     "pruningPrunedCount": {
       "desc": "probe count for normalized pruned-context accuracy in matched pruning scenarios",
       "script": "analysis/run_all.py",
@@ -1777,20 +1153,6 @@
       "unit": "pct",
       "value": 100.0
     },
-    "pruningTargetRetainedRateHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for matched keyword-pruned prompts retaining the answer clause",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 100.0
-    },
-    "pruningTargetRetainedRateLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for matched keyword-pruned prompts retaining the answer clause",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 100.0
-    },
     "pruningTies": {
       "desc": "accuracy ties in paired keyword-pruned context minus full context comparison",
       "script": "analysis/run_all.py",
@@ -1805,20 +1167,6 @@
     },
     "qualityEightIrrelevantAccuracy": {
       "desc": "normalized accuracy with irrelevant filler in the t8k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 66.66666666666667
-    },
-    "qualityEightIrrelevantAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy with irrelevant filler in the t8k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 66.66666666666667
-    },
-    "qualityEightIrrelevantAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with irrelevant filler in the t8k tier",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
@@ -1843,40 +1191,12 @@
       "unit": "pct",
       "value": 50.0
     },
-    "qualityEightRelevantAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy with relevant filler in the t8k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 65.41666666666667
-    },
-    "qualityEightRelevantAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with relevant filler in the t8k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 34.583333333333336
-    },
     "qualityEightRelevantChange": {
       "desc": "accuracy change in percentage points for paired relevant filler minus irrelevant filler comparison",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "raw",
       "value": -16.66666666666667
-    },
-    "qualityEightRelevantChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired relevant filler minus irrelevant filler comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": -1.250000000000003
-    },
-    "qualityEightRelevantChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired relevant filler minus irrelevant filler comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": -32.083333333333336
     },
     "qualityEightRelevantCount": {
       "desc": "probe count for normalized accuracy with relevant filler in the t8k tier",
@@ -1921,20 +1241,6 @@
       "unit": "pct",
       "value": 46.666666666666664
     },
-    "qualityFourIrrelevantAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy with irrelevant filler in the t4k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 86.66666666666667
-    },
-    "qualityFourIrrelevantAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with irrelevant filler in the t4k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 6.666666666666667
-    },
     "qualityFourIrrelevantCount": {
       "desc": "probe count for normalized accuracy with irrelevant filler in the t4k tier",
       "script": "analysis/run_all.py",
@@ -1954,40 +1260,12 @@
       "unit": "pct",
       "value": 33.333333333333336
     },
-    "qualityFourRelevantAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy with relevant filler in the t4k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 53.333333333333336
-    },
-    "qualityFourRelevantAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with relevant filler in the t4k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 13.333333333333334
-    },
     "qualityFourRelevantChange": {
       "desc": "accuracy change in percentage points for paired relevant filler minus irrelevant filler comparison",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "raw",
       "value": -13.333333333333329
-    },
-    "qualityFourRelevantChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired relevant filler minus irrelevant filler comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 13.333333333333334
-    },
-    "qualityFourRelevantChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired relevant filler minus irrelevant filler comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": -46.666666666666664
     },
     "qualityFourRelevantCount": {
       "desc": "probe count for normalized accuracy with relevant filler in the t4k tier",
@@ -2032,20 +1310,6 @@
       "unit": "pct",
       "value": 44.44444444444444
     },
-    "qualityTwoIrrelevantAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy with irrelevant filler in the t2k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 61.111111111111114
-    },
-    "qualityTwoIrrelevantAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with irrelevant filler in the t2k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 22.22222222222222
-    },
     "qualityTwoIrrelevantCount": {
       "desc": "probe count for normalized accuracy with irrelevant filler in the t2k tier",
       "script": "analysis/run_all.py",
@@ -2065,40 +1329,12 @@
       "unit": "pct",
       "value": 22.22222222222222
     },
-    "qualityTwoRelevantAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy with relevant filler in the t2k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 33.333333333333336
-    },
-    "qualityTwoRelevantAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy with relevant filler in the t2k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 11.11111111111111
-    },
     "qualityTwoRelevantChange": {
       "desc": "accuracy change in percentage points for paired relevant filler minus irrelevant filler comparison",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "raw",
       "value": -22.22222222222222
-    },
-    "qualityTwoRelevantChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired relevant filler minus irrelevant filler comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 0.0
-    },
-    "qualityTwoRelevantChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired relevant filler minus irrelevant filler comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": -33.333333333333336
     },
     "qualityTwoRelevantCount": {
       "desc": "probe count for normalized accuracy with relevant filler in the t2k tier",
@@ -2149,20 +1385,6 @@
       "unit": "raw",
       "value": 93.33333333333333
     },
-    "selectorComparisonChangeHigh": {
-      "desc": "family-cluster bootstrap upper bound for paired query-entity-selected context minus keyword-pruned context comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 100.0
-    },
-    "selectorComparisonChangeLow": {
-      "desc": "family-cluster bootstrap lower bound for paired query-entity-selected context minus keyword-pruned context comparison",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "raw",
-      "value": 80.0
-    },
     "selectorComparisonDenominator": {
       "desc": "matched pairs in paired query-entity-selected context minus keyword-pruned context comparison",
       "script": "analysis/run_all.py",
@@ -2200,20 +1422,6 @@
       "unit": "pct",
       "value": 58.333333333333336
     },
-    "tierEightAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized full-context accuracy in the t8k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 66.04166666666667
-    },
-    "tierEightAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized full-context accuracy in the t8k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 50.62500000000001
-    },
     "tierEightCount": {
       "desc": "probe count for normalized full-context accuracy in the t8k tier",
       "script": "analysis/run_all.py",
@@ -2240,20 +1448,6 @@
       "unit": "pct",
       "value": 40.0
     },
-    "tierFourAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized full-context accuracy in the t4k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 66.66666666666667
-    },
-    "tierFourAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized full-context accuracy in the t4k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 13.333333333333334
-    },
     "tierFourCount": {
       "desc": "probe count for normalized full-context accuracy in the t4k tier",
       "script": "analysis/run_all.py",
@@ -2279,20 +1473,6 @@
       "script": "analysis/run_all.py",
       "unit": "pct",
       "value": 33.333333333333336
-    },
-    "tierTwoAccuracyHigh": {
-      "desc": "family-cluster bootstrap upper confidence bound for normalized full-context accuracy in the t2k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 44.44444444444444
-    },
-    "tierTwoAccuracyLow": {
-      "desc": "family-cluster bootstrap lower confidence bound for normalized full-context accuracy in the t2k tier",
-      "fmt": ".1f",
-      "script": "analysis/run_all.py",
-      "unit": "pct",
-      "value": 22.22222222222222
     },
     "tierTwoCount": {
       "desc": "probe count for normalized full-context accuracy in the t2k tier",

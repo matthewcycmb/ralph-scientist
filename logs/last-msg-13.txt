@@ -1,0 +1,11 @@
+Completed exactly one task: replaced misleading bootstrap confidence intervals with descriptive family-level evidence.
+
+Changes:
+
+- Removed bootstrap calculations and interval values from `analysis/run_all.py`.
+- Regenerated `results.json` and `paper/values.tex`.
+- Updated the paper to report point estimates, family counts, matched denominators, and paired wins/losses/ties.
+- Explicitly disclaimed population-level inference from the two to six observed families.
+- Updated `paper/OUTLINE.md` and marked TODO item 3 complete.
+
+Passed individual checks: pipeline freshness, results sanity, numeric provenance, prose style, submission readiness, frozen inputs, citations, and `git diff --check`. LaTeX compilation was not run, as instructed.
