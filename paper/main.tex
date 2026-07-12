@@ -16,8 +16,8 @@
 \begin{document}
 
 \twocolumn[
-\icmltitle{More Context Did Not Hurt, but Its Placement Did:\
-           A Paired Study of a Small Language Model}
+\icmltitle{Answer Position and Lexical Pruning Shape Synthetic Clause Retrieval\
+           in a Small Language Model}
 \icmlsetsymbol{equal}{*}
 \begin{icmlauthorlist}
 \icmlauthor{Anonymous Authors}{anon}
@@ -29,7 +29,7 @@
 \printAffiliationsAndNotice{}
 
 \begin{abstract}
-Does adding context hurt a small language model, and do the location and topicality of that context matter? We test the frozen \modelName{} artifact on \sampleSize{} deterministic synthetic contract-clause probes spanning mean prompt lengths of \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Moving the same answer-bearing clause from the start to the end raised accuracy by \positionTwoStartEndChange{} percentage points at the shortest tier and \positionFourStartEndChange{} points at the middle tier, while keyword pruning lowered matched accuracy by \pruningChange{} points. The matched amount comparison was inconclusive: accuracy rose by \amountSharedTwoFourChange{} points and then changed by \amountSharedFourEightChange{} points, with only \amountSharedEightCount{} shared cases at each tier. For this model and task, clause placement and misleading lexical overlap mattered more than context amount, and a simple retriever made the problem worse.
+Does adding context hurt a small language model, and do the location and topicality of that context matter? We test the frozen \modelName{} artifact on \sampleSize{} deterministic synthetic contract-clause probes spanning mean prompt lengths of \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Moving the same answer-bearing clause from the start to the end raised accuracy by \positionTwoStartEndChange{} percentage points at the shortest tier and \positionFourStartEndChange{} points at the middle tier, while keyword pruning lowered matched accuracy by \pruningChange{} points. The matched amount comparison was inconclusive: accuracy rose by \amountSharedTwoFourChange{} points and then changed by \amountSharedFourEightChange{} points, with only \amountSharedEightCount{} shared cases at each tier. For this model and task, end placement improved retrieval and a keyword filter amplified the lexical trap, while the amount experiment could not establish whether longer context helped or hurt.
 \end{abstract}
 
 \section{Introduction}
@@ -89,7 +89,7 @@ Every accuracy interval is a \confidenceLevel{}\% Wilson score interval. Paired 
 \section{Results}
 
 \paragraph{Amount.}
-\textbf{The matched grid does not show accuracy degradation as context grows.} Accuracy was \amountSharedTwoAccuracy{}\% at \tierTwoTokens{} mean tokens and \amountSharedFourAccuracy{}\% at \tierFourTokens{}, a paired change of \amountSharedTwoFourChange{} points over \amountSharedTwoFourDenominator{} cases. It remained \amountSharedEightAccuracy{}\% at \tierEightTokens{}, with \amountSharedFourEightWins{} wins, \amountSharedFourEightLosses{} losses, and \amountSharedFourEightTies{} ties relative to the middle tier (Table~\ref{tab:amount-quality}). The wide intervals and small shared set do not locate a degradation threshold.
+\textbf{The amount effect remains unresolved.} Accuracy was \amountSharedTwoAccuracy{}\% at \tierTwoTokens{} mean tokens and \amountSharedFourAccuracy{}\% at \tierFourTokens{}, a paired change of \amountSharedTwoFourChange{} points over \amountSharedTwoFourDenominator{} cases. It was \amountSharedEightAccuracy{}\% at \tierEightTokens{}, with \amountSharedFourEightWins{} wins, \amountSharedFourEightLosses{} losses, and \amountSharedFourEightTies{} ties relative to the middle tier (Table~\ref{tab:amount-quality}). Because the longest-tier intersection represents only \amountSharedEightCount{} probes from a small set of scenario families, these observations neither establish a benefit nor rule out degradation within the measured range.
 
 \begin{table}[t]
 \caption{Matched amount and filler-quality comparisons. Brackets give \confidenceLevel{}\% Wilson intervals; $n$ is the matched denominator. Changes are later minus earlier for amount and related minus unrelated for quality.}
@@ -193,7 +193,7 @@ The controls support this explanation without proving it for other tasks. Litera
 
 \section{Limitations}
 
-The findings concern one small quantized model and may not transfer to larger models or other quantization levels. Synthetic clause lookup is not natural contract analysis, and retrieval accuracy is not a measure of general capability. The \cpuBudgetMinutes{}-minute CPU budget capped the grid, leaving only \tierEightCount{} full-context probes at the longest tier and wide intervals throughout. Greedy decoding removes run-to-run sampling variation but does not show how sampling would change the estimates. The mitigation is a deliberately simple keyword filter rather than a learned retrieval system. Finally, the experiment varies prompts only up to \tierEightTokens{} mean tokens, so it cannot rule out degradation beyond the measured range.
+The findings concern one small quantized model and may not transfer to larger models or other quantization levels. Synthetic clause lookup is not natural contract analysis, and retrieval accuracy is not a measure of general capability. The \cpuBudgetMinutes{}-minute CPU budget capped the grid, leaving only \tierEightCount{} full-context probes at the longest tier and wide intervals throughout. That sparse tier prevents a conclusion about degradation within the measured range, and the experiment cannot address longer prompts. Greedy decoding removes run-to-run sampling variation but does not show how sampling would change the estimates. The mitigation is a deliberately simple keyword filter rather than a learned retrieval system.
 
 \section{Reproducibility}
 

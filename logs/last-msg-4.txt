@@ -1,0 +1,15 @@
+Completed one task: corrected the underpowered-null framing.
+
+- Replaced the overclaiming title.
+- Made the abstract, amount result, and limitations explicitly state that context-length effects remain unresolved.
+- Updated TODO.md and archived the completed work in DONE.md.
+- Preserved the unrelated untracked `logs/iter-4.log`.
+
+Checks passed:
+
+- Number provenance
+- Prose style
+- Submission readiness
+- Diff whitespace
+
+Compilation was left to the harness as required.

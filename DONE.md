@@ -50,3 +50,10 @@
 - Fixed the sole iteration-2 compile-gate defect by placing the protected model
   checksum in a column-width box, preventing its unbreakable hexadecimal text
   from overflowing the column. The harness-side compile verdict remains pending.
+
+## Lap 5 (2026-07-12)
+
+- Removed the underpowered-null overclaim identified by the adversarial review.
+  The title now centers the supported position and pruning results; the abstract,
+  amount result, and limitations state that the sparse matched amount comparison
+  cannot establish either benefit or degradation.
