@@ -338,27 +338,27 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 60.0
+      "value": 48.0
     },
     "distractorCaptureRateHigh": {
       "desc": "family-cluster bootstrap upper confidence bound for responses containing the distractor code but not the target code",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 75.92592592592592
+      "value": 60.317460317460316
     },
     "distractorCaptureRateLow": {
       "desc": "family-cluster bootstrap lower confidence bound for responses containing the distractor code but not the target code",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 47.36842105263158
+      "value": 38.46153846153846
     },
     "exactOutputComplianceCount": {
       "desc": "count of responses containing exactly one code and nothing else",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 114
+      "value": 144
     },
     "exactOutputComplianceFamilyCount": {
       "desc": "scenario-family count for responses containing exactly one code and nothing else",
@@ -371,27 +371,27 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 95.0
+      "value": 96.0
     },
     "exactOutputComplianceRateHigh": {
       "desc": "family-cluster bootstrap upper confidence bound for responses containing exactly one code and nothing else",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 95.83333333333333
+      "value": 96.66666666666667
     },
     "exactOutputComplianceRateLow": {
       "desc": "family-cluster bootstrap lower confidence bound for responses containing exactly one code and nothing else",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 93.33333333333333
+      "value": 94.44444444444444
     },
     "exactTargetCount": {
       "desc": "count of responses containing exactly the target code and nothing else",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 38
+      "value": 65
     },
     "exactTargetFamilyCount": {
       "desc": "scenario-family count for responses containing exactly the target code and nothing else",
@@ -404,21 +404,21 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 31.666666666666668
+      "value": 43.333333333333336
     },
     "exactTargetRateHigh": {
       "desc": "family-cluster bootstrap upper confidence bound for responses containing exactly the target code and nothing else",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 43.93939393939394
+      "value": 51.78571428571429
     },
     "exactTargetRateLow": {
       "desc": "family-cluster bootstrap lower confidence bound for responses containing exactly the target code and nothing else",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 16.666666666666668
+      "value": 33.333333333333336
     },
     "extraTokenOutputCount": {
       "desc": "count of responses containing one expected code plus extra output",
@@ -457,7 +457,7 @@
       "desc": "count of responses containing both expected codes or neither expected code",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 10
+      "value": 13
     },
     "invalidOutputFamilyCount": {
       "desc": "scenario-family count for responses containing both expected codes or neither expected code",
@@ -470,21 +470,21 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 8.333333333333334
+      "value": 8.666666666666666
     },
     "invalidOutputRateHigh": {
       "desc": "family-cluster bootstrap upper confidence bound for responses containing both expected codes or neither expected code",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 10.526315789473685
+      "value": 14.102564102564102
     },
     "invalidOutputRateLow": {
       "desc": "family-cluster bootstrap lower confidence bound for responses containing both expected codes or neither expected code",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 6.140350877192983
+      "value": 4.861111111111111
     },
     "literalControlAccuracy": {
       "desc": "normalized literal-control accuracy",
@@ -568,7 +568,7 @@
       "desc": "total probes in the manifest",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 120
+      "value": 150
     },
     "missingProbeCount": {
       "desc": "manifest probes without completed raw outputs",
@@ -581,27 +581,27 @@
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 31.666666666666668
+      "value": 43.333333333333336
     },
     "overallAccuracyHigh": {
       "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy across all completed probes",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 43.93939393939394
+      "value": 51.78571428571429
     },
     "overallAccuracyLow": {
       "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy across all completed probes",
       "fmt": ".1f",
       "script": "analysis/run_all.py",
       "unit": "pct",
-      "value": 16.666666666666668
+      "value": 33.333333333333336
     },
     "overallCount": {
       "desc": "probe count for normalized accuracy across all completed probes",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 120
+      "value": 150
     },
     "overallFamilyCount": {
       "desc": "scenario-family count for normalized accuracy across all completed probes",
@@ -1425,6 +1425,39 @@
       "unit": "count",
       "value": 30
     },
+    "pruningDistractorRetainedCount": {
+      "desc": "count of matched keyword-pruned prompts retaining the lexical decoy",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 30
+    },
+    "pruningDistractorRetainedFamilyCount": {
+      "desc": "scenario-family count for matched keyword-pruned prompts retaining the lexical decoy",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 5
+    },
+    "pruningDistractorRetainedRate": {
+      "desc": "matched keyword-pruned prompts retaining the lexical decoy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 100.0
+    },
+    "pruningDistractorRetainedRateHigh": {
+      "desc": "family-cluster bootstrap upper confidence bound for matched keyword-pruned prompts retaining the lexical decoy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 100.0
+    },
+    "pruningDistractorRetainedRateLow": {
+      "desc": "family-cluster bootstrap lower confidence bound for matched keyword-pruned prompts retaining the lexical decoy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 100.0
+    },
     "pruningFamilyCount": {
       "desc": "matched scenario families in paired keyword-pruned context minus full context comparison",
       "script": "analysis/run_all.py",
@@ -1470,6 +1503,84 @@
       "unit": "count",
       "value": 11
     },
+    "pruningNoDecoyAccuracy": {
+      "desc": "normalized accuracy after removing only the retained lexical decoy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 90.0
+    },
+    "pruningNoDecoyAccuracyHigh": {
+      "desc": "family-cluster bootstrap upper confidence bound for normalized accuracy after removing only the retained lexical decoy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 100.0
+    },
+    "pruningNoDecoyAccuracyLow": {
+      "desc": "family-cluster bootstrap lower confidence bound for normalized accuracy after removing only the retained lexical decoy",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 70.0
+    },
+    "pruningNoDecoyChange": {
+      "desc": "accuracy change in percentage points for paired decoy-removed pruned context minus keyword-pruned context comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 83.33333333333333
+    },
+    "pruningNoDecoyChangeHigh": {
+      "desc": "family-cluster bootstrap upper bound for paired decoy-removed pruned context minus keyword-pruned context comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 100.0
+    },
+    "pruningNoDecoyChangeLow": {
+      "desc": "family-cluster bootstrap lower bound for paired decoy-removed pruned context minus keyword-pruned context comparison",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "raw",
+      "value": 63.333333333333336
+    },
+    "pruningNoDecoyCount": {
+      "desc": "probe count for normalized accuracy after removing only the retained lexical decoy",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 30
+    },
+    "pruningNoDecoyDenominator": {
+      "desc": "matched pairs in paired decoy-removed pruned context minus keyword-pruned context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 30
+    },
+    "pruningNoDecoyFamilyCount": {
+      "desc": "matched scenario families in paired decoy-removed pruned context minus keyword-pruned context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 5
+    },
+    "pruningNoDecoyLosses": {
+      "desc": "accuracy losses in paired decoy-removed pruned context minus keyword-pruned context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 0
+    },
+    "pruningNoDecoyTies": {
+      "desc": "accuracy ties in paired decoy-removed pruned context minus keyword-pruned context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 5
+    },
+    "pruningNoDecoyWins": {
+      "desc": "accuracy gains in paired decoy-removed pruned context minus keyword-pruned context comparison",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 25
+    },
     "pruningPrunedAccuracy": {
       "desc": "normalized pruned-context accuracy in matched pruning scenarios",
       "fmt": ".1f",
@@ -1502,6 +1613,39 @@
       "script": "analysis/run_all.py",
       "unit": "count",
       "value": 5
+    },
+    "pruningTargetRetainedCount": {
+      "desc": "count of matched keyword-pruned prompts retaining the answer clause",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 30
+    },
+    "pruningTargetRetainedFamilyCount": {
+      "desc": "scenario-family count for matched keyword-pruned prompts retaining the answer clause",
+      "script": "analysis/run_all.py",
+      "unit": "count",
+      "value": 5
+    },
+    "pruningTargetRetainedRate": {
+      "desc": "matched keyword-pruned prompts retaining the answer clause",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 100.0
+    },
+    "pruningTargetRetainedRateHigh": {
+      "desc": "family-cluster bootstrap upper confidence bound for matched keyword-pruned prompts retaining the answer clause",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 100.0
+    },
+    "pruningTargetRetainedRateLow": {
+      "desc": "family-cluster bootstrap lower confidence bound for matched keyword-pruned prompts retaining the answer clause",
+      "fmt": ".1f",
+      "script": "analysis/run_all.py",
+      "unit": "pct",
+      "value": 100.0
     },
     "pruningTies": {
       "desc": "accuracy ties in paired keyword-pruned context minus full context comparison",
@@ -1852,7 +1996,7 @@
       "desc": "total completed probes scored",
       "script": "analysis/run_all.py",
       "unit": "count",
-      "value": 120
+      "value": 150
     },
     "tierEightAccuracy": {
       "desc": "normalized full-context accuracy in the t8k tier",

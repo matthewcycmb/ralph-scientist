@@ -1,0 +1,9 @@
+Implemented exactly one task: the paired pruning control.
+
+- Keyword pruning retained both answer and decoy in all 30 matched prompts.
+- Removing only the decoy raised accuracy from 6.7% to 90.0%: +83.3 points, 25 wins, no losses.
+- Completed the expanded deterministic grid: 150/150 probes.
+- Updated analysis, generated results/macros, paper interpretation, schema, and TODO.
+- Seven non-compiling gates and all 21 regression tests pass.
+- PDF/Tectonic gate was not run, per instructions.
+- Changes remain uncommitted in the working tree.

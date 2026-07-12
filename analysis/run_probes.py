@@ -44,7 +44,7 @@ OUT_DIR = PROBE_DIR / "out"
 MANIFEST = PROBE_DIR / "manifest.json"
 
 LLAMA_ARGS = ["--temp", "0", "--seed", "42", "-c", "9216", "-n", "16",
-              "--no-display-prompt", "--simple-io"]
+              "--no-display-prompt", "--simple-io", "--device", "none"]
 
 # Grid: nested families per tier (families shared across tiers so the amount
 # axis reuses the same scenarios). Costs measured 2026-07-07 on this laptop.
@@ -58,6 +58,7 @@ FILLERS = ["rel", "irr"]
 PRUNED_TIER = "t4k"          # cheap mitigation variant, small tiers only
 PRUNE_MIN_OVERLAP = 2
 PRUNE_FLOOR = 8              # if the rule keeps < 8 sentences, keep top-8
+CONTROL_EST_SECONDS = 3      # short pruned prompt with one clause removed
 CLOSED_BOOK_FAMILIES = 6
 SIZE_TOLERANCE = 0.05        # measured prompt within +-5% of nominal
 
@@ -343,14 +344,38 @@ class Grid:
                                   distractor_code=fam.distractor_code)
                         if tier_label == PRUNED_TIER:
                             pdoc = prune(doc, fam.question)
+                            target_retained = needle in pdoc
+                            distractor_retained = distractor in pdoc
                             ppid = f"{tier_label}-f{fi}-{pos}-{kind}-pruned"
                             self._add(ppid, build_prompt(pdoc, fam.question),
                                       6, family=fi, tier=tier_label,
                                       nominal_tokens=nominal, style="para",
                                       filler=kind, position=pos,
                                       variant="pruned",
+                                      target_retained=target_retained,
+                                      distractor_retained=distractor_retained,
                                       target_code=fam.target_code,
                                       distractor_code=fam.distractor_code)
+                            # Paired diagnostic: the lexical filter retains
+                            # both clauses in this frozen grid. Remove only
+                            # its retained look-alike clause, leaving the
+                            # answer and every other selected sentence fixed.
+                            if not target_retained or not distractor_retained:
+                                raise RuntimeError(
+                                    f"{ppid}: pruning-control contract failed")
+                            cdoc = [s for s in pdoc if s != distractor]
+                            cpid = (f"{tier_label}-f{fi}-{pos}-{kind}-"
+                                    "prunednodecoy")
+                            self._add(
+                                cpid, build_prompt(cdoc, fam.question),
+                                CONTROL_EST_SECONDS, family=fi,
+                                tier=tier_label, nominal_tokens=nominal,
+                                style="para", filler=kind, position=pos,
+                                variant="prunednodecoy",
+                                target_retained=needle in cdoc,
+                                distractor_retained=distractor in cdoc,
+                                target_code=fam.target_code,
+                                distractor_code=fam.distractor_code)
         # Literal control: smallest tier, hardest position, irrelevant
         # filler. Reuses the paraphrase cell's sizing key, so the filler is
         # IDENTICAL to the matching paraphrase scenario; the two probes
@@ -409,7 +434,7 @@ def save_manifest(grid: Grid):
             "model_sha256": model_sha256(),
             "llama_command": "llama-completion -m <model> -f <prompt> "
                              + " ".join(LLAMA_ARGS),
-            "grid_version": "v1",
+            "grid_version": "v2-pruning-control",
             "total_probes": len(grid.probes),
             "done_probes": sum(done.values()),
             "manifest_complete": all(done.values()),

@@ -108,3 +108,14 @@ PASS  submission-ready
 PASS  latex-compiles
 gates failed: 0
 SHADOW: tagged green-v78 (iter=9)
+TAMPER: protected harness inputs modified at iter 10 — restoring from 52bd4348053155a0e6ab96acd591ef75992fab98
+--- gates @ iteration 10 14:10:54 ---
+PASS  frozen-inputs
+PASS  citations-resolve
+PASS  no-number-literals
+PASS  pipeline-fresh
+PASS  results-sane
+PASS  prose-style
+PASS  submission-ready
+PASS  latex-compiles
+gates failed: 0

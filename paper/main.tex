@@ -30,7 +30,7 @@
 \printAffiliationsAndNotice{}
 
 \begin{abstract}
-Does adding context hurt a small language model, and do the location and composition of that context matter? We test the frozen \modelName{} artifact on \sampleSize{} deterministic synthetic contract-clause probes spanning mean prompt lengths of \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Moving the same answer-bearing clause from the start to the end raised accuracy by \positionTwoStartEndChange{} percentage points at the shortest tier and \positionFourStartEndChange{} points at the middle tier, while keyword pruning lowered matched accuracy by \pruningChange{} points. The matched amount comparison was inconclusive: accuracy rose by \amountSharedTwoFourChange{} points and then changed by \amountSharedFourEightChange{} points, with only \amountSharedEightCount{} shared cases at each tier. Code-heavy business filler reduced accuracy relative to unrelated filler, but the manipulation does not isolate topical relevance from its other differences.
+Does adding context hurt a small language model, and do the location and composition of that context matter? We test the frozen \modelName{} artifact on \sampleSize{} deterministic synthetic contract-clause probes spanning mean prompt lengths of \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Moving the same answer-bearing clause from the start to the end raised accuracy by \positionTwoStartEndChange{} percentage points at the shortest tier and \positionFourStartEndChange{} points at the middle tier, while keyword pruning changed matched accuracy by \pruningChange{} points. Removing only the lexical decoy from each pruned prompt then changed accuracy by \pruningNoDecoyChange{} points. The matched amount comparison was inconclusive: accuracy rose by \amountSharedTwoFourChange{} points and then changed by \amountSharedFourEightChange{} points, with only \amountSharedEightCount{} shared cases at each tier. Code-heavy business filler reduced accuracy relative to unrelated filler, but the manipulation does not isolate topical relevance from its other differences.
 \end{abstract}
 
 \section{Introduction}
@@ -48,7 +48,7 @@ The experiment asks four questions:
     \item As the document grows from \tierTwoTokens{} to \tierEightTokens{} mean tokens, how much does accuracy change on shared cases?
     \item How does moving the same answer clause among the start, middle, and end change accuracy?
     \item How does accuracy differ between code-heavy business filler and unrelated prose in matched documents?
-    \item Does keyword pruning recover accuracy on matched full-context cases?
+    \item Does keyword pruning recover accuracy, and can answer removal explain its failures?
 \end{enumerate}
 
 The answer is not a general context-length threshold. In this grid, the model improved when the answer appeared near the end, code-heavy business filler produced lower accuracy than unrelated prose, and keyword pruning amplified the lexical trap built into the probes.
@@ -82,6 +82,8 @@ The expensive final tier contains fewer families. Amount estimates therefore use
 
 \paragraph{Pruning and controls.}
 At the middle tier, a keyword filter retains sentences with at least two content words shared with the question, falling back to the highest-overlap sentences if too few qualify. It preserves original order. The comparison is restricted to the \pruningDenominator{} cases with both full and pruned outputs. We also include \closedBookCount{} closed-book questions and \literalControlDenominator{} matched literal-versus-paraphrase controls.
+
+The filter retained the answer clause in \pruningTargetRetainedCount{} of \pruningPrunedCount{} matched prompts and retained the lexical decoy in \pruningDistractorRetainedCount{}. A paired diagnostic removes only that decoy from each pruned prompt, leaving the answer clause and every other selected sentence fixed. This control uses the known synthetic label to diagnose the filter; it is not a deployable retrieval method.
 
 \section{Scoring and Comparisons}
 
@@ -160,7 +162,7 @@ Mean tokens & Start & Middle & End \\
 \textbf{Code-heavy business filler produced lower accuracy than unrelated prose.} The matched difference was \qualityTwoRelevantChange{} points [\qualityTwoRelevantChangeLow{}, \qualityTwoRelevantChangeHigh{}] over \qualityTwoRelevantDenominator{} pairs at the shortest tier and \qualityFourRelevantChange{} points [\qualityFourRelevantChangeLow{}, \qualityFourRelevantChangeHigh{}] over \qualityFourRelevantDenominator{} pairs at the middle tier. The respective paired outcomes were \qualityTwoRelevantWins{} win, \qualityTwoRelevantLosses{} losses, and \qualityTwoRelevantTies{} ties, then \qualityFourRelevantWins{} win, \qualityFourRelevantLosses{} losses, and \qualityFourRelevantTies{} ties. The longest-tier estimate was \qualityEightRelevantChange{} points, but its \qualityEightRelevantFamilyCount{} families are too sparse to strengthen that conclusion. Because the business filler also adds code-shaped candidates and repeated entity templates, these results do not show that topical relevance caused the difference.
 
 \paragraph{Mitigation.}
-\textbf{Keyword pruning backfired on the matched cases.} Full-context accuracy was \pruningFullAccuracy{}\%, compared with \pruningPrunedAccuracy{}\% after filtering, a change of \pruningChange{} points [\pruningChangeLow{}, \pruningChangeHigh{}] across \pruningFamilyCount{} families. Only \pruningWins{} case improved; \pruningLosses{} worsened and \pruningTies{} tied (Table~\ref{tab:pruning}). The mechanism follows from the probe design: the filter retains the competing clause because it repeats the question's words, while the paraphrased answer clause has less lexical overlap.
+\textbf{Keyword pruning backfired on the matched cases.} Full-context accuracy was \pruningFullAccuracy{}\%, compared with \pruningPrunedAccuracy{}\% after filtering, a change of \pruningChange{} points [\pruningChangeLow{}, \pruningChangeHigh{}] across \pruningFamilyCount{} families. Only \pruningWins{} case improved; \pruningLosses{} worsened and \pruningTies{} tied (Table~\ref{tab:pruning}). Because every pruned prompt retained the answer clause, answer removal cannot explain this decline.
 
 \begin{table}[t]
 \caption{Matched keyword-pruning result and diagnostic controls. Accuracy intervals are \confidenceLevel{}\% family-cluster bootstrap intervals.}
@@ -178,6 +180,9 @@ Full context
 Keyword pruned
 & \pruningPrunedAccuracy{} [\pruningPrunedAccuracyLow{}, \pruningPrunedAccuracyHigh{}]
 & \pruningPrunedCount{} \\
+Decoy removed
+& \pruningNoDecoyAccuracy{} [\pruningNoDecoyAccuracyLow{}, \pruningNoDecoyAccuracyHigh{}]
+& \pruningNoDecoyCount{} \\
 Literal wording
 & \literalControlAccuracy{} [\literalControlAccuracyLow{}, \literalControlAccuracyHigh{}]
 & \literalControlCount{} \\
@@ -192,11 +197,11 @@ Closed book
 }
 \end{table}
 
-The controls support this explanation without proving it for other tasks. Literal wording improved matched accuracy by \literalControlChange{} points, with \literalControlWins{} wins and no losses. Across all outputs, distractor capture was \distractorCaptureRate{}\%, exact-output compliance was \exactOutputComplianceRate{}\%, and invalid output was \invalidOutputRate{}\%. The failures therefore arose mainly from selecting the competing code, not from ignoring the requested format.
+Removing only the retained decoy raised accuracy to \pruningNoDecoyAccuracy{}\%, a change of \pruningNoDecoyChange{} points [\pruningNoDecoyChangeLow{}, \pruningNoDecoyChangeHigh{}], with \pruningNoDecoyWins{} wins and no losses. Literal wording changed matched accuracy by \literalControlChange{} points, with \literalControlWins{} wins and no losses. Across all outputs, distractor capture was \distractorCaptureRate{}\%, exact-output compliance was \exactOutputComplianceRate{}\%, and invalid output was \invalidOutputRate{}\%. These diagnostics identify selection of the retained lexical competitor, rather than answer deletion, as the failure in this grid; they do not establish how another pruning rule would behave.
 
 \section{Limitations}
 
-The findings concern one small quantized model and may not transfer to larger models or other quantization levels. Synthetic clause lookup is not natural contract analysis, and retrieval accuracy is not a measure of general capability. The \cpuBudgetMinutes{}-minute CPU budget capped the grid, leaving only \tierEightCount{} full-context probes at the longest tier and wide intervals throughout. That sparse tier prevents a conclusion about degradation within the measured range, and the experiment cannot address longer prompts. The filler comparison confounds topical relation with semantic domain, entity and code density, candidate count, and sentence templates. A factorial design that matches those properties would be needed to identify a topical-relevance effect. Greedy decoding removes run-to-run sampling variation but does not show how sampling would change the estimates. The mitigation is a deliberately simple keyword filter rather than a learned retrieval system.
+The findings concern one small quantized model and may not transfer to larger models or other quantization levels. Synthetic clause lookup is not natural contract analysis, and retrieval accuracy is not a measure of general capability. The \cpuBudgetMinutes{}-minute CPU budget capped the grid, leaving only \tierEightCount{} full-context probes at the longest tier and wide intervals throughout. That sparse tier prevents a conclusion about degradation within the measured range, and the experiment cannot address longer prompts. The filler comparison confounds topical relation with semantic domain, entity and code density, candidate count, and sentence templates. A factorial design that matches those properties would be needed to identify a topical-relevance effect. Greedy decoding removes run-to-run sampling variation but does not show how sampling would change the estimates. The mitigation is a deliberately simple keyword filter, and its decoy-removal control depends on an oracle label unavailable in natural documents.
 
 \section{Reproducibility}
 

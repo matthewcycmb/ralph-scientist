@@ -271,6 +271,26 @@ def main() -> int:
     add_paired("pruning", paired_full, paired_pruned, pair_fields,
                "full context", "keyword-pruned context")
 
+    # The paired diagnostic removes only the retained lexical decoy from each
+    # keyword-pruned prompt. Manifest flags separately establish whether the
+    # filter removed the answer or distractor clause before model inference.
+    no_decoy = [r for r in scored if r["tier"] == "t4k" and
+                r["variant"] == "prunednodecoy"]
+    nm = keyed(no_decoy, pair_fields)
+    control_keys = sorted(set(pm) & set(nm))
+    control_pruned = [pm[k] for k in control_keys]
+    paired_no_decoy = [nm[k] for k in control_keys]
+    add_accuracy("pruningNoDecoy", paired_no_decoy,
+                 "normalized accuracy after removing only the retained lexical decoy")
+    add_paired("pruningNoDecoy", control_pruned, paired_no_decoy, pair_fields,
+               "keyword-pruned context", "decoy-removed pruned context")
+    add_binary_rate("pruningTargetRetained", paired_pruned,
+                    "target_retained",
+                    "matched keyword-pruned prompts retaining the answer clause")
+    add_binary_rate("pruningDistractorRetained", paired_pruned,
+                    "distractor_retained",
+                    "matched keyword-pruned prompts retaining the lexical decoy")
+
     literal = [r for r in scored if r["style"] == "lit"]
     para_controls = [r for r in full if r["tier"] == "t2k" and
                      r["position"] == "mid" and r["filler"] == "irr"]
