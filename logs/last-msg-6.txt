@@ -1,0 +1,3 @@
+Corrected the NoLiMa bibliography authors to Ryan A. Rossi and Seunghyun Yoon using cached metadata and full text.
+
+Updated `TODO.md` and `DONE.md`. Citation gate passes for all 11 entries; `git diff --check` passes. No commit created.

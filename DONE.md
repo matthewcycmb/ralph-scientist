@@ -64,3 +64,8 @@
   intervals that resample whole scenario families. Added family counts and
   family-cluster intervals for every paired change, regenerated the result
   registry and LaTeX macros, and reported the core paired intervals in the paper.
+
+## Lap 7 (2026-07-12)
+
+- Corrected the NoLiMa bibliography entry to match the cached exemplar and full
+  text: Ryan A. Rossi and Seunghyun Yoon replace the two inaccurate author names.

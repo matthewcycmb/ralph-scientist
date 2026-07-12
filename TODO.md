@@ -13,7 +13,6 @@ Highest leverage next:
   answer removal.
 - [ ] Correct the claimed distractor-position control in code or narrow the paper's
   description after verifying the final sentence indices.
-- [ ] Correct NoLiMa author metadata using the existing resolver cache.
 - [ ] Fix the visible missing-corresponding-author error and audit table readability.
 - [ ] Confirm that every one of the four numbered questions has a measured answer a
   reviewer can find in under a minute.
