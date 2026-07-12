@@ -87,7 +87,7 @@ class HarnessRegressionTests(unittest.TestCase):
         self.assertIn('CODEX_MODEL="${CODEX_MODEL:-gpt-5.6-sol}"', loop)
         self.assertIn('CODEX_REASONING_EFFORT="${CODEX_REASONING_EFFORT:-high}"', loop)
         effort_override = '-c "model_reasoning_effort=\\"$CODEX_REASONING_EFFORT\\""'
-        self.assertEqual(loop.count(effort_override), 4)
+        self.assertEqual(loop.count(effort_override), 3)
 
     def test_claude_worker_is_optional_and_falls_back_to_codex_on_quota(self) -> None:
         loop = (ROOT / "harness/loop.sh").read_text()
@@ -96,6 +96,15 @@ class HarnessRegressionTests(unittest.TestCase):
         self.assertIn('CLAUDE_MODEL="${CLAUDE_MODEL:-fable}"', loop)
         self.assertIn("--output-format stream-json", loop)
         self.assertIn("retrying this lap with Codex", loop)
+        self.assertIn("retrying this lap with Claude", loop)
+        self.assertIn("both backends failed consecutively", loop)
+
+    def test_codex_review_quota_falls_back_to_read_only_fable(self) -> None:
+        loop = (ROOT / "harness/loop.sh").read_text()
+        self.assertIn("run_scientific_review", loop)
+        self.assertIn("Codex review limit hit", loop)
+        self.assertIn('--permission-mode dontAsk', loop)
+        self.assertIn('--tools "Read,Glob,Grep"', loop)
 
     def test_claude_stream_result_extraction(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

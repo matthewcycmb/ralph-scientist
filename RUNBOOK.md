@@ -36,8 +36,10 @@ You type three commands all day. Everything else is watching and presenting.
    `claude auth login`, then verify `claude auth status` reports `loggedIn: true`.
    The event launcher uses `WORKER_BACKEND=claude` with the `fable` model alias.
    If Claude reports a quota/rate limit, the same lap automatically retries on
-   Codex. The editor and prose roles use Fable too; only the calibrated reviewer
-   and confirmation reads consume Codex capacity.
+   Codex. If Codex is exhausted, work returns to Fable. The editor and prose
+   roles use Fable too. Scientific review starts on calibrated Codex, then falls
+   back to a read-only Fable review when Codex reports a real quota outage. If
+   both providers fail consecutively, the loop backs off instead of spinning.
 3. If organizers announce constraints (topic rules, submission format),
    this is the LAST moment SPEC.md can be edited. Then hands off.
 4. Open Terminal and run, exactly:

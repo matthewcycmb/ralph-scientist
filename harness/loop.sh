@@ -65,6 +65,25 @@ run_post_review_role() {
   fi
 }
 
+run_scientific_review() {
+  local output_file="$1" log_file="$2" prompt="$3"
+  "$TIMEOUT" "${REVIEW_CAP_MIN}m" codex exec -m "$CODEX_MODEL" \
+    -c "model_reasoning_effort=\"$CODEX_REASONING_EFFORT\"" \
+    -s read-only --skip-git-repo-check \
+    -o "$output_file" "$prompt" > "$log_file" 2>&1 || true
+  if .venv/bin/python harness/check_quota.py "$log_file"; then
+    echo "QUOTA: Codex review limit hit — retrying review with Claude $CLAUDE_MODEL" | tee -a VERIFY.log
+    mv "$log_file" "${log_file%.log}-codex-quota.log"
+    rm -f "$output_file"
+    "$TIMEOUT" "${REVIEW_CAP_MIN}m" claude -p --model "$CLAUDE_MODEL" \
+      --effort "$CLAUDE_EFFORT" --permission-mode dontAsk \
+      --tools "Read,Glob,Grep" --no-session-persistence \
+      --output-format stream-json --verbose --include-partial-messages \
+      "$prompt" > "$log_file" 2>&1 || true
+    .venv/bin/python harness/extract_claude_result.py "$log_file" "$output_file" || true
+  fi
+}
+
 # --- Anti-reward-hacking guard (risk A) --------------------------------------
 # Fingerprint the harness in memory at loop start. Agents can write anywhere in
 # the workspace, but this loop process (and the baseline) live outside their
@@ -101,6 +120,7 @@ citation_fingerprint() {
 }
 
 ITER=0
+CONSECUTIVE_QUOTA_FALLBACKS=0
 while true; do
   ITER=$((ITER + 1))
   # Bounded runs for rehearsal: MAX_ITERS=3 harness/loop.sh
@@ -173,17 +193,23 @@ while true; do
   # Quota-outage backoff (found in endurance run 2026-07-02): a lap that dies on
   # usage limits must not spin no-op laps — sleep and let the quota window recover.
   if .venv/bin/python harness/check_quota.py "logs/iter-$ITER.log"; then
+    CONSECUTIVE_QUOTA_FALLBACKS=$((CONSECUTIVE_QUOTA_FALLBACKS + 1))
     if [[ "$ACTIVE_WORKER_BACKEND" == "claude" ]]; then
       echo "QUOTA: Claude limit hit at iter $ITER — retrying this lap with Codex" | tee -a VERIFY.log
       WORKER_BACKEND=codex
-      ITER=$((ITER - 1))
-      continue
+    else
+      echo "QUOTA: Codex limit hit at iter $ITER — retrying this lap with Claude $CLAUDE_MODEL" | tee -a VERIFY.log
+      WORKER_BACKEND=claude
     fi
-    echo "QUOTA: usage limit hit at iter $ITER — sleeping 10 min before retry" | tee -a VERIFY.log
-    ITER=$((ITER - 1))   # quota waits don't consume the lap budget
-    sleep 600
+    if (( CONSECUTIVE_QUOTA_FALLBACKS >= 2 )); then
+      echo "QUOTA: both backends failed consecutively — sleeping 10 min" | tee -a VERIFY.log
+      sleep 600
+      CONSECUTIVE_QUOTA_FALLBACKS=0
+    fi
+    ITER=$((ITER - 1))   # quota retries don't consume the lap budget
     continue
   fi
+  CONSECUTIVE_QUOTA_FALLBACKS=0
 
   # 2. Anti-reward-hacking: restore protected code and reject citation-cache records
   #    written by the worker. Only the networked harness citation gate may add cache files.
@@ -225,10 +251,7 @@ while true; do
 Previous review for the ledger: ${PREV_REVIEW:-none — first review, every ledger item is new}"
 
     # -o captures ONLY the reviewer's final message (the review); full stream -> logs/.
-    "$TIMEOUT" "${REVIEW_CAP_MIN}m" codex exec -m "$CODEX_MODEL" \
-      -c "model_reasoning_effort=\"$CODEX_REASONING_EFFORT\"" \
-      -s read-only --skip-git-repo-check \
-      -o "reviews/iter-$ITER.md" "$REVIEWER_PROMPT" > "logs/review-$ITER.log" 2>&1 || true
+    run_scientific_review "reviews/iter-$ITER.md" "logs/review-$ITER.log" "$REVIEWER_PROMPT"
     # Guarantee the review reaches the logbook — agents can't miss what's in TODO.
     if [[ -s "reviews/iter-$ITER.md" ]]; then
       SCORE_LINE=$(grep -o '"rubric": *[0-9]*' "reviews/iter-$ITER.md" | tail -1)
@@ -239,10 +262,7 @@ Previous review for the ledger: ${PREV_REVIEW:-none — first review, every ledg
       RSCORE=$(grep -o '"rubric": *[0-9]*' "reviews/iter-$ITER.md" | tail -1 | grep -o '[0-9]*$' || true)
       if [[ -n "${RSCORE:-}" && "$RSCORE" -ge 6 ]]; then
         echo "CONFIRM: rubric $RSCORE >= 6 at iter $ITER — running confirmation review" | tee -a VERIFY.log
-        "$TIMEOUT" "${REVIEW_CAP_MIN}m" codex exec -m "$CODEX_MODEL" \
-          -c "model_reasoning_effort=\"$CODEX_REASONING_EFFORT\"" \
-          -s read-only --skip-git-repo-check \
-          -o "reviews/confirm-$ITER.md" "$REVIEWER_PROMPT" > "logs/confirm-$ITER.log" 2>&1 || true
+        run_scientific_review "reviews/confirm-$ITER.md" "logs/confirm-$ITER.log" "$REVIEWER_PROMPT"
       fi
       # Promote the already-committed checkpoint using the fresh review. Do not create
       # a second green tag for the same commit.
