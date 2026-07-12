@@ -5,11 +5,9 @@ See DONE.md.
 
 Highest leverage next:
 
-- [ ] FOCUS LAP: spend your ENTIRE lap on the confounded quality comparison. Do not pick
-  any other task. Finish it completely: either redesign and run a matched control that
-  separates topical relevance from code density, candidate count, and semantic domain,
-  or, if the remaining CPU budget makes that impossible, remove the causal quality claim
-  everywhere and make the confound explicit in Results and Limitations.
+- [x] FOCUS LAP: removed the causal quality claim throughout the paper and made explicit
+  that the filler contrast bundles topical relation, domain, code density, candidate count,
+  entities, and sentence templates. A matched redesign exceeds the remaining probe budget.
 - [ ] Add a pruning control that can distinguish lexical-selection failure from
   answer removal.
 - [ ] Replace or simplify the scaled tables if the harness PDF audit still finds

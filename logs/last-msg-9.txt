@@ -1,0 +1,17 @@
+Completed exactly one task: removed the causal “topical relevance” claim throughout the paper.
+
+Changes:
+
+- Reframed the experiment as a bundled filler-composition contrast.
+- Explicitly documented confounds: domain, entities, code density, candidate count, and templates.
+- Updated the abstract, research question, method, results, table labels, and limitations.
+- Marked the focus task complete in `TODO.md`, which remains under 40 lines.
+- Left changes uncommitted in the working tree.
+
+Individual gates passed:
+
+- `prose-style`
+- `no-number-literals`
+- `submission-ready`
+
+Tectonic and the full gate runner were not invoked, as required.

@@ -30,7 +30,7 @@
 \printAffiliationsAndNotice{}
 
 \begin{abstract}
-Does adding context hurt a small language model, and do the location and topicality of that context matter? We test the frozen \modelName{} artifact on \sampleSize{} deterministic synthetic contract-clause probes spanning mean prompt lengths of \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Moving the same answer-bearing clause from the start to the end raised accuracy by \positionTwoStartEndChange{} percentage points at the shortest tier and \positionFourStartEndChange{} points at the middle tier, while keyword pruning lowered matched accuracy by \pruningChange{} points. The matched amount comparison was inconclusive: accuracy rose by \amountSharedTwoFourChange{} points and then changed by \amountSharedFourEightChange{} points, with only \amountSharedEightCount{} shared cases at each tier. For this model and task, end placement improved retrieval and a keyword filter amplified the lexical trap, while the amount experiment could not establish whether longer context helped or hurt.
+Does adding context hurt a small language model, and do the location and composition of that context matter? We test the frozen \modelName{} artifact on \sampleSize{} deterministic synthetic contract-clause probes spanning mean prompt lengths of \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Moving the same answer-bearing clause from the start to the end raised accuracy by \positionTwoStartEndChange{} percentage points at the shortest tier and \positionFourStartEndChange{} points at the middle tier, while keyword pruning lowered matched accuracy by \pruningChange{} points. The matched amount comparison was inconclusive: accuracy rose by \amountSharedTwoFourChange{} points and then changed by \amountSharedFourEightChange{} points, with only \amountSharedEightCount{} shared cases at each tier. Code-heavy business filler reduced accuracy relative to unrelated filler, but the manipulation does not isolate topical relevance from its other differences.
 \end{abstract}
 
 \section{Introduction}
@@ -41,17 +41,17 @@ Long prompts make this ordinary lookup less predictable. A model may fail becaus
 
 We study these choices in a synthetic, gradeable version of the contract situation. Each document contains an answer-bearing vendor clause and a look-alike clause for another company. The question uses the wording of the look-alike clause, while the answer clause expresses the same relation with different words. This construction reduces the value of literal matching, following the motivation of NoLiMa \citep{modarressi2025nolima}.
 
-Our contribution is a fully paired, laptop-scale evaluation of a frozen open model. Prior work established position and length failures in larger systems \citep{liu2023lost,levy2024same}, and showed that irrelevant statements can disrupt reasoning \citep{shi2023distracted}. We instead compare topically related and unrelated filler at matched prompt lengths, positions, and questions. We also test whether a deterministic keyword filter helps the exact cases on which the unfiltered model was evaluated.
+Our contribution is a fully paired, laptop-scale evaluation of a frozen open model. Prior work established position and length failures in larger systems \citep{liu2023lost,levy2024same}, and showed that irrelevant statements can disrupt reasoning \citep{shi2023distracted}. We compare code-heavy business filler with unrelated prose at matched prompt lengths, positions, and questions. We also test whether a deterministic keyword filter helps the exact cases on which the unfiltered model was evaluated.
 
 The experiment asks four questions:
 \begin{enumerate}
     \item As the document grows from \tierTwoTokens{} to \tierEightTokens{} mean tokens, how much does accuracy change on shared cases?
     \item How does moving the same answer clause among the start, middle, and end change accuracy?
-    \item Does topically related filler hurt less than unrelated filler in matched documents?
+    \item How does accuracy differ between code-heavy business filler and unrelated prose in matched documents?
     \item Does keyword pruning recover accuracy on matched full-context cases?
 \end{enumerate}
 
-The answer is not a general context-length threshold. In this grid, the model improved when the answer appeared near the end, related filler was no safer than unrelated filler, and keyword pruning amplified the lexical trap built into the probes.
+The answer is not a general context-length threshold. In this grid, the model improved when the answer appeared near the end, code-heavy business filler produced lower accuracy than unrelated prose, and keyword pruning amplified the lexical trap built into the probes.
 
 \section{Related Work}
 
@@ -59,7 +59,7 @@ The answer is not a general context-length threshold. In this grid, the model im
 
 Input amount can matter even when the underlying problem is fixed. \citet{levy2024same} padded matched reasoning problems and observed degradation well before model context limits, while RULER found that usable context lengths can be shorter than advertised windows \citep{hsieh2024ruler}. Our amount comparison uses the intersection of cases present at every tier, avoiding a change in scenario mix as prompts grow.
 
-\citet{shi2023distracted} added irrelevant statements to arithmetic problems and found lower reasoning accuracy. We ask a different quality question: whether filler from the same business domain is less harmful than unrelated prose when amount and question wording match. NoLiMa shows why literal needle tests can overstate retrieval ability \citep{modarressi2025nolima}; our answer clause therefore paraphrases the question while a competing clause shares its surface form. The tested model belongs to the instruction-tuned Qwen family \citep{qwen2024qwen25}.
+\citet{shi2023distracted} added irrelevant statements to arithmetic problems and found lower reasoning accuracy. We compare filler from the same business domain with unrelated prose while matching amount and question wording. The business condition also contains more entities and code-shaped candidates, so the comparison measures that bundle rather than topical relevance alone. NoLiMa shows why literal needle tests can overstate retrieval ability \citep{modarressi2025nolima}; our answer clause therefore paraphrases the question while a competing clause shares its surface form. The tested model belongs to the instruction-tuned Qwen family \citep{qwen2024qwen25}.
 
 \section{Probe Design}
 
@@ -73,10 +73,12 @@ Seeded code generates a company, target code, competing company and code, questi
 
 For each full-context family, we insert the answer clause near the start, middle, or end. Family generation does not use target position in any random seed. The competing clause receives an earlier or later fractional insertion index that is independent of answer position and fixed across the three renders. Its final sentence index shifts by one when the answer is inserted before it. Thus a paired position contrast changes answer placement and this mechanical one-sentence shift, while preserving the scenario content and filler order.
 
-\paragraph{Amount and quality.}
-The tokenizer, rather than a character estimate, determines prompt length. The three full-context tiers average \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Each tier balances topically related filler with unrelated sentences. Related filler consists of other companies, business records, and unrelated codes; unrelated filler describes places and events outside the contract domain. Quality pairs share the family, target position, question, and measured tier.
+\paragraph{Amount and filler composition.}
+The tokenizer, rather than a character estimate, determines prompt length. The three full-context tiers average \tierTwoTokens{}, \tierFourTokens{}, and \tierEightTokens{} tokens. Each tier balances business filler with unrelated sentences. Business filler consists of other companies, records, and unrelated codes; unrelated filler describes places and events outside the contract domain. Filler pairs share the family, target position, question, and measured tier.
 
-The expensive final tier contains fewer families. Amount estimates therefore use only the \amountSharedEightCount{} cases shared by every tier, not the unequal full-tier totals. Quality estimates use \qualityTwoRelevantDenominator{}, \qualityFourRelevantDenominator{}, and \qualityEightRelevantDenominator{} pairs at the three tiers, respectively.
+This manipulation changes several properties together. Compared with unrelated prose, the related filler contains more business entities, contract-like templates, and code-shaped answer candidates. The paired comparison therefore identifies the effect of these two generated filler conditions, not the effect of topical relevance alone.
+
+The expensive final tier contains fewer families. Amount estimates therefore use only the \amountSharedEightCount{} cases shared by every tier, not the unequal full-tier totals. Filler-composition estimates use \qualityTwoRelevantDenominator{}, \qualityFourRelevantDenominator{}, and \qualityEightRelevantDenominator{} pairs at the three tiers, respectively.
 
 \paragraph{Pruning and controls.}
 At the middle tier, a keyword filter retains sentences with at least two content words shared with the question, falling back to the highest-overlap sentences if too few qualify. It preserves original order. The comparison is restricted to the \pruningDenominator{} cases with both full and pruned outputs. We also include \closedBookCount{} closed-book questions and \literalControlDenominator{} matched literal-versus-paraphrase controls.
@@ -93,7 +95,7 @@ The inferential target is the seeded generator's population of synthetic scenari
 \textbf{The amount effect remains unresolved.} Accuracy was \amountSharedTwoAccuracy{}\% at \tierTwoTokens{} mean tokens and \amountSharedFourAccuracy{}\% at \tierFourTokens{}, a paired change of \amountSharedTwoFourChange{} points with a family-cluster interval of [\amountSharedTwoFourChangeLow{}, \amountSharedTwoFourChangeHigh{}] over \amountSharedTwoFourDenominator{} cases. It was \amountSharedEightAccuracy{}\% at \tierEightTokens{}, with \amountSharedFourEightWins{} wins, \amountSharedFourEightLosses{} losses, and \amountSharedFourEightTies{} ties relative to the middle tier (Table~\ref{tab:amount-quality}). Because the longest-tier intersection represents only \amountSharedEightCount{} probes from \amountSharedEightFamilyCount{} scenario families, these observations neither establish a benefit nor rule out degradation within the measured range.
 
 \begin{table}[t]
-\caption{Matched amount and filler-quality comparisons. Brackets give \confidenceLevel{}\% family-cluster bootstrap intervals; $n$ is the matched denominator. Changes are later minus earlier for amount and related minus unrelated for quality.}
+\caption{Matched amount and filler-composition comparisons. Brackets give \confidenceLevel{}\% family-cluster bootstrap intervals; $n$ is the matched denominator. Changes are later minus earlier for amount and business filler minus unrelated prose for composition.}
 \label{tab:amount-quality}
 \centering
 \small
@@ -111,11 +113,11 @@ Amount: middle to long
 & \amountSharedEightAccuracy{} [\amountSharedEightAccuracyLow{}, \amountSharedEightAccuracyHigh{}]
 & \amountSharedFourEightChange{} (\amountSharedFourEightDenominator{}) \\
 \midrule
-Quality at short tier
+Composition at short tier
 & \qualityTwoIrrelevantAccuracy{} [\qualityTwoIrrelevantAccuracyLow{}, \qualityTwoIrrelevantAccuracyHigh{}]
 & \qualityTwoRelevantAccuracy{} [\qualityTwoRelevantAccuracyLow{}, \qualityTwoRelevantAccuracyHigh{}]
 & \qualityTwoRelevantChange{} (\qualityTwoRelevantDenominator{}) \\
-Quality at middle tier
+Composition at middle tier
 & \qualityFourIrrelevantAccuracy{} [\qualityFourIrrelevantAccuracyLow{}, \qualityFourIrrelevantAccuracyHigh{}]
 & \qualityFourRelevantAccuracy{} [\qualityFourRelevantAccuracyLow{}, \qualityFourRelevantAccuracyHigh{}]
 & \qualityFourRelevantChange{} (\qualityFourRelevantDenominator{}) \\
@@ -154,8 +156,8 @@ Mean tokens & Start & Middle & End \\
 }
 \end{table}
 
-\paragraph{Filler quality.}
-\textbf{Topically related filler was more harmful, not safer.} Relative to matched unrelated filler, related business clauses changed accuracy by \qualityTwoRelevantChange{} points [\qualityTwoRelevantChangeLow{}, \qualityTwoRelevantChangeHigh{}] over \qualityTwoRelevantDenominator{} pairs at the shortest tier and by \qualityFourRelevantChange{} points [\qualityFourRelevantChangeLow{}, \qualityFourRelevantChangeHigh{}] over \qualityFourRelevantDenominator{} pairs at the middle tier. The respective paired outcomes were \qualityTwoRelevantWins{} win, \qualityTwoRelevantLosses{} losses, and \qualityTwoRelevantTies{} ties, then \qualityFourRelevantWins{} win, \qualityFourRelevantLosses{} losses, and \qualityFourRelevantTies{} ties. The longest-tier estimate was \qualityEightRelevantChange{} points, but its \qualityEightRelevantFamilyCount{} families are too sparse to strengthen that conclusion.
+\paragraph{Filler composition.}
+\textbf{Code-heavy business filler produced lower accuracy than unrelated prose.} The matched difference was \qualityTwoRelevantChange{} points [\qualityTwoRelevantChangeLow{}, \qualityTwoRelevantChangeHigh{}] over \qualityTwoRelevantDenominator{} pairs at the shortest tier and \qualityFourRelevantChange{} points [\qualityFourRelevantChangeLow{}, \qualityFourRelevantChangeHigh{}] over \qualityFourRelevantDenominator{} pairs at the middle tier. The respective paired outcomes were \qualityTwoRelevantWins{} win, \qualityTwoRelevantLosses{} losses, and \qualityTwoRelevantTies{} ties, then \qualityFourRelevantWins{} win, \qualityFourRelevantLosses{} losses, and \qualityFourRelevantTies{} ties. The longest-tier estimate was \qualityEightRelevantChange{} points, but its \qualityEightRelevantFamilyCount{} families are too sparse to strengthen that conclusion. Because the business filler also adds code-shaped candidates and repeated entity templates, these results do not show that topical relevance caused the difference.
 
 \paragraph{Mitigation.}
 \textbf{Keyword pruning backfired on the matched cases.} Full-context accuracy was \pruningFullAccuracy{}\%, compared with \pruningPrunedAccuracy{}\% after filtering, a change of \pruningChange{} points [\pruningChangeLow{}, \pruningChangeHigh{}] across \pruningFamilyCount{} families. Only \pruningWins{} case improved; \pruningLosses{} worsened and \pruningTies{} tied (Table~\ref{tab:pruning}). The mechanism follows from the probe design: the filter retains the competing clause because it repeats the question's words, while the paraphrased answer clause has less lexical overlap.
@@ -194,7 +196,7 @@ The controls support this explanation without proving it for other tasks. Litera
 
 \section{Limitations}
 
-The findings concern one small quantized model and may not transfer to larger models or other quantization levels. Synthetic clause lookup is not natural contract analysis, and retrieval accuracy is not a measure of general capability. The \cpuBudgetMinutes{}-minute CPU budget capped the grid, leaving only \tierEightCount{} full-context probes at the longest tier and wide intervals throughout. That sparse tier prevents a conclusion about degradation within the measured range, and the experiment cannot address longer prompts. Greedy decoding removes run-to-run sampling variation but does not show how sampling would change the estimates. The mitigation is a deliberately simple keyword filter rather than a learned retrieval system.
+The findings concern one small quantized model and may not transfer to larger models or other quantization levels. Synthetic clause lookup is not natural contract analysis, and retrieval accuracy is not a measure of general capability. The \cpuBudgetMinutes{}-minute CPU budget capped the grid, leaving only \tierEightCount{} full-context probes at the longest tier and wide intervals throughout. That sparse tier prevents a conclusion about degradation within the measured range, and the experiment cannot address longer prompts. The filler comparison confounds topical relation with semantic domain, entity and code density, candidate count, and sentence templates. A factorial design that matches those properties would be needed to identify a topical-relevance effect. Greedy decoding removes run-to-run sampling variation but does not show how sampling would change the estimates. The mitigation is a deliberately simple keyword filter rather than a learned retrieval system.
 
 \section{Reproducibility}
 
