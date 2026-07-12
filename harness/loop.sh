@@ -38,13 +38,32 @@ TIMEOUT=$(command -v timeout || command -v gtimeout) || {
 CODEX_MODEL="${CODEX_MODEL:-gpt-5.6-sol}"
 CODEX_REASONING_EFFORT="${CODEX_REASONING_EFFORT:-high}"
 WORKER_BACKEND="${WORKER_BACKEND:-codex}"
+POST_REVIEW_BACKEND="${POST_REVIEW_BACKEND:-$WORKER_BACKEND}"
 CLAUDE_MODEL="${CLAUDE_MODEL:-fable}"
 CLAUDE_EFFORT="${CLAUDE_EFFORT:-high}"
-if [[ "$WORKER_BACKEND" != "codex" && "$WORKER_BACKEND" != "claude" ]]; then
-  echo "FATAL: WORKER_BACKEND must be codex or claude, got $WORKER_BACKEND"
-  exit 1
-fi
-echo "AGENTS: worker=$WORKER_BACKEND codex=$CODEX_MODEL/$CODEX_REASONING_EFFORT claude=$CLAUDE_MODEL/$CLAUDE_EFFORT"
+for backend in "$WORKER_BACKEND" "$POST_REVIEW_BACKEND"; do
+  if [[ "$backend" != "codex" && "$backend" != "claude" ]]; then
+    echo "FATAL: agent backends must be codex or claude, got $backend"
+    exit 1
+  fi
+done
+echo "AGENTS: worker=$WORKER_BACKEND post_review=$POST_REVIEW_BACKEND reviewer=codex codex=$CODEX_MODEL/$CODEX_REASONING_EFFORT claude=$CLAUDE_MODEL/$CLAUDE_EFFORT"
+
+run_post_review_role() {
+  local output_file="$1" log_file="$2" prompt="$3"
+  if [[ "$POST_REVIEW_BACKEND" == "claude" ]]; then
+    "$TIMEOUT" "${ROLE_CAP_MIN}m" claude -p --model "$CLAUDE_MODEL" \
+      --effort "$CLAUDE_EFFORT" --permission-mode acceptEdits \
+      --no-session-persistence --output-format stream-json --verbose \
+      --include-partial-messages "$prompt" > "$log_file" 2>&1 || true
+    .venv/bin/python harness/extract_claude_result.py "$log_file" "$output_file" || true
+  else
+    "$TIMEOUT" "${ROLE_CAP_MIN}m" codex exec -m "$CODEX_MODEL" \
+      -c "model_reasoning_effort=\"$CODEX_REASONING_EFFORT\"" \
+      -s workspace-write --skip-git-repo-check \
+      -o "$output_file" "$prompt" > "$log_file" 2>&1 || true
+  fi
+}
 
 # --- Anti-reward-hacking guard (risk A) --------------------------------------
 # Fingerprint the harness in memory at loop start. Agents can write anywhere in
@@ -237,15 +256,9 @@ Previous review for the ledger: ${PREV_REVIEW:-none — first review, every ledg
   # 6. Strategy/prose roles run only after the verified checkpoint. Their changes are
   #    intentionally not included in this lap's tag; the next lap's gates inspect them.
   if [[ "$REVIEW_COMPLETED" -eq 1 ]]; then
-    "$TIMEOUT" "${ROLE_CAP_MIN}m" codex exec -m "$CODEX_MODEL" \
-      -c "model_reasoning_effort=\"$CODEX_REASONING_EFFORT\"" \
-      -s workspace-write --skip-git-repo-check \
-      -o "logs/editor-msg-$ITER.txt" "$(cat harness/EDITOR.md)" > "logs/editor-$ITER.log" 2>&1 || true
+    run_post_review_role "logs/editor-msg-$ITER.txt" "logs/editor-$ITER.log" "$(cat harness/EDITOR.md)"
     echo "HUMANIZER pass at iter $ITER" | tee -a VERIFY.log
-    "$TIMEOUT" "${ROLE_CAP_MIN}m" codex exec -m "$CODEX_MODEL" \
-      -c "model_reasoning_effort=\"$CODEX_REASONING_EFFORT\"" \
-      -s workspace-write --skip-git-repo-check \
-      -o "logs/humanizer-msg-$ITER.txt" "$(cat harness/HUMANIZER.md)" > "logs/humanizer-$ITER.log" 2>&1 || true
+    run_post_review_role "logs/humanizer-msg-$ITER.txt" "logs/humanizer-$ITER.log" "$(cat harness/HUMANIZER.md)"
     restore_protected_files
     if [[ -n "$(git status --porcelain -- data/cache/citations)" ]]; then
       echo "TAMPER: citation cache modified by post-review role at iter $ITER — restoring checkpoint" | tee -a VERIFY.log

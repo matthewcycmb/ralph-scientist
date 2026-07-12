@@ -87,11 +87,12 @@ class HarnessRegressionTests(unittest.TestCase):
         self.assertIn('CODEX_MODEL="${CODEX_MODEL:-gpt-5.6-sol}"', loop)
         self.assertIn('CODEX_REASONING_EFFORT="${CODEX_REASONING_EFFORT:-high}"', loop)
         effort_override = '-c "model_reasoning_effort=\\"$CODEX_REASONING_EFFORT\\""'
-        self.assertEqual(loop.count(effort_override), 5)
+        self.assertEqual(loop.count(effort_override), 4)
 
     def test_claude_worker_is_optional_and_falls_back_to_codex_on_quota(self) -> None:
         loop = (ROOT / "harness/loop.sh").read_text()
         self.assertIn('WORKER_BACKEND="${WORKER_BACKEND:-codex}"', loop)
+        self.assertIn('POST_REVIEW_BACKEND="${POST_REVIEW_BACKEND:-$WORKER_BACKEND}"', loop)
         self.assertIn('CLAUDE_MODEL="${CLAUDE_MODEL:-fable}"', loop)
         self.assertIn("--output-format stream-json", loop)
         self.assertIn("retrying this lap with Codex", loop)
