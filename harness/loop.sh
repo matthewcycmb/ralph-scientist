@@ -17,7 +17,8 @@ fi
 
 # Archive the previous run's working state — lap numbers and review files repeat
 # across runs, and stale state must never bleed into this run's records.
-if [[ -s VERIFY.log || -n "$(ls reviews 2>/dev/null)" || -n "$(ls logs 2>/dev/null)" ]]; then
+if [[ -z "${RESUME_RUN:-}" ]] \
+  && [[ -s VERIFY.log || -n "$(ls reviews 2>/dev/null)" || -n "$(ls logs 2>/dev/null)" ]]; then
   STAMP=$(date +%Y%m%d-%H%M%S)
   mkdir -p "runs/$STAMP"
   [[ -f VERIFY.log ]] && mv VERIFY.log "runs/$STAMP/"
@@ -138,7 +139,14 @@ citation_fingerprint() {
   done | shasum -a 256 | cut -d' ' -f1
 }
 
-ITER=0
+if [[ -n "${RESUME_RUN:-}" ]]; then
+  ITER=$(find logs -maxdepth 1 -type f -name 'iter-*.log' -print 2>/dev/null \
+    | sed -n 's#.*iter-\([0-9][0-9]*\)\.log#\1#p' | sort -n | tail -1)
+  ITER="${ITER:-0}"
+  echo "RESUME: continuing event run after iteration $ITER"
+else
+  ITER=0
+fi
 CONSECUTIVE_QUOTA_FALLBACKS=0
 while true; do
   ITER=$((ITER + 1))

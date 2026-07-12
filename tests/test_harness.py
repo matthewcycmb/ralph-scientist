@@ -59,6 +59,12 @@ class HarnessRegressionTests(unittest.TestCase):
         self.assertIn('git merge-base --is-ancestor "$OFFICIAL_TAG^{commit}" HEAD', launcher)
         self.assertIn("Claude worker requested but Claude Code is not logged in", launcher)
 
+    def test_same_event_resume_preserves_history_and_iteration_number(self) -> None:
+        loop = (ROOT / "harness/loop.sh").read_text()
+        self.assertIn('[[ -z "${RESUME_RUN:-}" ]]', loop)
+        self.assertIn('echo "RESUME: continuing event run after iteration $ITER"', loop)
+        self.assertIn("find logs -maxdepth 1", loop)
+
     def test_submission_gate_rejects_identity_and_placeholder_abstract(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo = Path(tmp)
