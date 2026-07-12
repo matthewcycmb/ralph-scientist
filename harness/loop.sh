@@ -37,7 +37,14 @@ TIMEOUT=$(command -v timeout || command -v gtimeout) || {
 # local xhigh setting cannot silently make laps slower during the event.
 CODEX_MODEL="${CODEX_MODEL:-gpt-5.6-sol}"
 CODEX_REASONING_EFFORT="${CODEX_REASONING_EFFORT:-high}"
-echo "CODEX: model=$CODEX_MODEL reasoning_effort=$CODEX_REASONING_EFFORT"
+WORKER_BACKEND="${WORKER_BACKEND:-codex}"
+CLAUDE_MODEL="${CLAUDE_MODEL:-fable}"
+CLAUDE_EFFORT="${CLAUDE_EFFORT:-high}"
+if [[ "$WORKER_BACKEND" != "codex" && "$WORKER_BACKEND" != "claude" ]]; then
+  echo "FATAL: WORKER_BACKEND must be codex or claude, got $WORKER_BACKEND"
+  exit 1
+fi
+echo "AGENTS: worker=$WORKER_BACKEND codex=$CODEX_MODEL/$CODEX_REASONING_EFFORT claude=$CLAUDE_MODEL/$CLAUDE_EFFORT"
 
 # --- Anti-reward-hacking guard (risk A) --------------------------------------
 # Fingerprint the harness in memory at loop start. Agents can write anywhere in
@@ -46,6 +53,7 @@ echo "CODEX: model=$CODEX_MODEL reasoning_effort=$CODEX_REASONING_EFFORT"
 START_SHA=$(git rev-parse HEAD)
 harness_fingerprint() {
   cat harness/loop.sh harness/checkpoint.sh harness/review_due.sh harness/run_gates.sh harness/ratchet.sh harness/REVIEWER.md harness/ASSIGNMENT_REVIEW.md \
+      harness/extract_claude_result.py \
       harness/EDITOR.md harness/HUMANIZER.md harness/gates/* Makefile PROMPT.md SPEC.md \
       analysis/make_values.py analysis/RESULTS_SCHEMA.md data/models/CHECKSUMS.txt \
       data/models/FETCH.sh data/cache/nlsy97/CHECKSUMS.txt requirements.txt \
@@ -58,6 +66,7 @@ restore_protected_files() {
     echo "TAMPER: protected harness inputs modified at iter $ITER — restoring from $START_SHA" | tee -a VERIFY.log
     git checkout "$START_SHA" -- harness/loop.sh harness/checkpoint.sh harness/review_due.sh harness/run_gates.sh \
       harness/ratchet.sh harness/REVIEWER.md harness/ASSIGNMENT_REVIEW.md harness/EDITOR.md harness/HUMANIZER.md \
+      harness/extract_claude_result.py \
       harness/gates Makefile PROMPT.md SPEC.md analysis/make_values.py \
       analysis/RESULTS_SCHEMA.md data/models/CHECKSUMS.txt data/models/FETCH.sh \
       data/cache/nlsy97/CHECKSUMS.txt requirements.txt paper/*.sty paper/*.bst
@@ -103,10 +112,18 @@ while true; do
   # itself so the watchdog's kill reaches the agent, not a log pipe. Live view:
   # tail -f the iter log. GNU timeout forwards TERM to its child.
   echo "agent streaming to logs/iter-$ITER.log"
-  "$TIMEOUT" "${AGENT_CAP_MIN}m" codex exec -m "$CODEX_MODEL" \
-    -c "model_reasoning_effort=\"$CODEX_REASONING_EFFORT\"" \
-    -s workspace-write --skip-git-repo-check \
-    -o "logs/last-msg-$ITER.txt" "$(cat PROMPT.md)" > "logs/iter-$ITER.log" 2>&1 &
+  ACTIVE_WORKER_BACKEND="$WORKER_BACKEND"
+  if [[ "$ACTIVE_WORKER_BACKEND" == "claude" ]]; then
+    "$TIMEOUT" "${AGENT_CAP_MIN}m" claude -p --model "$CLAUDE_MODEL" \
+      --effort "$CLAUDE_EFFORT" --permission-mode acceptEdits \
+      --no-session-persistence --output-format stream-json --verbose \
+      --include-partial-messages "$(cat PROMPT.md)" > "logs/iter-$ITER.log" 2>&1 &
+  else
+    "$TIMEOUT" "${AGENT_CAP_MIN}m" codex exec -m "$CODEX_MODEL" \
+      -c "model_reasoning_effort=\"$CODEX_REASONING_EFFORT\"" \
+      -s workspace-write --skip-git-repo-check \
+      -o "logs/last-msg-$ITER.txt" "$(cat PROMPT.md)" > "logs/iter-$ITER.log" 2>&1 &
+  fi
   AGENT_JOB=$!
   LAST_SIG=""
   STALL=0
@@ -129,10 +146,20 @@ while true; do
     LAST_SIG="$SIG"
   done
   wait "$AGENT_JOB" 2>/dev/null
+  if [[ "$ACTIVE_WORKER_BACKEND" == "claude" ]]; then
+    .venv/bin/python harness/extract_claude_result.py \
+      "logs/iter-$ITER.log" "logs/last-msg-$ITER.txt" || true
+  fi
 
   # Quota-outage backoff (found in endurance run 2026-07-02): a lap that dies on
   # usage limits must not spin no-op laps — sleep and let the quota window recover.
-  if grep -q "hit your usage limit" "logs/iter-$ITER.log" 2>/dev/null; then
+  if grep -Eqi "hit your usage limit|usage limit|rate[_ -]?limit" "logs/iter-$ITER.log" 2>/dev/null; then
+    if [[ "$ACTIVE_WORKER_BACKEND" == "claude" ]]; then
+      echo "QUOTA: Claude limit hit at iter $ITER — retrying this lap with Codex" | tee -a VERIFY.log
+      WORKER_BACKEND=codex
+      ITER=$((ITER - 1))
+      continue
+    fi
     echo "QUOTA: usage limit hit at iter $ITER — sleeping 10 min before retry" | tee -a VERIFY.log
     ITER=$((ITER - 1))   # quota waits don't consume the lap budget
     sleep 600

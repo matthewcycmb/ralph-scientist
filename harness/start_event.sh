@@ -22,6 +22,12 @@ command -v timeout >/dev/null 2>&1 || command -v gtimeout >/dev/null 2>&1 \
   || fail "GNU timeout/gtimeout missing"
 
 codex --version
+if [[ "${WORKER_BACKEND:-codex}" == "claude" ]]; then
+  need claude
+  claude auth status | grep -q '"loggedIn": true' \
+    || fail "Claude worker requested but Claude Code is not logged in; run: claude auth login"
+  claude --version
+fi
 make test
 bash harness/gates/check_frozen.sh
 
@@ -92,7 +98,7 @@ else
   git tag -a "$OFFICIAL_TAG" -m "Official Ralph Loop boundary, 2026-07-12 12:30 KST"
 fi
 
-echo "STARTING research loop (PUSH=${PUSH:-1})"
+echo "STARTING research loop (worker=${WORKER_BACKEND:-codex}, PUSH=${PUSH:-1})"
 # Monitor mode gives every background job a distinct process group whose ID is
 # its leader PID, which makes terminate_group reliable on macOS.
 set -m

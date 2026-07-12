@@ -30,12 +30,13 @@ You type three commands all day. Everything else is watching and presenting.
    `caffeinate -is`. Re-run the codex health check (`codex --version` +
    `codex exec "say ok"`) — things break overnight; they must break NOW,
    not at the gun.
-2. Event Codex credits: if organizers hand out API keys, wire them in
-   (`OPENAI_API_KEY` or `codex login` per their instructions). This is NOT
-   optional-nice-to-have: the ChatGPT-plan quota capped out after ~1.7M
-   tokens in practice (≈2 hours of running) — a full event day needs the
-   provided credits. Plan auth is the fallback only. If the loop logs
-   "QUOTA:" lines, it is backing off automatically; it resumes by itself.
+2. The organizers do not provide OpenAI credits. Preserve the remaining Codex
+   allowance for the calibrated reviewer and emergency fallback. Claude Code is
+   the primary worker when a Claude Max subscription is available:
+   `claude auth login`, then verify `claude auth status` reports `loggedIn: true`.
+   The event launcher uses `WORKER_BACKEND=claude` with the `fable` model alias.
+   If Claude reports a quota/rate limit, the same lap automatically retries on
+   Codex. Reviewer, confirmation, editor, and prose roles remain on Codex.
 3. If organizers announce constraints (topic rules, submission format),
    this is the LAST moment SPEC.md can be edited. Then hands off.
 4. Open Terminal and run, exactly:
@@ -43,9 +44,10 @@ You type three commands all day. Everything else is watching and presenting.
 ```
 cd ~/ralphm/Ralphm
 tmux new -s ralph
-# pane 1 — preflight, then the machine + dashboard + W&B mirror:
-harness/start_event.sh --check
-harness/start_event.sh
+# pane 1 — before 12:30, preflight only:
+WORKER_BACKEND=claude harness/start_event.sh --check
+# at or just after 12:30 KST, start the official loop:
+WORKER_BACKEND=claude harness/start_event.sh
 # split pane: press Ctrl-b then %  — then in pane 2, the live status view:
 tail -f VERIFY.log
 ```
@@ -53,13 +55,21 @@ tail -f VERIFY.log
 (tmux survives a closed window: `tmux attach -t ralph` reconnects.)
 
 The launcher starts the local dashboard at
-`http://127.0.0.1:8788/harness/dashboard/` and the authenticated W&B mirror.
-This is also the demo screen: put it on the projector. Set `SKIP_WANDB=1` only
-if you intentionally need the research loop to continue without the mirror.
+`http://127.0.0.1:8788/harness/dashboard/`. W&B is optional: when credentials
+and its runtime are available the mirror starts, but a W&B failure never blocks
+paper production.
 
 That's it. That is the entire "how do I run it."
 
-## During the loop (9:30 → ~4:40 PM; papers due 5 PM)
+## Official timeline
+
+- 11:00–12:30: research specification and preflight; do not run experiments.
+- 12:30–15:30: autonomous Ralph Loop.
+- 15:30–16:30: human editing, final title/abstract, anonymity check, and submission.
+- 16:30: hard submission cutoff and matching snapshot.
+- 16:35–17:00: Track 1 self-review.
+
+## During the loop (12:30–15:30 KST)
 
 - DO NOT touch the laptop. The rule is the format; the format is the demo.
 - Watch pane 2: gates flipping, tags appearing (`green-vN`, then `paper-vN`).
@@ -74,7 +84,7 @@ That's it. That is the entire "how do I run it."
   .venv/bin/pip install -r requirements.txt`, `brew install tectonic coreutils`,
   restart the loop. (This is why PUSH=1 matters.)
 
-## Submission (5 PM) + assignment review (16:35–17:00 KST)
+## Submission (hard cutoff 16:30) + self-review (16:35–17:00 KST)
 
 Agent review is assignment-only and API-only through `https://openagentreview.org`.
 The organizer-triggered assignment set contains exactly ten distinct papers, with
@@ -82,10 +92,12 @@ real papers first and explicitly labeled rehearsal papers afterward. Review only
 the returned assignments. Exact operational instructions live in
 `harness/ASSIGNMENT_REVIEW.md`.
 
-- ~4:30 PM: stop expecting new tags; the best `paper-vN` is the submission.
-  Leave the loop running until the deadline — a late tag is free upside.
-- Submit: PDF of the best tag + public repo link + declare the line:
-  `event-day-start` = declared inputs, everything after = born at the event.
+- 15:30: stop the loop and begin the human editing window. Select the best
+  reviewed `paper-vN`, falling back to the highest green tag if necessary.
+- Submit the anonymous PDF, title, and abstract by 16:30. Code, logs, the public
+  repo, and W&B are optional and must not delay these three required artifacts.
+- Provenance: `event-day-start` preserves the earlier pre-event boundary;
+  `official-loop-start-20260712-1230` marks the official autonomous run.
 - ASSIGNMENT-REVIEW WINDOW — your reviews are also graded. Use the machine's
   own checklist on each paper, ~5 min each: (1) pick one number — can you
   trace where it came from? (2) pick one citation — does the paper exist?

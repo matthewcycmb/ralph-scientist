@@ -41,6 +41,7 @@ class HarnessRegressionTests(unittest.TestCase):
         self.assertIn("set -m", launcher)
         self.assertIn("official-loop-start-20260712-1230", launcher)
         self.assertIn("official Ralph Loop window is 12:30-15:30 KST", launcher)
+        self.assertIn("Claude worker requested but Claude Code is not logged in", launcher)
 
     def test_submission_gate_rejects_identity_and_placeholder_abstract(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -87,6 +88,32 @@ class HarnessRegressionTests(unittest.TestCase):
         self.assertIn('CODEX_REASONING_EFFORT="${CODEX_REASONING_EFFORT:-high}"', loop)
         effort_override = '-c "model_reasoning_effort=\\"$CODEX_REASONING_EFFORT\\""'
         self.assertEqual(loop.count(effort_override), 5)
+
+    def test_claude_worker_is_optional_and_falls_back_to_codex_on_quota(self) -> None:
+        loop = (ROOT / "harness/loop.sh").read_text()
+        self.assertIn('WORKER_BACKEND="${WORKER_BACKEND:-codex}"', loop)
+        self.assertIn('CLAUDE_MODEL="${CLAUDE_MODEL:-fable}"', loop)
+        self.assertIn("--output-format stream-json", loop)
+        self.assertIn("retrying this lap with Codex", loop)
+
+    def test_claude_stream_result_extraction(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            stream = root / "stream.jsonl"
+            output = root / "result.txt"
+            stream.write_text(
+                '{"type":"assistant","message":{"content":[]}}\n'
+                '{"type":"result","result":"Finished the selected task."}\n'
+            )
+            result = run(
+                sys.executable,
+                str(ROOT / "harness/extract_claude_result.py"),
+                str(stream),
+                str(output),
+                cwd=root,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertEqual(output.read_text(), "Finished the selected task.\n")
 
     def test_review_waits_for_green_paper_then_fires_immediately(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
